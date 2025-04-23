@@ -1,0 +1,176 @@
+<!-- src/app/features/apartments/pages/apartment-detail/apartment-detail.component.html -->
+<div class="apartment-detail-container">
+    <div *ngIf="loading" class="loading">
+      Loading apartment details...
+    </div>
+    
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+    
+    <div *ngIf="!loading && !error" class="apartment-content">
+      <!-- Apartment Header -->
+      <div class="apartment-header">
+        <div class="title-section">
+          <h1>{{ apartment.title }}</h1>
+          <div class="location">
+            <i class="icon-location"></i>
+            <span>{{ apartment.location.address }}, {{ apartment.location.city }}, {{ apartment.location.country }}</span>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button *ngIf="isOwner" [routerLink]="['edit']" class="edit-button">Edit Listing</button>
+        </div>
+      </div>
+      
+      <!-- Image Gallery -->
+      <app-apartment-gallery [images]="apartment.media.imageUrls"></app-apartment-gallery>
+      
+      <!-- Main Content Grid -->
+      <div class="content-grid">
+        <!-- Left Column - Apartment Details -->
+        <div class="details-column">
+          <!-- Features Section -->
+          <section class="features-section">
+            <h2>Features</h2>
+            <div class="features-grid">
+              <div class="feature">
+                <i class="icon-bedroom"></i>
+                <div>
+                  <h3>{{ apartment.features.bedroomCount }} Bedroom<span *ngIf="apartment.features.bedroomCount > 1">s</span></h3>
+                  <p>Comfortable sleeping areas</p>
+                </div>
+              </div>
+              
+              <div class="feature">
+                <i class="icon-bathroom"></i>
+                <div>
+                  <h3>{{ apartment.features.bathroomCount }} Bathroom<span *ngIf="apartment.features.bathroomCount > 1">s</span></h3>
+                  <p>With shower and amenities</p>
+                </div>
+              </div>
+              
+              <div class="feature">
+                <i class="icon-occupancy"></i>
+                <div>
+                  <h3>{{ apartment.features.maxOccupancy }} Guest<span *ngIf="apartment.features.maxOccupancy > 1">s</span></h3>
+                  <p>Maximum occupancy</p>
+                </div>
+              </div>
+              
+              <div class="feature">
+                <i class="icon-area"></i>
+                <div>
+                  <h3>{{ apartment.features.area }} m²</h3>
+                  <p>Total living area</p>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Description Section -->
+          <section class="description-section">
+            <h2>Description</h2>
+            <p>{{ apartment.description }}</p>
+          </section>
+          
+          <!-- Amenities Section -->
+          <section class="amenities-section">
+            <h2>Amenities</h2>
+            <div class="amenities-grid">
+              <div class="amenity" *ngFor="let amenity of apartment.features.amenities">
+                <i class="icon-{{ amenity | lowercase }}"></i>
+                <span>{{ amenity }}</span>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Price Comparison Section -->
+          <section class="price-comparison" *ngIf="comparablePrices.length > 0">
+            <h2>Compare Price</h2>
+            <div class="comparison-table">
+              <div class="loading-overlay" *ngIf="loadingComparisons">Loading comparisons...</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Price</th>
+                    <th>Size</th>
+                    <th>Bedrooms</th>
+                    <th>Bathrooms</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Current Apartment -->
+                  <tr class="current-property">
+                    <td>{{ apartment.title }} (Current)</td>
+                    <td>{{ apartment.price.currency }} {{ apartment.price.amount }} / {{ apartment.price.period }}</td>
+                    <td>{{ apartment.features.area }} m²</td>
+                    <td>{{ apartment.features.bedroomCount }}</td>
+                    <td>{{ apartment.features.bathroomCount }}</td>
+                  </tr>
+                  
+                  <!-- Comparable Properties -->
+                  <tr *ngFor="let property of comparablePrices">
+                    <td>{{ property.title }}</td>
+                    <td>{{ property.price.currency }} {{ property.price.amount }} / {{ property.price.period }}</td>
+                    <td>{{ property.features.area }} m²</td>
+                    <td>{{ property.features.bedroomCount }}</td>
+                    <td>{{ property.features.bathroomCount }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+        
+        <!-- Right Column - Booking Form -->
+        <div class="booking-column">
+          <section class="booking-card">
+            <h2>Book This Apartment</h2>
+            <div class="price-display">
+              <span class="amount">{{ apartment.price.currency }} {{ apartment.price.amount }}</span>
+              <span class="period">/ {{ apartment.price.period }}</span>
+            </div>
+            
+            <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
+              <div class="form-group">
+                <label for="checkIn">Check-in Date</label>
+                <input type="date" id="checkIn" formControlName="checkIn">
+                <div *ngIf="bookingSubmitted && bookingForm.get('checkIn')?.errors" class="error-message">
+                  Check-in date is required
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="checkOut">Check-out Date</label>
+                <input type="date" id="checkOut" formControlName="checkOut">
+                <div *ngIf="bookingSubmitted && bookingForm.get('checkOut')?.errors" class="error-message">
+                  Check-out date is required
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="guests">Number of Guests</label>
+                <input type="number" id="guests" formControlName="guests" min="1" [max]="apartment.features.maxOccupancy">
+                <div *ngIf="bookingSubmitted && bookingForm.get('guests')?.errors" class="error-message">
+                  Valid number of guests is required
+                </div>
+              </div>
+              
+              <div *ngIf="bookingError" class="error-message">
+                {{ bookingError }}
+              </div>
+              
+              <button type="submit" class="book-now-button">Book Now</button>
+            </form>
+            
+            <div class="login-prompt" *ngIf="!currentUser">
+              <p>Please <a [routerLink]="['/login']" [queryParams]="{returnUrl: router.url}">login</a> to book this apartment.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>

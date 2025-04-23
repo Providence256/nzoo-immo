@@ -1,0 +1,56 @@
+<!-- src/app/features/apartments/components/apartment-gallery/apartment-gallery.component.html -->
+<div class="gallery-container">
+    <!-- Regular Gallery View -->
+    <div class="image-grid">
+      <div class="main-image">
+        <img [src]="images[0]" alt="Main Image" (click)="toggleGallery()">
+      </div>
+      
+      <div class="thumbnail-grid">
+        <div class="thumbnail" *ngFor="let image of images.slice(1, 5); let i = index">
+          <img [src]="image" [alt]="'Thumbnail ' + (i + 1)" (click)="toggleGallery()">
+        </div>
+        
+        <div class="thumbnail view-all" *ngIf="images.length > 5" (click)="toggleGallery()">
+          <div class="overlay">
+            <span>View All Photos</span>
+          </div>
+          <img [src]="images[5]" alt="View All">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Full Gallery Modal -->
+    <div class="gallery-modal" *ngIf="showFullGallery">
+      <div class="modal-header">
+        <button class="close-button" (click)="toggleGallery()">×</button>
+      </div>
+      
+      <div class="modal-content">
+        <div class="main-slide">
+          <img [src]="images[currentImageIndex]" [alt]="'Image ' + (currentImageIndex + 1)">
+        </div>
+        
+        <div class="thumbnails">
+          <div class="thumbnail" 
+              *ngFor="let image of images; let i = index" 
+              [class.active]="i === currentImageIndex"
+              (click)="showImage(i)">
+            <img [src]="image" [alt]="'Thumbnail ' + (i + 1)">
+          </div>
+        </div>
+        
+        <div class="navigation">
+          <button class="nav-button prev" (click)="previousImage()">
+            <i class="icon-arrow-left"></i>
+          </button>
+          <div class="image-counter">
+            {{ currentImageIndex + 1 }} / {{ images.length }}
+          </div>
+          <button class="nav-button next" (click)="nextImage()">
+            <i class="icon-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

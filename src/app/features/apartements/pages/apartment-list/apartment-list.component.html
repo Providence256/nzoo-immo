@@ -1,0 +1,72 @@
+<!-- src/app/features/apartments/pages/apartment-list/apartment-list.component.html -->
+<div class="apartment-list-container">
+    <section class="filters-section">
+      <h2>Find Your Perfect Stay</h2>
+      
+      <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+        <div class="filter-grid">
+          <div class="filter-item">
+            <label for="location">Location</label>
+            <input id="location" formControlName="location" placeholder="Where are you going?" />
+          </div>
+          
+          <div class="filter-item">
+            <label for="checkIn">Check-in</label>
+            <input type="date" id="checkIn" formControlName="checkIn" />
+          </div>
+          
+          <div class="filter-item">
+            <label for="checkOut">Check-out</label>
+            <input type="date" id="checkOut" formControlName="checkOut" />
+          </div>
+          
+          <div class="filter-item">
+            <label for="guests">Guests</label>
+            <input type="number" id="guests" formControlName="guests" min="1" />
+          </div>
+          
+          <div class="filter-item">
+            <label for="minPrice">Min Price</label>
+            <input type="number" id="minPrice" formControlName="minPrice" min="0" />
+          </div>
+          
+          <div class="filter-item">
+            <label for="maxPrice">Max Price</label>
+            <input type="number" id="maxPrice" formControlName="maxPrice" min="0" />
+          </div>
+          
+          <div class="filter-button">
+            <button type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+    </section>
+    
+    <section class="apartments-section">
+      <div class="section-header">
+        <h2>Available Apartments</h2>
+        <div class="controls">
+          <button *ngIf="apartments.length" routerLink="/create" class="create-btn">List Your Property</button>
+        </div>
+      </div>
+      
+      <div *ngIf="loading" class="loading">
+        Loading apartments...
+      </div>
+      
+      <div *ngIf="error" class="error">
+        {{ error }}
+      </div>
+      
+      <div *ngIf="!loading && !error && apartments.length === 0" class="no-results">
+        No apartments found matching your criteria.
+      </div>
+      
+      <div class="apartment-grid" *ngIf="!loading && apartments.length > 0">
+        <app-apartment-card 
+          *ngFor="let apartment of apartments" 
+          [apartment]="apartment"
+        ></app-apartment-card>
+      </div>
+    </section>
+  </div>
