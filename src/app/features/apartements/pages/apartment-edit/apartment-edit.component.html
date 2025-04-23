@@ -1,0 +1,157 @@
+<!-- src/app/features/apartments/pages/apartment-edit/apartment-edit.component.html -->
+<div class="apartment-edit-container">
+    <div *ngIf="loading" class="loading">
+      Loading apartment details...
+    </div>
+    
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+    
+    <div *ngIf="!loading">
+      <h1>Edit Apartment Listing</h1>
+      
+      <form [formGroup]="apartmentForm" (ngSubmit)="onSubmit()">
+        <!-- Basic Information -->
+        <section class="form-section">
+          <h2>Basic Information</h2>
+          
+          <div class="form-group">
+            <label for="title">Apartment Title</label>
+            <input type="text" id="title" formControlName="title">
+            <div *ngIf="apartmentForm.get('title')?.invalid && apartmentForm.get('title')?.touched" class="error-message">
+              Please provide a valid title (5-100 characters).
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" rows="5"></textarea>
+            <div *ngIf="apartmentForm.get('description')?.invalid && apartmentForm.get('description')?.touched" class="error-message">
+              Please provide a valid description (minimum 20 characters).
+            </div>
+          </div>
+        </section>
+        
+        <!-- Location -->
+        <section class="form-section" formGroupName="location">
+          <h2>Location</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" formControlName="address">
+              <div *ngIf="apartmentForm.get('location.address')?.invalid && apartmentForm.get('location.address')?.touched" class="error-message">
+                Address is required.
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row three-columns">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" formControlName="city">
+              <div *ngIf="apartmentForm.get('location.city')?.invalid && apartmentForm.get('location.city')?.touched" class="error-message">
+                City is required.
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="country">Country</label>
+              <input type="text" id="country" formControlName="country">
+              <div *ngIf="apartmentForm.get('location.country')?.invalid && apartmentForm.get('location.country')?.touched" class="error-message">
+                Country is required.
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="zipCode">Zip/Postal Code</label>
+              <input type="text" id="zipCode" formControlName="zipCode">
+              <div *ngIf="apartmentForm.get('location.zipCode')?.invalid && apartmentForm.get('location.zipCode')?.touched" class="error-message">
+                Zip code is required.
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row two-columns">
+            <div class="form-group">
+              <label for="latitude">Latitude (Optional)</label>
+              <input type="number" id="latitude" formControlName="latitude">
+            </div>
+            
+            <div class="form-group">
+              <label for="longitude">Longitude (Optional)</label>
+              <input type="number" id="longitude" formControlName="longitude">
+            </div>
+          </div>
+        </section>
+        
+        <!-- Price -->
+        <section class="form-section" formGroupName="price">
+          <h2>Pricing</h2>
+          
+          <div class="form-row three-columns">
+            <div class="form-group">
+              <label for="amount">Price Amount</label>
+              <input type="number" id="amount" formControlName="amount" min="1">
+              <div *ngIf="apartmentForm.get('price.amount')?.invalid && apartmentForm.get('price.amount')?.touched" class="error-message">
+                Please provide a valid price amount.
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="currency">Currency</label>
+              <select id="currency" formControlName="currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+                <option value="AUD">AUD</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="period">Period</label>
+              <select id="period" formControlName="period">
+                <option value="night">Per Night</option>
+                <option value="week">Per Week</option>
+                <option value="month">Per Month</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Features -->
+        <section class="form-section" formGroupName="features">
+          <h2>Features</h2>
+          
+          <div class="form-row four-columns">
+            <div class="form-group">
+              <label for="bedroomCount">Bedrooms</label>
+              <input type="number" id="bedroomCount" formControlName="bedroomCount" min="1">
+              <div *ngIf="apartmentForm.get('features.bedroomCount')?.invalid && apartmentForm.get('features.bedroomCount')?.touched" class="error-message">
+                Please provide a valid number of bedrooms.
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="bathroomCount">Bathrooms</label>
+              <input type="number" id="bathroomCount" formControlName="bathroomCount" min="1">
+              <div *ngIf="apartmentForm.get('features.bathroomCount')?.invalid && apartmentForm.get('features.bathroomCount')?.touched" class="error-message">
+                Please provide a valid number of bathrooms.
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="maxOccupancy">Max Guests</label>
+              <input type="number" id="maxOccupancy" formControlName="maxOccupancy" min="1">
+              <div *ngIf="apartmentForm.get('features.maxOccupancy')?.invalid && apartmentForm.get('features.maxOccupancy')?.touched" class="error-message">
+                Please provide a valid number of maximum occupants.
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="area">Area (m²)</label>
+              <input type="number" id="area" formControlName="area" min="1">
+              <div *ngIf="apartmentForm.get('features.area')?.invalid && apartmentForm.get('features.area')?.touched" class="error-message">
+                Please provide a valid area size.

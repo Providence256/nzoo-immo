@@ -6,14 +6,14 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { ApartmentCreateComponent } from './pages/apartment-create/apartment-create.component';
-import { ApartmentEditComponent } from './pages/apartment-edit/apartment-edit.component';
 import { ApartmentFilterComponent } from './components/apartment-filter/apartment-filter.component';
 import { AuthGuard } from '../../core/authentication/auth.guard';
 import { ApartmentListComponent } from './pages/apartment-list/apartment-list.component';
 import { ApartmentCardComponent } from './components/apartment-card/apartment-card.component';
 import { ApartmentDetailComponent } from './pages/apartment-detail/apartment-detail.component';
 import { ApartmentGalleryComponent } from './components/apartment-gallery/apartment-gallery.component';
+import { ApartmentCreateComponent } from './pages/apartment-create/apartment-create.component';
+import { ApartmentEditComponent } from './pages/apartment-edit/apartment-edit.component';
 
 const routes: Routes = [
   { 
