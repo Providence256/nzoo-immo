@@ -1,42 +1,52 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ElementRef, Renderer2 } from '@angular/core';
 import { AdminLayoutComponent } from '../admin-layout.component';
 import { AdminSidebarService } from '../../../services/admin-sidebar.service';
 
 @Component({
   selector: 'app-admin-header',
   templateUrl: './admin-header.component.html',
-  styleUrl: './admin-header.component.scss'
+  styleUrls: ['./admin-header.component.scss']
 })
-export class AdminHeaderComponent {
+export class AdminHeaderComponent implements OnInit {
   dropdownOpen = false;
-  isMobileView = window.innerWidth <= 991;
-  activeItem! : number
+  isMobileView = false;
 
+  constructor(
+    private sidebarService: AdminSidebarService,
+    public appMain: AdminLayoutComponent,
+    private el: ElementRef,
+    private renderer: Renderer2
+  ) {
+    // Add event listener to close dropdown when clicking outside
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (!this.el.nativeElement.contains(e.target)) {
+        this.dropdownOpen = false;
+      }
+    });
+  }
 
+  ngOnInit() {
+    this.updateView();
+  }
 
-  constructor( private sidebarService: AdminSidebarService, public appMain: AdminLayoutComponent) {}
+  @HostListener('window:resize')
+  onResize() {
+    this.updateView();
+  }
 
-
-    @HostListener('window:resize', ['$event'])
-    onResize() {
-      this.updateView();
+  toggleDropdown(event?: Event) {
+    if (event) {
+      event.stopPropagation();
     }
-
-  toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
   private updateView() {
     this.isMobileView = window.innerWidth <= 991;
-    if (!this.isMobileView) {
-      
+    
+    // Close mobile menu when viewport becomes desktop
+    if (!this.isMobileView && this.appMain.menuMobileActive) {
+      this.appMain.menuMobileActive = false;
     }
   }
-
-  mobileMegaMenuItemClick(index:any){
-    this.appMain.megaMenuMobileClick = true;
-    this.activeItem = this.activeItem === index ? null : index;
-    
-  }
-
 }

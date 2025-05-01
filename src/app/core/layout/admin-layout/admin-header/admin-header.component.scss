@@ -1,0 +1,23 @@
+// Admin Header Styles
+.dropdown-menu {
+    animation: fadeInDown 0.3s ease-out;
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    header {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }

@@ -1,16 +1,35 @@
-<nav class="bg-gray-200 p-3 rounded mb-4">
-    <ul class="flex items-center space-x-2 list-none"> 
-      <ng-container *ngFor="let item of items; let last = last">
-        <li>
-          <a [routerLink]="item.routerLink" *ngIf="item.routerLink" class="text-blue-500 font-Jost">
-            {{ item.label }}
-          </a>
-          <ng-container *ngIf="!item.routerLink" >
-            <span class="font-Jost text-gray-400">{{ item.label }}</span>
-          </ng-container>
-        </li>
-        <li *ngIf="!last"><i class="pi pi-angle-right text-gray-400"></i></li>
-      </ng-container>
-    </ul>
-  </nav>
-  
+<nav class="mb-6">
+  <ol class="flex items-center flex-wrap space-x-2 text-sm">
+    <li class="flex items-center">
+      <a routerLink="/admin/dashboard" class="flex items-center text-slate-600 hover:text-amber-500 transition-colors">
+        <i class="pi pi-home mr-1"></i>
+        <span class="font-Jost">Home</span>
+      </a>
+    </li>
+    
+    <ng-container *ngFor="let item of items; let last = last">
+      <!-- Separator -->
+      <li class="flex items-center text-slate-400 mx-1">
+        <i class="pi pi-angle-right text-sm"></i>
+      </li>
+      
+      <!-- Breadcrumb Item -->
+      <li class="flex items-center">
+        <a 
+          *ngIf="item.routerLink && !last" 
+          [routerLink]="item.routerLink" 
+          class="font-Jost text-slate-600 hover:text-amber-500 transition-colors"
+        >
+          {{ item.label }}
+        </a>
+        <span 
+          *ngIf="!item.routerLink || last" 
+          class="font-Jost text-slate-400"
+          [class.text-amber-500]="last"
+        >
+          {{ item.label }}
+        </span>
+      </li>
+    </ng-container>
+  </ol>
+</nav>
