@@ -18,14 +18,14 @@ export class AuthGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authService.currentUser.pipe(
+    return this.authService.currentUser$.pipe(
       take(1),
       map(user => {
         const isLoggedIn = !!user;
         
         if (isLoggedIn) {
           // Check if route requires admin role
-          if (route.data['roles'] && route.data['roles'].indexOf(user.role) === -1) {
+          if (route.data['roles'] && route.data['roles'].indexOf(user) === -1) {
             // Role not authorized, redirect to home page
             this.router.navigate(['/']);
             return false;

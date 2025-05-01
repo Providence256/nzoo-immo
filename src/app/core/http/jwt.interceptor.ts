@@ -1,27 +1,40 @@
-// src/app/core/http/jwt.interceptor.ts
+// src/app/core/http/interceptors/auth.interceptor.ts
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { AuthService } from '../authentication/auth.service';
-import { environment } from '../../../environments/environment';
 
 @Injectable()
-export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+export class AuthInterceptor implements HttpInterceptor {
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Add auth header with jwt token if user is logged in and request is to the api url
-    const currentUser = this.authService.currentUserValue;
-    const isApiUrl = request.url.startsWith(environment.apiUrl);
-    
-    if (currentUser && currentUser.token && isApiUrl) {
+    // Get the auth token from the service
+    const token = this.authService.getToken();
+
+    // Clone the request and add the token if it exists
+    if (token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${currentUser.token}`
+          Authorization: `Bearer ${token}`
         }
       });
     }
 
-    return next.handle(request);
+    // Pass the cloned request to the next handler
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Handle 401 Unauthorized or 403 Forbidden responses
+        if (error.status === 401 || error.status === 403) {
+          this.authService.logout();
+          this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: this.router.url }
+          });
+        }
+        return throwError(() => error);
+      })
+    );
   }
 }

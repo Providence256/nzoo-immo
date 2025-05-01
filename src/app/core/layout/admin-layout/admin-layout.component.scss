@@ -1,0 +1,13 @@
+/* src/app/core/layouts/admin-layout/admin-layout.component.scss */
+:host ::ng-deep {
+    .p-avatar {
+      background-color: var(--primary-color);
+      color: #ffffff;
+    }
+    
+    a.router-link-active {
+      i {
+        color: var(--primary-color) !important;
+      }
+    }
+  }

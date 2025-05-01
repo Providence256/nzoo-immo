@@ -1,0 +1,167 @@
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Title with Filter buttons -->
+    <div class="flex flex-col items-center justify-center mb-12 space-y-6">
+      <h2 class="text-3xl sm:text-4xl font-bold font-Jost text-center text-gray-800">
+        Découvrez Nos Propriétés
+      </h2>
+      
+      <!-- Filter buttons -->
+      <div class="flex flex-wrap justify-center gap-4">
+        <button 
+          *ngFor="let category of categories" 
+          (click)="filterProperties(category)" 
+          [ngClass]="{
+            'bg-blue-600 text-white': selectedCategory === category,
+            'border-blue-600 text-blue-600': selectedCategory !== category
+          }"
+          class="px-5 py-2 rounded-full border font-Jost hover:bg-blue-600 hover:text-white transition-all duration-300">
+          {{ category }}
+        </button>
+      </div>
+      
+    </div>
+
+    <!-- Properties Grid -->
+    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4">
+      <div *ngFor="let property of filteredProperties"
+           [@fadeInUp]
+           [routerLink]="['/detail-annonce', property.id]"
+           class="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer">
+        
+        <!-- Image + Favorite -->
+        <div class="relative w-full h-56 overflow-hidden group">
+          <img [src]="property.image" [alt]="property.title"
+               class="w-full h-full object-cover transform group-hover:scale-105 transition-all duration-300">
+        
+          <button class="absolute top-3 right-3 w-10 h-10 bg-white/70 hover:bg-white rounded-full shadow backdrop-blur-md flex items-center justify-center transition-all duration-300">
+            <i class="pi pi-heart text-red-500 text-xl"></i>
+          </button>
+        </div>
+        
+
+        <!-- Content -->
+        <div class="p-5 flex flex-col flex-grow justify-between">
+          <div>
+            <h3 class="text-lg font-semibold font-Jost text-gray-900 mb-2">{{ property.title }}</h3>
+            <p class="text-gray-600 text-sm font-Jost line-clamp-2">{{ property.description }}</p>
+          </div>
+
+          <div class="mt-4 space-y-2">
+            <div class="flex items-center text-gray-500 text-xs gap-4">
+              <div class="flex items-center gap-1">
+                <span class="material-icons text-blue-500 text-lg">group</span>
+                <span>{{ property.visiteurs }}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="material-icons text-blue-500 text-lg">bedroom_parent</span>
+                <span>{{ property.chambres }}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="material-icons text-blue-500 text-lg">bed</span>
+                <span>{{ property.lits }}</span>
+              </div>
+            </div>
+            <div class="text-gold-500 text-sm font-bold font-Jost mt-2">
+              {{ property.price }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="flex justify-center mt-12">
+      <button 
+        *ngIf="propertiesToShow < properties.length"
+        (click)="loadMore()"
+        class="px-8 py-3 rounded-full bg-blue-600 text-white font-Jost font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg">
+        Charger plus
+      </button>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button 
+      *ngIf="showScrollTop"
+      (click)="scrollToTop()"
+      class="fixed bottom-24 right-5 bg-blue-600/80 hover:bg-blue-700 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 z-50 backdrop-blur-md">
+      <i class="pi pi-arrow-up text-xl"></i>
+    </button>
+
+  </div>
+
+  <section class="py-10 bg-gray-50 text-gray-800">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl sm:text-3xl font-bold text-center mb-16 font-Jost" data-aos="fade-up">
+        Pourquoi nous choisir ?
+      </h2>
+  
+      <!-- Grille responsive -->
+      <div class="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 gap-8">
+        
+        <!-- Sécurité -->
+        <div 
+          class="flex flex-col items-center bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 text-center transform hover:scale-105 hover:ring-4 hover:ring-blue-300"
+          data-aos="zoom-in"
+        >
+          <div class="bg-blue-100 text-blue-600 p-4 rounded-full mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 11c0-1.105-.895-2-2-2s-2 .895-2 2v1c0 1.105.895 2 2 2s2-.895 2-2v-1zm0 4.5c0 .828-.672 1.5-1.5 1.5S9 16.328 9 15.5 9.672 14 10.5 14s1.5.672 1.5 1.5zM12 17v2"></path>
+              <path d="M20 11a8 8 0 10-16 0c0 5.25 8 10 8 10s8-4.75 8-10z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-Jost font-semibold mb-2">Sécurité garantie</h3>
+          <p class="text-sm font-Jost text-gray-600">Toutes nos annonces sont vérifiées pour garantir votre tranquillité.</p>
+        </div>
+  
+        <!-- Rapidité -->
+        <div 
+          class="flex flex-col items-center bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 text-center transform hover:scale-105 hover:ring-4 hover:ring-blue-300"
+          data-aos="zoom-in" data-aos-delay="100"
+        >
+          <div class="bg-blue-100 text-blue-600 p-4 rounded-full mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold font-Jost mb-2">Rapidité assurée</h3>
+          <p class="text-sm font-Jost text-gray-600">Trouvez un logement en quelques clics grâce à notre interface fluide.</p>
+        </div>
+  
+        <!-- Support -->
+        <div 
+          class="flex flex-col items-center bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 text-center transform hover:scale-105 hover:ring-4 hover:ring-blue-300"
+          data-aos="zoom-in" data-aos-delay="200"
+        >
+          <div class="bg-blue-100 text-blue-600 p-4 rounded-full mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 10c0-3.314-2.686-6-6-6S6 6.686 6 10v1H5a2 2 0 000 4h1v1c0 3.314 2.686 6 6 6s6-2.686 6-6v-6z"/>
+              <circle cx="12" cy="18" r="1"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-Jost font-semibold mb-2">Support 24/7</h3>
+          <p class="text-sm font-Jost text-gray-600">Une équipe à votre écoute, disponible à toute heure.</p>
+        </div>
+  
+        <!-- Satisfaction -->
+        <div 
+          class="flex flex-col items-center bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 text-center transform hover:scale-105 hover:ring-4 hover:ring-blue-300"
+          data-aos="zoom-in" data-aos-delay="300"
+        >
+          <div class="bg-blue-100 text-blue-600 p-4 rounded-full mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-Jost font-semibold mb-2">Satisfaction garantie</h3>
+          <p class="text-sm font-Jost text-gray-600">Plus de 95% de clients satisfaits selon nos enquêtes récentes.</p>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+
+ 
+  

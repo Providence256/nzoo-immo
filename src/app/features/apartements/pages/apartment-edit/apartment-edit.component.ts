@@ -39,9 +39,9 @@ export class ApartmentEditComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.apartmentForm = this.createForm();
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
-    });
+    // this.authService.currentUser$.subscribe(user => {
+    //   this.currentUser = user;
+    // });
   }
 
   ngOnInit(): void {

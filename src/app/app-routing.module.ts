@@ -1,38 +1,46 @@
 // src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/authentication/auth.guard';
+import { ClientLayoutComponent } from './core/layout/client-layout/client-layout.component';
+import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
+import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
+
+// Import your auth guard for admin routes
+// import { AdminGuard } from './core/authentication/guards/admin.guard';
 
 const routes: Routes = [
+  // Client routes
   {
     path: '',
-    loadChildren: () => import('./features/apartements/apartements.module').then(m => m.ApartmentsModule)
+    component: ClientLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      {
+        path: 'home',
+        loadChildren :() => import('./features/home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'apartements',
+        loadChildren: () => import('./features/apartements/apartements.module').then(m => m.ApartmentsModule)
+      }
+      
+    ]
   },
-  {
-    path: 'booking',
-    loadChildren: () => import('./features/booking/booking.module').then(m => m.BookingModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'payments',
-    loadChildren: () => import('./features/payments/payments.module').then(m => m.PaymentsModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'compare',
-    loadChildren: () => import('./features/price-comparison/price-comparison.module').then(m => m.PriceComparisonModule)
-  },
-  {
-    path: 'profile',
-    loadChildren: () => import('./features/user-profile/user-profile.module').then(m => m.UserProfileModule),
-    canActivate: [AuthGuard]
-  },
+  
+  // Admin routes
   {
     path: 'admin',
-    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AuthGuard]
+    component: AdminLayoutComponent,
+    // Uncomment when you have the guard implemented
+    // canActivate: [AdminGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+     
+    ]
   },
-  { path: '**', redirectTo: '' }
+  
+  // Wildcard route for 404
+  { path: '**', redirectTo: '/not-found' }
 ];
 
 @NgModule({

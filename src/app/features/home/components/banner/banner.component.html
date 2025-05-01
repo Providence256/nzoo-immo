@@ -1,0 +1,61 @@
+<!-- Hero Banner Component Template -->
+<section class="relative w-full h-screen min-h-[800px] overflow-hidden">
+  
+  <!-- Video Background with Parallax Effect -->
+  <div class="absolute inset-0 overflow-hidden" #videoContainer>
+    <video autoplay muted loop playsinline class="w-full h-full object-cover scale-[1.05] transform-gpu will-change-transform"
+           [style.transform]="'scale(' + (1.05 + parallaxScale * 0.02) + ')'">
+      <source src="/videos/home_video.mp4" type="video/mp4" />
+    </video>
+    
+    <!-- Gradient Overlay with Noise Texture -->
+    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/95 via-gray-900/50 to-transparent"></div>
+    <div class="absolute inset-0 bg-[url('/images/noise-texture.png')] opacity-10 mix-blend-overlay"></div>
+  </div>
+  
+  <!-- Hero Content with Staggered Animations -->
+  <div class="relative z-10 flex flex-col items-center justify-center text-center h-full px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-7xl mx-auto space-y-8 sm:space-y-10">
+      <!-- Animated Headline -->
+      <div class="overflow-hidden">
+        <h1 @fadeInUp class="text-white font-Lobster text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold mb-4 leading-[0.9] tracking-tight drop-shadow-lg">
+          <span class="inline-block">Bienvenue chez</span>
+          <span class="block text-[#FFD166] mt-4">Nzoo.Immo</span>
+        </h1>
+      </div>
+
+      <!-- Animated Subtitle -->
+      <div class="overflow-hidden">
+        <p @fadeInUp class="text-white/90 font-Jost text-xl sm:text-2xl md:text-3xl max-w-4xl mx-auto leading-relaxed tracking-wide">
+          Trouvez votre <span class="text-[#FFD166] font-medium">résidence idéale</span> parmi nos propriétés exclusives, où l'innovation architecturale rencontre le luxe contemporain.
+        </p>
+      </div>
+
+      <!-- Animated Buttons -->
+      <div @fadeInUp class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#explore" 
+           class="relative px-10 py-5 bg-[#FFD166] text-gray-900 font-Jost font-semibold rounded-full hover:bg-[#FFDC83] transition-all duration-300 text-lg sm:text-xl shadow-lg hover:shadow-xl overflow-hidden group">
+          <span class="relative z-10">Explorer les propriétés</span>
+          <span class="absolute inset-0 bg-gradient-to-r from-[#FFD166] to-[#FFDC83] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+         
+        </a>
+        
+        <a href="#contact" 
+           class="relative px-10 py-5 bg-white/10 text-white font-Jost font-semibold rounded-full hover:bg-white/20 transition-all duration-300 text-lg sm:text-xl shadow-lg hover:shadow-xl overflow-hidden group backdrop-blur-md">
+          <span class="relative z-10">Contact expert</span>
+          <span class="absolute inset-0 bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+          
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div @fadeInUp class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
+    <button (click)="scrollToContent()" class="text-white hover:text-[#FFD166] transition-colors animate-bounce-slow">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </button>
+  </div>
+</section>

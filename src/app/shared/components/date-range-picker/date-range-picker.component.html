@@ -1,0 +1,71 @@
+<div class="date-range-wrapper">
+  <!-- Date Range Selector UI -->
+  <div class="inputs-container">
+    <div class="input" 
+         [class.active]="activeSelector === 'check-in'"
+         (click)="toggleDropdown('check-in')">
+      <div class="label">Check-in</div>
+      <div class="value">{{ selectedStartDate ? formatDisplayDate(selectedStartDate) : 'Add date' }}</div>
+    </div>
+    <div class="separator"></div>
+    <div class="input" 
+         [class.active]="activeSelector === 'check-out'"
+         (click)="toggleDropdown('check-out')">
+      <div class="label">Check-out</div>
+      <div class="value">{{ selectedEndDate ? formatDisplayDate(selectedEndDate) : 'Add date' }}</div>
+    </div>
+    <button *ngIf="selectedStartDate || selectedEndDate" 
+            class="clear-btn" 
+            (click)="clearSelection()">
+      <span>×</span>
+    </button>
+  </div>
+
+  <!-- Dropdown Calendar -->
+  <div class="dropdown" *ngIf="isDropdownOpen">
+    <div class="dropdown-header">
+      <button class="nav-btn" (click)="previousMonth()">
+        <span>←</span>
+      </button>
+      <div class="month-labels">
+        <span *ngFor="let month of displayedMonths">{{ formatMonth(month) | uppercase }}</span>
+      </div>
+      <button class="nav-btn" (click)="nextMonth()">
+        <span>→</span>
+      </button>
+    </div>
+    
+    <div class="calendars-container">
+      <div class="calendar" *ngFor="let month of displayedMonths">
+        <div class="week-days">
+          <div class="day-name" *ngFor="let day of weekDays">{{ day }}</div>
+        </div>
+        <div class="month-days">
+          <ng-container *ngFor="let day of daysInMonth(month)">
+            <div *ngIf="!day" class="day-cell empty"></div>
+            <div *ngIf="day" class="day-cell">
+              <button
+                class="day-button"
+                [class.today]="isToday(day)"
+                [class.start-date]="isStartDate(day)"
+                [class.end-date]="isEndDate(day)"
+                [class.in-range]="isInRange(day)"
+                [class.selected]="isSelected(day)"
+                [disabled]="isDisabled(day)"
+                (click)="onDateClick(day)"
+                (mouseenter)="onDateHover(day)"
+                (mouseleave)="onDateHover(null)">
+                {{ formatDay(day) }}
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    
+    <div class="dropdown-footer" *ngIf="selectedStartDate && selectedEndDate">
+      <div class="nights-info">{{ getDatesCount() }} nights</div>
+      <button class="close-btn" (click)="isDropdownOpen = false">Close</button>
+    </div>
+  </div>
+</div>

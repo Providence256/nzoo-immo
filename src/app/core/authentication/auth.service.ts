@@ -1,94 +1,104 @@
-// src/app/core/authentication/auth.service.ts
+// src/app/core/authentication/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { User } from '../models/user.model';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
+  token?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser: Observable<User | null>;
+  public currentUser$: Observable<User | null>;
+  
   private apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('currentUser');
-    this.currentUserSubject = new BehaviorSubject<User | null>(storedUser ? JSON.parse(storedUser) : null);
-    this.currentUser = this.currentUserSubject.asObservable();
+  constructor(private http: HttpClient, private router: Router) {
+    this.currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
+    this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
-  public get currentUserValue(): User | null {
+  private getUserFromStorage(): User | null {
+    const userData = localStorage.getItem('currentUser');
+    return userData ? JSON.parse(userData) : null;
+  }
+
+  public getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
+  public isLoggedIn(): boolean {
+    return !!this.currentUserSubject.value;
+  }
+
+  public isAdmin(): boolean {
+    const user = this.currentUserSubject.value;
+    return user?.roles.includes('admin') || false;
+  }
+
   login(email: string, password: string): Observable<User> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, password })
+    return this.http.post<User>(`${this.apiUrl}/login`, { email, password })
       .pipe(
-        map(response => {
-          // Store user details and jwt token in local storage
-          const user = response.user;
-          user.token = response.token;
+        tap(user => {
+          // Store user details and token in local storage
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
-          return user;
         })
       );
   }
 
-  register(user: User): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
-  logout() {
-    // Remove user from local storage and set current user to null
+  logout(): void {
+    // Remove user from local storage
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.router.navigate(['/auth/login']);
   }
 
-  // Social login methods
+  // Method to get user token
+  getToken(): string | undefined {
+    return this.currentUserSubject.value?.token;
+  }
+
+  // Method to check token expiration (implement JWT decode logic if needed)
+  isTokenExpired(): boolean {
+    // Implement token expiration check here if using JWT
+    return false;
+  }
+
+  // Social authentication methods
   loginWithGoogle(): Observable<User> {
-    return this.http.get<any>(`${this.apiUrl}/google`)
-      .pipe(
-        map(response => {
-          const user = response.user;
-          user.token = response.token;
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
-        })
-      );
+    // This would typically redirect to Google OAuth
+    // For demo purposes, we'll simulate it
+    return this.http.get<User>(`${this.apiUrl}/google-login`);
   }
 
   loginWithFacebook(): Observable<User> {
-    return this.http.get<any>(`${this.apiUrl}/facebook`)
-      .pipe(
-        map(response => {
-          const user = response.user;
-          user.token = response.token;
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
-        })
-      );
+    // This would typically redirect to Facebook OAuth
+    // For demo purposes, we'll simulate it
+    return this.http.get<User>(`${this.apiUrl}/facebook-login`);
   }
 
-  // Verify token validity
-  verifyToken(): Observable<boolean> {
-    if (!this.currentUserValue || !this.currentUserValue.token) {
-      return of(false);
-    }
-    
-    return this.http.post<boolean>(`${this.apiUrl}/verify-token`, {})
-      .pipe(
-        catchError(() => of(false)),
-        tap(isValid => {
-          if (!isValid) {
-            this.logout();
-          }
-        })
-      );
+  // Password recovery
+  requestPasswordReset(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
   }
 }

@@ -1,0 +1,20 @@
+/* Add to your global styles */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite;
+}
+
+/* For the noise texture */
+.bg-noise {
+  background-image: url('/images/noise-texture.png');
+  background-size: 200px 200px;
+  opacity: 0.05;
+}

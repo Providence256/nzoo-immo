@@ -1,176 +1,333 @@
-<!-- src/app/features/apartments/pages/apartment-detail/apartment-detail.component.html -->
-<div class="apartment-detail-container">
-    <div *ngIf="loading" class="loading">
-      Loading apartment details...
-    </div>
-    
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
-    
-    <div *ngIf="!loading && !error" class="apartment-content">
-      <!-- Apartment Header -->
-      <div class="apartment-header">
-        <div class="title-section">
-          <h1>{{ apartment.title }}</h1>
-          <div class="location">
-            <i class="icon-location"></i>
-            <span>{{ apartment.location.address }}, {{ apartment.location.city }}, {{ apartment.location.country }}</span>
+<section class=" bg-gray-50">
+
+<div class="w-full max-w-7xl mx-auto px-4 py-8 md:px-6">
+  <!-- Loading & Error States -->
+  <ng-container *ngIf="loading">
+      <div class="flex justify-center items-center py-16">
+        <div class="animate-pulse flex flex-col items-center">
+          <svg class="w-12 h-12 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <p class="mt-4 text-lg text-gray-600">Loading apartment details...</p>
+        </div>
+      </div>
+    </ng-container>
+  
+    <ng-container *ngIf="error">
+      <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                 fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-red-700">{{ error }}</p>
           </div>
         </div>
-        
-        <div class="actions">
-          <button *ngIf="isOwner" [routerLink]="['edit']" class="edit-button">Edit Listing</button>
+      </div>
+    </ng-container>
+  
+  <!-- Apartment Content -->
+  <div *ngIf="!loading && !error" class="space-y-8">
+    <!-- Apartment Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start border-b border-gray-200 pb-6">
+      <div class="space-y-2">
+        <h1 class="text-3xl font-bold text-gray-900">{{ apartment!.title }}</h1>
+        <div class="flex items-center text-gray-600">
+          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>{{ apartment!.location.address }}, {{ apartment!.location.city }}, {{ apartment!.location.country }}</span>
+    
         </div>
       </div>
       
-      <!-- Image Gallery -->
-      <app-apartment-gallery [images]="apartment.media.imageUrls"></app-apartment-gallery>
-      
-      <!-- Main Content Grid -->
-      <div class="content-grid">
-        <!-- Left Column - Apartment Details -->
-        <div class="details-column">
-          <!-- Features Section -->
-          <section class="features-section">
-            <h2>Features</h2>
-            <div class="features-grid">
-              <div class="feature">
-                <i class="icon-bedroom"></i>
-                <div>
-                  <h3>{{ apartment.features.bedroomCount }} Bedroom<span *ngIf="apartment.features.bedroomCount > 1">s</span></h3>
-                  <p>Comfortable sleeping areas</p>
-                </div>
-              </div>
-              
-              <div class="feature">
-                <i class="icon-bathroom"></i>
-                <div>
-                  <h3>{{ apartment.features.bathroomCount }} Bathroom<span *ngIf="apartment.features.bathroomCount > 1">s</span></h3>
-                  <p>With shower and amenities</p>
-                </div>
-              </div>
-              
-              <div class="feature">
-                <i class="icon-occupancy"></i>
-                <div>
-                  <h3>{{ apartment.features.maxOccupancy }} Guest<span *ngIf="apartment.features.maxOccupancy > 1">s</span></h3>
-                  <p>Maximum occupancy</p>
-                </div>
-              </div>
-              
-              <div class="feature">
-                <i class="icon-area"></i>
-                <div>
-                  <h3>{{ apartment.features.area }} m²</h3>
-                  <p>Total living area</p>
-                </div>
-              </div>
-            </div>
-          </section>
-          
-          <!-- Description Section -->
-          <section class="description-section">
-            <h2>Description</h2>
-            <p>{{ apartment.description }}</p>
-          </section>
-          
-          <!-- Amenities Section -->
-          <section class="amenities-section">
-            <h2>Amenities</h2>
-            <div class="amenities-grid">
-              <div class="amenity" *ngFor="let amenity of apartment.features.amenities">
-                <i class="icon-{{ amenity | lowercase }}"></i>
-                <span>{{ amenity }}</span>
-              </div>
-            </div>
-          </section>
-          
-          <!-- Price Comparison Section -->
-          <section class="price-comparison" *ngIf="comparablePrices.length > 0">
-            <h2>Compare Price</h2>
-            <div class="comparison-table">
-              <div class="loading-overlay" *ngIf="loadingComparisons">Loading comparisons...</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Property</th>
-                    <th>Price</th>
-                    <th>Size</th>
-                    <th>Bedrooms</th>
-                    <th>Bathrooms</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Current Apartment -->
-                  <tr class="current-property">
-                    <td>{{ apartment.title }} (Current)</td>
-                    <td>{{ apartment.price.currency }} {{ apartment.price.amount }} / {{ apartment.price.period }}</td>
-                    <td>{{ apartment.features.area }} m²</td>
-                    <td>{{ apartment.features.bedroomCount }}</td>
-                    <td>{{ apartment.features.bathroomCount }}</td>
-                  </tr>
-                  
-                  <!-- Comparable Properties -->
-                  <tr *ngFor="let property of comparablePrices">
-                    <td>{{ property.title }}</td>
-                    <td>{{ property.price.currency }} {{ property.price.amount }} / {{ property.price.period }}</td>
-                    <td>{{ property.features.area }} m²</td>
-                    <td>{{ property.features.bedroomCount }}</td>
-                    <td>{{ property.features.bathroomCount }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+      <div class="mt-4 md:mt-0">
+        <button *ngIf="isOwner" [routerLink]="['edit']" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition">
+          <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Edit Listing
+        </button>
+      </div>
+    </div>
+    
+    <!-- Image Gallery Carousel -->
+    <div class="relative rounded-xl overflow-hidden shadow-lg">
+      <!-- Main Image Display -->
+      <div class="relative h-96 bg-gray-100">
+        <img [src]="currentImage" class="w-full h-full object-cover cursor-pointer" (click)="openPhotoModal()" alt="Apartment photo">
+        
+        <!-- Navigation Arrows -->
+        <button (click)="prevImage(); $event.stopPropagation();" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 focus:outline-none">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button (click)="nextImage(); $event.stopPropagation();" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 focus:outline-none">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        
+        <!-- Image Counter & View Full -->
+        <div class="absolute bottom-4 left-4">
+          <button (click)="openPhotoModal(); $event.stopPropagation();" class="bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm flex items-center hover:bg-opacity-70">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+            </svg>
+            View Photos
+          </button>
         </div>
         
-        <!-- Right Column - Booking Form -->
-        <div class="booking-column">
-          <section class="booking-card">
-            <h2>Book This Apartment</h2>
-            <div class="price-display">
-              <span class="amount">{{ apartment.price.currency }} {{ apartment.price.amount }}</span>
-              <span class="period">/ {{ apartment.price.period }}</span>
+        <div class="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+          {{ currentImageIndex + 1 }} / {{ apartment!.media.imageUrls.length }}
+        </div>
+      </div>
+      
+      <!-- Thumbnail Navigation -->
+      <div class="flex overflow-x-auto py-4 px-2 bg-gray-50 scrollbar-hide">
+        <div *ngFor="let image of apartment!.media.imageUrls; let i = index" 
+             class="flex-shrink-0 mx-1 cursor-pointer transition-all duration-200"
+             [ngClass]="{'border-2 border-indigo-600': i === currentImageIndex, 'border-2 border-transparent': i !== currentImageIndex}"
+             (click)="selectImage(i)">
+          <img [src]="image" class="h-16 w-24 object-cover rounded" [alt]="'Apartment photo ' + (i + 1)">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Photo Modal -->
+    <div *ngIf="isPhotoModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90" (click)="closePhotoModal()">
+      <!-- Modal Container -->
+      <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
+        <!-- Close Button -->
+        <button class="absolute top-4 right-4 text-white p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 z-10">
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        <!-- Image Container -->
+        <div class="relative max-w-5xl w-full h-full flex items-center justify-center" (click)="$event.stopPropagation()">
+          <!-- Main Image -->
+          <img [src]="apartment!.media.imageUrls[modalImageIndex]" class="max-h-full max-w-full object-contain" alt="Full size apartment photo">
+          
+          <!-- Navigation Arrows -->
+          <button (click)="prevModalImage($event)" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 focus:outline-none">
+            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button (click)="nextModalImage($event)" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 focus:outline-none">
+            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Thumbnails at Bottom -->
+        <div class="absolute bottom-6 left-0 right-0">
+          <div class="flex justify-center items-center">
+            <div class="bg-black bg-opacity-75 rounded-full px-4 py-2 text-white text-sm">
+              {{ modalImageIndex + 1 }} / {{ apartment!.media.imageUrls.length }}
+            </div>
+          </div>
+          
+          <div class="flex justify-center mt-4 overflow-x-auto p-2 max-w-3xl mx-auto">
+            <div *ngFor="let image of apartment!.media.imageUrls; let i = index" 
+                  class="flex-shrink-0 mx-1 cursor-pointer transition-all duration-200"
+                  [ngClass]="{'border-2 border-white': i === modalImageIndex, 'border-2 border-transparent': i !== modalImageIndex}"
+                  (click)="selectModalImage(i, $event)">
+              <img [src]="image" class="h-16 w-24 object-cover rounded-sm opacity-80 hover:opacity-100" 
+                  [ngClass]="{'opacity-100': i === modalImageIndex}" 
+                  [alt]="'Apartment photo ' + (i + 1)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Apartment Details (spans 2 columns on large screens) -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Features Section -->
+        <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Features</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.bedroomCount }} Bedroom<span *ngIf="apartment!.features.bedroomCount > 1">s</span></h3>
+                <p class="text-sm text-gray-500">Comfortable spaces</p>
+              </div>
             </div>
             
-            <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
-              <div class="form-group">
-                <label for="checkIn">Check-in Date</label>
-                <input type="date" id="checkIn" formControlName="checkIn">
-                <div *ngIf="bookingSubmitted && bookingForm.get('checkIn')?.errors" class="error-message">
-                  Check-in date is required
-                </div>
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </div>
-              
-              <div class="form-group">
-                <label for="checkOut">Check-out Date</label>
-                <input type="date" id="checkOut" formControlName="checkOut">
-                <div *ngIf="bookingSubmitted && bookingForm.get('checkOut')?.errors" class="error-message">
-                  Check-out date is required
-                </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.bathroomCount }} Bathroom<span *ngIf="apartment!.features.bathroomCount > 1">s</span></h3>
+                <p class="text-sm text-gray-500">With amenities</p>
               </div>
-              
-              <div class="form-group">
-                <label for="guests">Number of Guests</label>
-                <input type="number" id="guests" formControlName="guests" min="1" [max]="apartment.features.maxOccupancy">
-                <div *ngIf="bookingSubmitted && bookingForm.get('guests')?.errors" class="error-message">
-                  Valid number of guests is required
-                </div>
-              </div>
-              
-              <div *ngIf="bookingError" class="error-message">
-                {{ bookingError }}
-              </div>
-              
-              <button type="submit" class="book-now-button">Book Now</button>
-            </form>
+            </div>
             
-            <div class="login-prompt" *ngIf="!currentUser">
-              <p>Please <a [routerLink]="['/login']" [queryParams]="{returnUrl: router.url}">login</a> to book this apartment.</p>
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.maxOccupancy }} Guest<span *ngIf="apartment!.features.maxOccupancy > 1">s</span></h3>
+                <p class="text-sm text-gray-500">Maximum occupancy</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.area }} m²</h3>
+                <p class="text-sm text-gray-500">Living space</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Description Section -->
+        <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Description</h2>
+          <p class="text-gray-700 whitespace-pre-line">{{ apartment!.description }}</p>
+        </section>
+        
+        <!-- Amenities Section -->
+        <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Amenities</h2>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div *ngFor="let amenity of apartment!.features.amenities" class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-gray-700">{{ amenity }}</span>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Price Comparison Section -->
+        <section *ngIf="comparablePrices.length > 0" class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 overflow-x-auto">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Compare Price</h2>
+          <div class="relative">
+            <div *ngIf="loadingComparisons" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center">
+              <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bedrooms</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bathrooms</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <!-- Current Apartment -->
+                <tr class="bg-indigo-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">{{ apartment!.title }} (Current)</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ apartment!.price.currency }} {{ apartment!.price.amount }} / {{ apartment!.price.period }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ apartment!.features.area }} m²</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ apartment!.features.bedroomCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ apartment!.features.bathroomCount }}</td>
+                </tr>
+                
+                <!-- Comparable Properties -->
+                <tr *ngFor="let property of comparablePrices" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ property.title }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ property.price.currency }} {{ property.price.amount }} / {{ property.price.period }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ property.features.area }} m²</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ property.features.bedroomCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ property.features.bathroomCount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+      
+      <!-- Right Column - Booking Form -->
+      <div class="lg:col-span-1">
+        <div class="sticky top-6">
+          <section class="bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-indigo-600 p-6 text-center">
+              <h2 class="text-xl font-bold text-white">Book This Apartment</h2>
+              <div class="mt-2 text-white">
+                <span class="text-3xl font-bold">{{ apartment!.price.currency }} {{ apartment!.price.amount }}</span>
+                <span class="text-lg">/ {{ apartment!.price.period }}</span>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()" class="space-y-4">
+                <div class="mb-4" >
+                  <label for="checkIn" class="block text-sm font-medium text-gray-700 mb-1">Select Dates</label>
+                  <app-date-range-picker 
+                      (dateRangeSelected)="onDateRangeSelect($event)"
+                  >
+                 </app-date-range-picker>
+                
+                </div>
+            
+                
+                
+                
+                <div class="space-y-2">
+                  <label for="guests" class="block text-sm font-medium text-gray-700">Number of Guests</label>
+                  <input type="number" id="guests" formControlName="guests" min="1" [max]="apartment!.features.maxOccupancy" 
+                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  <div *ngIf="bookingSubmitted && bookingForm.get('guests')?.errors" class="text-red-600 text-xs mt-1">
+                    Valid number of guests is required
+                  </div>
+                </div>
+                
+                <div *ngIf="bookingError" class="bg-red-50 border-l-4 border-red-500 p-4 text-sm text-red-700">
+                  {{ bookingError }}
+                </div>
+                
+                <button type="submit" [disabled]="!currentUser" 
+                        class="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                  Book Now
+                </button>
+              </form>
+              
+              <div class="login-prompt mt-4 text-center" *ngIf="!currentUser">
+                <p class="text-sm text-gray-600">Please <a [routerLink]="['/login']" class="text-indigo-600 hover:text-indigo-800 font-medium">login</a> to book this apartment.</p>
+              </div>
             </div>
           </section>
         </div>
       </div>
     </div>
   </div>
+</div>
+</section>

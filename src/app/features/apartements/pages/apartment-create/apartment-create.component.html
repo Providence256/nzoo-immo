@@ -157,7 +157,7 @@
         <div class="form-group">
           <label>Amenities</label>
           <div class="amenities-grid">
-            <div class="amenity-item" *ngFor="let amenity of amenities" 
+            <div class="amenity-item" *ngFor="let amenity in amenities" 
                 [class.selected]="isAmenitySelected(amenity)"
                 (click)="toggleAmenity(amenity)">
               <span class="amenity-icon"><i class="icon-{{ amenity.toLowerCase().replace(' ', '-') }}"></i></span>

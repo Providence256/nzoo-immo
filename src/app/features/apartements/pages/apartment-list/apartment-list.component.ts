@@ -54,7 +54,7 @@ export class ApartmentListComponent implements OnInit {
     const activeFilters = Object.keys(filters)
       .filter(key => filters[key] !== '' && filters[key] !== null)
       .reduce((obj, key) => {
-        obj[key] = filters[key];
+        // obj[key] = filters[key];
         return obj;
       }, {});
       
