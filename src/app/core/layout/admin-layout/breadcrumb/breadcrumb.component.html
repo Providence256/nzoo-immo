@@ -1,11 +1,5 @@
 <nav class="mb-6">
   <ol class="flex items-center flex-wrap space-x-2 text-sm">
-    <li class="flex items-center">
-      <a routerLink="/admin/dashboard" class="flex items-center text-slate-600 hover:text-amber-500 transition-colors">
-        <i class="pi pi-home mr-1"></i>
-        <span class="font-Jost">Home</span>
-      </a>
-    </li>
     
     <ng-container *ngFor="let item of items; let last = last">
       <!-- Separator -->
@@ -18,14 +12,16 @@
         <a 
           *ngIf="item.routerLink && !last" 
           [routerLink]="item.routerLink" 
-          class="font-Jost text-slate-600 hover:text-amber-500 transition-colors"
+          class="font-Jost text-indigo-600 hover:text-teal-600 transition-colors"
         >
           {{ item.label }}
         </a>
         <span 
           *ngIf="!item.routerLink || last" 
-          class="font-Jost text-slate-400"
-          [class.text-amber-500]="last"
+          class="font-Jost"
+          [class.text-teal-600]="last"
+          [class.text-slate-400]="!last"
+          [class.font-medium]="last"
         >
           {{ item.label }}
         </span>

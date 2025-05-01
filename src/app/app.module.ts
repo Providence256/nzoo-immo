@@ -13,10 +13,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { PrimengModule } from './shared/_primeng/primeng.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './features/admin/dashboard/components/dashboard.component';
+import { CustomerService } from './core/services/customer.service';
 
 @NgModule({
   declarations: [
     AppComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     }),
     // PrimeNG services
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+    CustomerService,
   ],
   bootstrap: [AppComponent]
 })

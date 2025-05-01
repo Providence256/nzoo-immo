@@ -17,7 +17,7 @@ export class AdminSidebarComponent implements OnInit {
   constructor(public appMain:AdminLayoutComponent ){}
   ngOnInit() {
     this.model = [
-       {label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['dashboard']},
+       {label: 'Tableau de Bord', icon: 'pi pi-fw pi-home', routerLink: ['dashboard']},
        {
         label: 'Élément de base', 
         icon: 'pi pi-fw pi-box', 

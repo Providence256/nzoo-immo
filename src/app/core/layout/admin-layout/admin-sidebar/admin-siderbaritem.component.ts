@@ -8,61 +8,61 @@ import { AdminMenuService } from "../../../services/admin-menu.service";
 @Component({
     selector: '[app-admin-sidebaritem]',
     template: `
-      <div class="relative">
-        <!-- Menu Item Link -->
-        <a 
-          *ngIf="(!item.routerLink || item.items) && item.visible !== false"
-          [attr.href]="item.url"
-          (click)="itemClick($event)"
-          [attr.target]="item.target"
-          [attr.tabindex]="0"
-          class="flex items-center px-3 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition-colors group cursor-pointer"
-          [class.bg-slate-700]="active"
-        >
-          <i [ngClass]="item.icon" class="text-amber-400 mr-3 text-lg"></i>
-          <span class="flex-1 font-Jost">{{item.label}}</span>
-          <i 
-            *ngIf="item.items" 
-            [ngClass]="active ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
-            class="text-sm transition-transform duration-300"
-          ></i>
-        </a>
+  <div class="relative">
+    <!-- Menu Item Link -->
+    <a 
+      *ngIf="(!item.routerLink || item.items) && item.visible !== false"
+      [attr.href]="item.url"
+      (click)="itemClick($event)"
+      [attr.target]="item.target"
+      [attr.tabindex]="0"
+      class="flex items-center px-3 py-3 text-neutral-300 hover:bg-neutral-700 hover:text-white rounded-md transition-colors group cursor-pointer"
+      [class.bg-neutral-700]="active"
+    >
+      <i [ngClass]="item.icon" class="text-primary-400 mr-3 text-lg"></i>
+      <span class="flex-1 font-Jost">{{item.label}}</span>
+      <i 
+        *ngIf="item.items" 
+        [ngClass]="active ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+        class="text-sm transition-transform duration-300"
+      ></i>
+    </a>
 
-        <!-- Menu Item with Router Link -->
-        <a
-          *ngIf="item.routerLink && !item.items && item.visible !== false"
-          [routerLink]="item.routerLink"
-          routerLinkActive="bg-slate-700 text-white"
-          [routerLinkActiveOptions]="{exact: !item.preventExact}"
-          (click)="itemClick($event)"
-          [attr.target]="item.target"
-          [attr.tabindex]="0"
-          class="flex items-center px-3 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-md transition-colors group cursor-pointer"
-        >
-          <i [ngClass]="item.icon" class="text-amber-400 mr-3 text-lg"></i>
-          <span class="flex-1 font-Jost">{{item.label}}</span>
-        </a>
+    <!-- Menu Item with Router Link -->
+    <a
+      *ngIf="item.routerLink && !item.items && item.visible !== false"
+      [routerLink]="item.routerLink"
+      routerLinkActive="bg-neutral-700 text-white"
+      [routerLinkActiveOptions]="{exact: !item.preventExact}"
+      (click)="itemClick($event)"
+      [attr.target]="item.target"
+      [attr.tabindex]="0"
+      class="flex items-center px-3 py-3 text-neutral-300 hover:bg-neutral-700 hover:text-white rounded-md transition-colors group cursor-pointer"
+    >
+      <i [ngClass]="item.icon" class="text-primary-400 mr-3 text-lg"></i>
+      <span class="flex-1 font-Jost">{{item.label}}</span>
+    </a>
 
-        <!-- Submenu Items -->
-        <div
-          *ngIf="item.items && item.visible !== false"
-          [@submenu]="active ? 'visible' : 'hidden'"
-          class="pl-4 overflow-hidden"
-        >
-          <ul class="space-y-1 mt-1">
-            <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
-              <li 
-                app-admin-sidebaritem 
-                [item]="child" 
-                [index]="i" 
-                [parentKey]="key"
-                class="rounded-md overflow-hidden"
-              ></li>
-            </ng-template>
-          </ul>
-        </div>
-      </div>
-    `,
+    <!-- Submenu Items -->
+    <div
+      *ngIf="item.items && item.visible !== false"
+      [@submenu]="active ? 'visible' : 'hidden'"
+      class="pl-4 overflow-hidden"
+    >
+      <ul class="space-y-1 mt-1">
+        <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
+          <li 
+            app-admin-sidebaritem 
+            [item]="child" 
+            [index]="i" 
+            [parentKey]="key"
+            class="rounded-md overflow-hidden"
+          ></li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+`,
     animations: [
       trigger('submenu', [
         state('hidden', style({

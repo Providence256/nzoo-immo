@@ -1,3 +1,4 @@
+// src/app/core/layout/admin-layout/admin-layout.component.ts
 import { Component, OnInit, HostListener } from '@angular/core';
 
 @Component({

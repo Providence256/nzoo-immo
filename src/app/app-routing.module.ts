@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClientLayoutComponent } from './core/layout/client-layout/client-layout.component';
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
 import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
+import { DashboardComponent } from './features/admin/dashboard/components/dashboard.component';
 
 // Import your auth guard for admin routes
 // import { AdminGuard } from './core/authentication/guards/admin.guard';
@@ -39,6 +40,10 @@ const routes: Routes = [
     // canActivate: [AdminGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      }
      
     ]
   },

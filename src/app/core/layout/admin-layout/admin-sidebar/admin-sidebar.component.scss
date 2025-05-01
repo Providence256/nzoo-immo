@@ -1,4 +1,4 @@
-// Admin Sidebar Styles
+// src/app/core/layout/admin-layout/admin-sidebar/admin-sidebar.component.scss
 :host {
     display: contents;
   }
@@ -48,4 +48,29 @@
   // PrimeNG icon tweaks
   .pi {
     font-size: 1rem;
+  }
+  
+  // Admin Header Styles
+  // src/app/core/layout/admin-layout/admin-header/admin-header.component.scss
+  .dropdown-menu {
+    animation: fadeInDown 0.3s ease-out;
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    header {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
   }
