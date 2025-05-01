@@ -4,7 +4,7 @@ import {
   isBefore, isSameDay, isWithinInterval, startOfDay,
   startOfMonth, startOfWeek
 } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, se } from 'date-fns/locale';
 
 @Component({
   selector: 'app-date-range-picker',
@@ -38,16 +38,30 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < 7; i++) {
       this.weekDays.push(format(addDays(weekStart, i), 'EEE', { locale: fr }).charAt(0));
     }
-    this.displayedMonths = [startOfMonth(this.today), startOfMonth(addMonths(this.today, 1))];
+    this.displayedMonths = [
+      startOfMonth(this.today), 
+      startOfMonth(addMonths(this.today, 1))
+    ];
     this.checkViewportSize();
     console.log('[INIT] DateRangePickerComponent initialized');
   }
 
   ngAfterViewInit(): void {
-    const resizeObserver = new ResizeObserver(entries => {
+    // Set up resize observer to handle responsive behavior
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(entries => {
+        this.checkViewportSize();
+        this.cdr.detectChanges(); // Make sure changes are detected
+      });
+      resizeObserver.observe(this.elementRef.nativeElement);
+    } else {
+      // Fallback for browsers without ResizeObserver
       this.checkViewportSize();
-    });
-    resizeObserver.observe(this.elementRef.nativeElement);
+      window.addEventListener('resize', () => {
+        this.checkViewportSize();
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   checkViewportSize() {
@@ -56,14 +70,19 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
     if (this.isCompactView) {
       this.displayedMonths = [startOfMonth(this.today)];
     } else {
-      this.displayedMonths = [startOfMonth(this.today), startOfMonth(addMonths(this.today, 1))];
+      this.displayedMonths = [
+        startOfMonth(this.today), 
+        startOfMonth(addMonths(this.today, 1))
+      ];
     }
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:click', ['$event'])
   clickOutside(event: MouseEvent) {
     if (!this.elementRef.nativeElement.contains(event.target) && this.isDropdownOpen) {
       this.isDropdownOpen = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -75,6 +94,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       this.isDropdownOpen = true;
       this.activeSelector = selector;
     }
+    this.cdr.detectChanges();
   }
 
   onDateClick(date: Date) {
@@ -84,6 +104,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       this.selectedStartDate = date;
       this.selectedEndDate = null;
       this.activeSelector = 'check-out';
+      this.cdr.detectChanges();
       return;
     }
     
@@ -92,6 +113,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       this.selectedStartDate = date;
       this.selectedEndDate = null;
       this.activeSelector = 'check-out';
+      this.cdr.detectChanges();
       return;
     }
     
@@ -109,22 +131,30 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       this.isDropdownOpen = false;
       this.emitSelectedRange();
     }
+
+    setTimeout(() => {
+      this.isDropdownOpen = false;
+      this.activeSelector = null;
+      this.cdr.detectChanges();
+    }, 300); // Allow time for the view to update
     this.cdr.detectChanges();
   }
 
   onDateHover(date: Date | null) {
     this.hoverDate = date;
+    this.cdr.detectChanges();
   }
 
   emitSelectedRange() {
     
+    console.log('Emit range:', this.selectedStartDate, this.selectedEndDate);
     if (this.selectedStartDate && this.selectedEndDate) {
       console.log('Selected range:', this.selectedStartDate, this.selectedEndDate);
       this.dateRangeSelected.emit({
         startDate: this.selectedStartDate,
         endDate: this.selectedEndDate
       });
-      
+
     }
   }
 
@@ -242,6 +272,14 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
     }
     
     return days;
+  }
+
+  getDayOfWeek(date: Date) : string{
+    return format(date, 'EEEE', {locale: fr})
+  }
+
+  isSameDay(date1: Date, date2: Date) : boolean{
+    return isSameDay(date1, date2)
   }
 
   clearSelection() {

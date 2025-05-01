@@ -1,0 +1,176 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="container mx-auto px-4 max-w-4xl">
+      <div class="bg-white rounded-lg shadow-sm p-8 flex items-center justify-center">
+        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-rose-500"></div>
+      </div>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="container mx-auto px-4 max-w-4xl">
+      <div class="bg-white rounded-lg shadow-sm p-8">
+        <div class="text-red-500 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h2 class="text-2xl font-bold mb-2">Oops! Something went wrong</h2>
+          <p class="mb-4">{{ error }}</p>
+          <button class="px-4 py-2 bg-rose-500 text-white rounded-lg" routerLink="/">Go Home</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Success State -->
+    <div *ngIf="booking && !isLoading" class="container mx-auto px-4 max-w-4xl">
+      <!-- Confirmation Header -->
+      <div class="bg-white rounded-t-lg shadow-sm p-8 border-b">
+        <div class="flex items-center mb-6">
+          <div class="bg-green-100 rounded-full p-2 mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">You're all set!</h1>
+            <p class="text-gray-600">Confirmation code: <span class="font-semibold">{{ booking.confirmationCode }}</span></p>
+          </div>
+        </div>
+  
+        <div class="flex flex-wrap gap-6">
+          <button (click)="viewTrip()" class="flex-1 md:flex-none px-5 py-3 bg-rose-500 text-white font-medium rounded-lg text-center hover:bg-rose-600 transition-colors">
+            View trip
+          </button>
+          <button (click)="messageHost()" class="flex-1 md:flex-none px-5 py-3 border border-gray-900 text-gray-900 font-medium rounded-lg text-center hover:bg-gray-50 transition-colors">
+            Message host
+          </button>
+        </div>
+      </div>
+  
+      <!-- Reservation Details -->
+      <div class="bg-white shadow-sm p-8 grid md:grid-cols-5 gap-6">
+        <!-- Left Column: Property Details -->
+        <div class="md:col-span-3">
+          <h2 class="text-xl font-semibold mb-6">Your reservation</h2>
+          
+          <!-- Dates Section -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-4">Dates</h3>
+            <div class="flex">
+              <div class="flex-1">
+                <p class="text-gray-500 text-sm">Check-in</p>
+                <p class="font-medium">{{ formatDate(booking.checkIn) }}</p>
+              </div>
+              <div class="flex-1">
+                <p class="text-gray-500 text-sm">Checkout</p>
+                <p class="font-medium">{{ formatDate(booking.checkOut) }}</p>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Guests Section -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-4">Guests</h3>
+            <p>{{ getGuestSummary() }}</p>
+          </div>
+  
+          <!-- Payment Section -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-2">Payment</h3>
+            <p class="text-gray-700">{{ booking.paymentMethod }}</p>
+            <p class="text-sm text-gray-500 mt-1">Total charged: ${{ booking.totalPrice.toLocaleString() }}</p>
+          </div>
+  
+          <!-- Cancellation Policy -->
+          <div class="p-4 bg-gray-50 rounded-lg">
+            <h3 class="text-lg font-medium mb-2">Cancellation policy</h3>
+            <p class="text-gray-700 text-sm">Free cancellation before {{ formatDate(booking.checkIn) }}. After that, cancel before check-in and get a 50% refund.</p>
+          </div>
+        </div>
+  
+        <!-- Right Column: Property Card -->
+        <div class="md:col-span-2">
+          <div class="border border-gray-200 rounded-xl overflow-hidden h-full">
+            <!-- Property Image -->
+            <div class="relative h-48 w-full">
+              <img 
+                [src]="'/api/placeholder/400/320'" 
+                alt="Property image"
+                class="object-cover h-full w-full"
+              />
+            </div>
+            
+            <!-- Property Details -->
+            <div class="p-4">
+              <p class="text-sm text-gray-500">{{ booking.property.type }}</p>
+              <h3 class="font-medium text-lg mb-1">{{ booking.property.name }}</h3>
+              <p class="text-gray-700 mb-4">{{ booking.property.location }}</p>
+              
+              <!-- Host Info -->
+              <div class="flex items-center mt-4">
+                <div class="h-10 w-10 rounded-full overflow-hidden bg-gray-200 mr-3">
+                  <img 
+                    [src]="'/api/placeholder/100/100'" 
+                    alt="Host photo"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Hosted by</p>
+                  <p class="font-medium">{{ booking.property.host.name }}</p>
+                </div>
+              </div>
+  
+              <!-- View Property Button -->
+              <button 
+                (click)="viewProperty()" 
+                class="mt-4 w-full py-2 border border-gray-900 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+              >
+                View property
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Price Details -->
+      <div class="bg-white rounded-b-lg shadow-sm p-8 border-t">
+        <h2 class="text-xl font-semibold mb-6">Price details</h2>
+        
+        <!-- Price Breakdown -->
+        <div class="space-y-4">
+          <div class="flex justify-between">
+            <p>${{ booking.pricePerNight }} × {{ booking.totalNights }} nights</p>
+            <p>${{ (booking.pricePerNight * booking.totalNights).toLocaleString() }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Cleaning fee</p>
+            <p>${{ booking.cleaningFee.toLocaleString() }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Service fee</p>
+            <p>${{ booking.serviceFee.toLocaleString() }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>Taxes</p>
+            <p>${{ booking.taxes.toLocaleString() }}</p>
+          </div>
+          <div class="border-t pt-4 flex justify-between font-bold">
+            <p>Total (USD)</p>
+            <p>${{ booking.totalPrice.toLocaleString() }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Need Help Section -->
+    <div class="container mx-auto px-4 max-w-4xl mt-6">
+      <div class="bg-white rounded-lg shadow-sm p-8">
+        <h2 class="text-xl font-semibold mb-4">Need help with your reservation?</h2>
+        <div class="flex flex-wrap gap-4">
+          <a href="#" class="text-rose-600 underline">Get help</a>
+          <a href="#" class="text-rose-600 underline">Visit Help Center</a>
+          <a href="#" class="text-rose-600 underline">Contact customer service</a>
+        </div>
+      </div>
+    </div>
+  </div>

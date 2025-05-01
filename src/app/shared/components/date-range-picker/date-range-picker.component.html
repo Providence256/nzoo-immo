@@ -4,15 +4,15 @@
     <div class="input" 
          [class.active]="activeSelector === 'check-in'"
          (click)="toggleDropdown('check-in')">
-      <div class="label">Check-in</div>
-      <div class="value">{{ selectedStartDate ? formatDisplayDate(selectedStartDate) : 'Add date' }}</div>
+      <div class="label">ARRIVÉE</div>
+      <div class="value">{{ selectedStartDate ? formatDisplayDate(selectedStartDate) : 'Ajouter date' }}</div>
     </div>
     <div class="separator"></div>
     <div class="input" 
          [class.active]="activeSelector === 'check-out'"
          (click)="toggleDropdown('check-out')">
-      <div class="label">Check-out</div>
-      <div class="value">{{ selectedEndDate ? formatDisplayDate(selectedEndDate) : 'Add date' }}</div>
+      <div class="label">DEPART</div>
+      <div class="value">{{ selectedEndDate ? formatDisplayDate(selectedEndDate) : 'Ajouter date' }}</div>
     </div>
     <button *ngIf="selectedStartDate || selectedEndDate" 
             class="clear-btn" 
@@ -43,8 +43,9 @@
         <div class="month-days">
           <ng-container *ngFor="let day of daysInMonth(month)">
             <div *ngIf="!day" class="day-cell empty"></div>
-            <div *ngIf="day" class="day-cell">
+            
               <button
+                *ngIf="day"
                 class="day-button"
                 [class.today]="isToday(day)"
                 [class.start-date]="isStartDate(day)"
@@ -53,11 +54,10 @@
                 [class.selected]="isSelected(day)"
                 [disabled]="isDisabled(day)"
                 (click)="onDateClick(day)"
-                (mouseenter)="onDateHover(day)"
-                (mouseleave)="onDateHover(null)">
+                >
                 {{ formatDay(day) }}
               </button>
-            </div>
+          
           </ng-container>
         </div>
       </div>
@@ -65,7 +65,7 @@
     
     <div class="dropdown-footer" *ngIf="selectedStartDate && selectedEndDate">
       <div class="nights-info">{{ getDatesCount() }} nights</div>
-      <button class="close-btn" (click)="isDropdownOpen = false">Close</button>
+      <button class="close-btn" (click)="isDropdownOpen = false">Fermer</button>
     </div>
   </div>
 </div>

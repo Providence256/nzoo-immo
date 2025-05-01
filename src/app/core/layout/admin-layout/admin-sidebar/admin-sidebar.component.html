@@ -1,0 +1,29 @@
+<div 
+  class="fixed md:relative sm:top-[55px] md:top-[63px] w-64 bg-gray-900 text-gray-200 h-[calc(100vh-60px)] p-4 transition-transform duration-300 shadow-lg flex-shrink-0"
+  [ngClass]="{ 
+    'translate-x-0': appMain.menuMobileActive, 
+    '-translate-x-full': !appMain.menuMobileActive && appMain.isMobile()
+  }"
+>
+  <!-- En-tête du menu -->
+  <div class="flex items-center space-x-3 pb-4 border-b border-gray-700">
+    <i class="pi pi-objects-column text-lg text-[#E4B363]"></i>
+    <h2 class="text-lg font-Jost font-semibold">Admin Panel</h2>
+  </div>
+
+  <!-- Navigation -->
+  <div class="mt-4">
+    <ul class="space-y-2" (click)="onMenuClick()">
+      <ng-container *ngFor="let item of model; let i = index">
+        <li app-admin-sidebaritem 
+            [item]="item" 
+            [index]="i" 
+            [root]="true"  
+            class="p-3 rounded-lg hover:bg-gray-800 transition-all cursor-pointer">
+          <i [ngClass]="item.icon" class="text-[#E4B363]"></i>
+          <span class="font-jost">{{ item.label }}</span>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

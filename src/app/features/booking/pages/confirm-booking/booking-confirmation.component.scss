@@ -1,0 +1,69 @@
+/* Optional: Add any custom styles here that go beyond Tailwind's utilities */
+
+/* For example, if you want to add some custom animations */
+@keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Custom scrollbar for better UX */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+  }
+  
+  /* Responsive print styles for booking confirmation */
+  @media print {
+    .container {
+      max-width: 100% !important;
+      padding: 0 !important;
+    }
+    
+    button, a {
+      display: none !important;
+    }
+    
+    .shadow-sm {
+      box-shadow: none !important;
+    }
+    
+    .bg-gray-50 {
+      background-color: white !important;
+    }
+    
+    .rounded-lg, .rounded-t-lg, .rounded-b-lg, .rounded-xl {
+      border-radius: 0 !important;
+    }
+    
+    .py-8 {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    
+    /* Add page break before price details */
+    .border-t {
+      page-break-before: always;
+    }
+  }

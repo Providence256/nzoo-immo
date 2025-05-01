@@ -1,0 +1,173 @@
+.guest-selector-container {
+    position: relative;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  .input-container {
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: all 0.2s;
+  
+    &:hover {
+      border-color: #b0b0b0;
+    }
+    
+    &:focus-within {
+      border-color: #222;
+      box-shadow: 0 0 0 1px #222;
+    }
+  }
+  
+  .input-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 4px;
+  }
+  
+  .guest-input {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #222;
+    width: 100%;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .dropdown-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .arrow-down, .arrow-up {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: solid #222;
+    border-width: 0 2px 2px 0;
+  }
+  
+  .arrow-down {
+    transform: rotate(45deg);
+  }
+  
+  .arrow-up {
+    transform: rotate(-135deg);
+  }
+  
+  .dropdown-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    min-width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    z-index: 1000;
+  }
+  
+  .guest-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+  
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+  
+  .guest-type {
+    flex: 1;
+  }
+  
+  .guest-label {
+    font-weight: 500;
+    font-size: 16px;
+    color: #222;
+    margin-bottom: 4px;
+  }
+  
+  .guest-description {
+    font-size: 14px;
+    color: #717171;
+  }
+  
+  .counter-controls {
+    display: flex;
+    align-items: center;
+  }
+  
+  .counter-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #b0b0b0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+    transition: all 0.2s;
+  
+    &:hover:not(:disabled) {
+      border-color: #222;
+    }
+  
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+  
+  .counter-value {
+    width: 40px;
+    text-align: center;
+    font-size: 16px;
+    color: #222;
+  }
+  
+  .info-text {
+    font-size: 14px;
+    color: #717171;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .dropdown-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .close-btn {
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    
+    &:hover {
+      background-color: #f7f7f7;
+    }
+  }

@@ -12,7 +12,12 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { FooterComponent } from './components/footer/footer.component';
 import { PrimengModule } from './_primeng/primeng.module';
 import { HeaderComponent } from '../core/layout/client-layout/header/header.component';
-import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
+import { AdminHeaderComponent } from '../core/layout/admin-layout/admin-header/admin-header.component';
+import { AdminSidebarComponent } from '../core/layout/admin-layout/admin-sidebar/admin-sidebar.component';
+import { BreadcrumbComponent } from '../core/layout/admin-layout/breadcrumb/breadcrumb.component';
+import { AdminSidebarItemComponent } from '../core/layout/admin-layout/admin-sidebar/admin-siderbaritem.component';
+import { BreadcrumbService } from '../core/services/breadcrumb.service';
+import { AdminMenuService } from '../core/services/admin-menu.service';
 
 // Shared components that will be used throughout the app
 
@@ -25,6 +30,13 @@ import { DateRangePickerComponent } from './components/date-range-picker/date-ra
     PageHeaderComponent,
     FooterComponent,
     HeaderComponent,
+
+    //Admin Shared
+    AdminHeaderComponent,
+    AdminSidebarComponent,
+    BreadcrumbComponent,
+    AdminSidebarItemComponent
+    
   ],
   imports: [
     CommonModule,
@@ -50,7 +62,17 @@ import { DateRangePickerComponent } from './components/date-range-picker/date-ra
     LoadingSpinnerComponent,
     PageHeaderComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+
+
+    AdminHeaderComponent,
+    AdminSidebarComponent,
+    BreadcrumbComponent,
+  ],
+  providers: [
+    // Add any shared services here
+    BreadcrumbService,
+    AdminMenuService,
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,16 @@
+<nav class="bg-gray-200 p-3 rounded mb-4">
+    <ul class="flex items-center space-x-2 list-none"> 
+      <ng-container *ngFor="let item of items; let last = last">
+        <li>
+          <a [routerLink]="item.routerLink" *ngIf="item.routerLink" class="text-blue-500 font-Jost">
+            {{ item.label }}
+          </a>
+          <ng-container *ngIf="!item.routerLink" >
+            <span class="font-Jost text-gray-400">{{ item.label }}</span>
+          </ng-container>
+        </li>
+        <li *ngIf="!last"><i class="pi pi-angle-right text-gray-400"></i></li>
+      </ng-container>
+    </ul>
+  </nav>
+  

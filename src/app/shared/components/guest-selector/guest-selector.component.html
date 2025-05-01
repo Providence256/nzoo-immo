@@ -1,0 +1,139 @@
+<div class="guest-selector-container">
+    <div class="input-container" (click)="toggleDropdown()">
+      <label for="guest-input" class="input-label">Visiteurs</label>
+      <input
+        id="guest-input"
+        type="text"
+        readonly
+        class="guest-input"
+        [value]="getGuestSummary()"
+      />
+      <span class="dropdown-icon">
+        <i [class]="isDropdownOpen ? 'arrow-up' : 'arrow-down'"></i>
+      </span>
+    </div>
+    
+    <div *ngIf="isDropdownOpen" class="dropdown-panel">
+      <form [formGroup]="guestForm">
+        <!-- Adults -->
+        <div class="guest-row">
+          <div class="guest-type">
+            <div class="guest-label">Adultes</div>
+            <div class="guest-description">13 ans +</div>
+          </div>
+          <div class="counter-controls">
+            <button 
+              type="button" 
+              class="counter-btn" 
+              [disabled]="guestForm.get('adults')?.value <= 1"
+              (click)="decreaseCount('adults')"
+            >
+              -
+            </button>
+            <span class="counter-value">{{guestForm.get('adults')?.value}}</span>
+            <button 
+              type="button" 
+              class="counter-btn" 
+              [disabled]="getTotalOccupancy() >= maxOccupancy"
+              (click)="increaseCount('adults')"
+            >
+              +
+            </button>
+          </div>
+        </div>
+        
+        <!-- Children -->
+        <div class="guest-row">
+          <div class="guest-type">
+            <div class="guest-label">Enfants</div>
+            <div class="guest-description">2-12 ans</div>
+          </div>
+          <div class="counter-controls">
+            <button 
+              type="button" 
+              class="counter-btn" 
+              [disabled]="guestForm.get('children')?.value <= 0"
+              (click)="decreaseCount('children')"
+            >
+              -
+            </button>
+            <span class="counter-value">{{guestForm.get('children')?.value}}</span>
+            <button 
+              type="button" 
+              class="counter-btn" 
+              [disabled]="getTotalOccupancy() >= maxOccupancy"
+              (click)="increaseCount('children')"
+            >
+              +
+            </button>
+          </div>
+        </div>
+        
+        <!-- Infants -->
+        <div class="guest-row">
+          <div class="guest-type">
+            <div class="guest-label">Bébés</div>
+            <div class="guest-description">- de 2 ans</div>
+          </div>
+          <div class="counter-controls">
+            <button 
+              type="button" 
+              class="counter-btn" 
+              [disabled]="guestForm.get('babies')?.value <= 0"
+              (click)="decreaseCount('babies')"
+            >
+              -
+            </button>
+            <span class="counter-value">{{guestForm.get('babies')?.value}}</span>
+            <button 
+              type="button" 
+              class="counter-btn" 
+              (click)="increaseCount('babies')"
+            >
+              +
+            </button>
+          </div>
+        </div>
+        
+        <!-- Pets -->
+        <div class="guest-row" *ngIf="allowPets">
+          <div class="guest-type">
+            <div class="guest-label">Animaux de compagnie</div>
+            <div class="guest-description">Service animals n'est pas inclus</div>
+          </div>
+          <div class="counter-controls">
+            <button 
+              type="button" 
+              class="counter-btn" 
+              [disabled]="guestForm.get('pets')?.value <= 0"
+              (click)="decreaseCount('pets')"
+            >
+              -
+            </button>
+            <span class="counter-value">{{guestForm.get('pets')?.value}}</span>
+            <button 
+              type="button" 
+              class="counter-btn" 
+              (click)="increaseCount('pets')"
+            >
+              +
+            </button>
+          </div>
+        </div>
+        
+        <div class="info-text" *ngIf="maxOccupancy">
+          la capacité d'accueil de ce logement est limitée a {{maxOccupancy}} Voyageurs. sans compter les bébés.
+        </div>
+        
+        <div class="dropdown-footer">
+          <button 
+            type="button" 
+            class="close-btn" 
+            (click)="toggleDropdown()"
+          >
+            Fermer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

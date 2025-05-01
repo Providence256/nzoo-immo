@@ -280,7 +280,7 @@
         <div class="sticky top-6">
           <section class="bg-white rounded-lg shadow-lg border border-gray-200">
             <div class="bg-indigo-600 p-6 text-center">
-              <h2 class="text-xl font-bold text-white">Book This Apartment</h2>
+              <h2 class="text-xl font-bold text-white">Reserve cet apartement</h2>
               <div class="mt-2 text-white">
                 <span class="text-3xl font-bold">{{ apartment!.price.currency }} {{ apartment!.price.amount }}</span>
                 <span class="text-lg">/ {{ apartment!.price.period }}</span>
@@ -292,37 +292,34 @@
                 <div class="mb-4" >
                   <label for="checkIn" class="block text-sm font-medium text-gray-700 mb-1">Select Dates</label>
                   <app-date-range-picker 
-                      (dateRangeSelected)="onDateRangeSelect($event)"
-                  >
-                 </app-date-range-picker>
-                
+                  (dateRangeSelected)="onDateRangeSelect($event)"
+                  
+                ></app-date-range-picker>
+                <div *ngIf="bookingForm.get('checkIn')?.value || bookingForm.get('checkOut')?.value" 
+                  class="text-sm text-gray-600 mt-2">
+                Selected: 
+                {{ bookingForm.get('checkIn')?.value | date:'mediumDate' }} - 
+                {{ bookingForm.get('checkOut')?.value | date:'mediumDate' }}
+              </div>
                 </div>
-            
-                
-                
-                
                 <div class="space-y-2">
-                  <label for="guests" class="block text-sm font-medium text-gray-700">Number of Guests</label>
-                  <input type="number" id="guests" formControlName="guests" min="1" [max]="apartment!.features.maxOccupancy" 
-                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                  <div *ngIf="bookingSubmitted && bookingForm.get('guests')?.errors" class="text-red-600 text-xs mt-1">
-                    Valid number of guests is required
-                  </div>
+                  <label for="guests" class="block text-sm font-medium text-gray-700">Nombre des visiteurs</label>
+                  <app-guest-selector
+                  [maxOccupancy]="apartment?.features?.maxOccupancy || 16"
+        
+                ></app-guest-selector>
                 </div>
                 
                 <div *ngIf="bookingError" class="bg-red-50 border-l-4 border-red-500 p-4 text-sm text-red-700">
                   {{ bookingError }}
                 </div>
                 
-                <button type="submit" [disabled]="!currentUser" 
+                <button type="submit" 
                         class="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
-                  Book Now
+                  Réserver
                 </button>
               </form>
               
-              <div class="login-prompt mt-4 text-center" *ngIf="!currentUser">
-                <p class="text-sm text-gray-600">Please <a [routerLink]="['/login']" class="text-indigo-600 hover:text-indigo-800 font-medium">login</a> to book this apartment.</p>
-              </div>
             </div>
           </section>
         </div>

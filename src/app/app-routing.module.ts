@@ -22,6 +22,10 @@ const routes: Routes = [
       {
         path: 'apartements',
         loadChildren: () => import('./features/apartements/apartements.module').then(m => m.ApartmentsModule)
+      },
+      {
+        path:'booking',
+        loadChildren: () => import('./features/booking/booking.module').then((m) => m.BookingModule)
       }
       
     ]

@@ -64,13 +64,13 @@ export class ApartmentDetailComponent implements OnInit {
       guests: [1, [Validators.required, Validators.min(1)]]
     });
 
-    this.bookingForm.get('checkInDate')?.valueChanges.subscribe(val => {
+    this.bookingForm.get('checkIn')?.valueChanges.subscribe(val => {
       if (val) {
         this.rangeDates[0] = val;
       }
     });
 
-    this.bookingForm.get('checkOutDate')?.valueChanges.subscribe(val => {
+    this.bookingForm.get('checkOut')?.valueChanges.subscribe(val => {
       if (val) {
         this.rangeDates[1] = val;
       }
@@ -155,7 +155,10 @@ export class ApartmentDetailComponent implements OnInit {
 
   onDateRangeSelect(event: { startDate: Date, endDate: Date }) {
     console.log('Form values after date range selection:', event);
-
+    this.bookingForm.patchValue({
+      checkIn: event.startDate,
+      checkOut: event.endDate
+    });
     this.cdr.detectChanges();
   }
 

@@ -1,7 +1,7 @@
 // src/app/features/apartments/apartments.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -14,6 +14,7 @@ import { ApartmentGalleryComponent } from './components/apartment-gallery/apartm
 import { ApartmentCreateComponent } from './pages/apartment-create/apartment-create.component';
 import { ApartmentEditComponent } from './pages/apartment-edit/apartment-edit.component';
 import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
+import { GuestSelectorComponent } from '../../shared/components/guest-selector/guest-selector.component';
 
 const routes: Routes = [
   { 
@@ -45,6 +46,7 @@ const routes: Routes = [
     ApartmentCardComponent,
     ApartmentGalleryComponent,
     DateRangePickerComponent,
+    GuestSelectorComponent
   ],
   imports: [
     CommonModule,
