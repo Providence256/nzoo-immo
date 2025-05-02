@@ -1,0 +1,16 @@
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/bin/Debug/net8.0/Infrastructure.deps.json
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/bin/Debug/net8.0/Infrastructure.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/bin/Debug/net8.0/Infrastructure.pdb
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/bin/Debug/net8.0/Core.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/bin/Debug/net8.0/Core.pdb
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.AssemblyReference.cache
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.AssemblyInfoInputs.cache
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.AssemblyInfo.cs
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.CoreCompileInputs.cache
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.sourcelink.json
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastr.15EFFBFE.Up2Date
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/refint/Infrastructure.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/Infrastructure.pdb
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Infrastructure/obj/Debug/net8.0/ref/Infrastructure.dll

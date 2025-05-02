@@ -1,0 +1,12 @@
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/bin/Debug/net8.0/Core.deps.json
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/bin/Debug/net8.0/Core.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/bin/Debug/net8.0/Core.pdb
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.AssemblyInfoInputs.cache
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.AssemblyInfo.cs
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.csproj.CoreCompileInputs.cache
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.sourcelink.json
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/refint/Core.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.pdb
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/ref/Core.dll
