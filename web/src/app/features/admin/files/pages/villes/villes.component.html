@@ -1,0 +1,162 @@
+<div>
+    <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4" >
+          <ng-template pTemplate="left">
+              <div>
+                <button  
+                  pButton 
+                  pRipple 
+                  label="Ajouter" 
+                  icon="pi pi-plus-circle" 
+                  class="p-button-primary mr-2"
+                  (click)="openDialog()"
+                >
+               </button>
+                
+              </div>
+            </ng-template>
+      </p-toolbar>
+  
+      
+  </div>
+  
+  
+  <p-dialog 
+    header="Ajouter Ville" 
+    class="font-Jost"
+    [modal]="true" 
+    [(visible)]="dialog" 
+    [style]="{ width: 'min(600px, 90vw)' }"
+    [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
+  >
+    <div class="p-1 space-y-2">
+      
+      <form [formGroup]="formGroup">
+        <!-- Code Field -->
+      <div class="flex flex-col  w-full">
+        <label for="code" class="font-semibold font-Jost text-gray-700">Code</label>
+        <input 
+          pInputText 
+          id="code" 
+          formControlName="code"
+          placeholder="Code"
+          class="w-full p-3 placeholder:font-Jost border rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none"
+          autocomplete="off" 
+        />
+      </div>
+  
+      <!-- Désignation Field -->
+      <div class="flex flex-col  w-full">
+        <label for="designation" class="font-semibold font-Jost text-gray-700">Désignation</label>
+        <input 
+          pInputText 
+          id="designation"
+          formControlName="designation"
+          placeholder="Désignation"
+          class="w-full p-3 border placeholder:font-Jost rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none"
+          autocomplete="off" 
+        />
+      </div>
+  
+      <!-- File Upload -->
+      <div class="flex flex-col">
+        <label class="font-semibold text-gray-700 mb-2">Photo de la Ville</label>
+      
+        <!-- Zone d'upload ou image -->
+        <div *ngIf="!villeImage; else imagePreview"
+          class="flex flex-col items-center border-2 border-dashed 
+                 border-gray-300 p-4 rounded-lg w-full hover:border-green-500 
+                 transition-colors cursor-pointer"
+          (click)="fileInput.click()">
+          
+          <i class="pi pi-cloud-upload text-green-500 text-4xl mb-2"></i>
+          <p class="text-gray-500 text-sm font-Jost text-center">
+            Cliquez pour sélectionner une image
+          </p>
+          <input 
+            type="file"  
+            class="hidden" 
+            #fileInput 
+            accept="image/*">
+        </div>
+      
+        <!-- Preview image -->
+        <ng-template #imagePreview>
+          <div class="relative w-full max-w-xs">
+            <img 
+              [src]="villeImage" 
+              class="w-full h-40 object-cover rounded-lg shadow-md">
+      
+            <!-- Supprimer -->
+            <button 
+              class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 flex items-center justify-center rounded-full shadow hover:bg-red-600 transition"
+              >
+              <i class="pi pi-times text-xs"></i>
+            </button>
+      
+            <!-- Réuploader (optionnel) -->
+            <button 
+              class="absolute bottom-1 right-1 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600"
+              (click)="fileInput.click()">
+              Changer
+            </button>
+          </div>
+      
+          <!-- Hidden input même ici -->
+          <input 
+            type="file" 
+            class="hidden" 
+            #fileInput 
+            accept="image/*">
+        </ng-template>
+      </div>
+      
+      </form>
+  
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-4">
+        <button 
+          pButton
+          type="button"
+          label="Annuler" 
+          class="font-Jost p-button-outlined w-full"
+          severity="secondary"
+        ></button>
+        <button 
+          pButton
+          type="button"
+          label="Enregistrer" 
+          class="w-full font-Jost"
+        ></button>
+      </div>
+    </div>
+  </p-dialog>
+  
+  
+  <p-dialog 
+    [(visible)]="deleteDialog" 
+    header="Confirmer Suppression" 
+    [modal]="true" 
+    [style]="{ width: 'min(500px, 90vw)', fontFamily: 'Jost' }"
+    [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
+    >
+    <div class="flex align-items-center justify-content-start p-4">
+      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color: #e74c3c"></i>
+      <span *ngIf="ville" class="text-lg font-Jost">Voulez-vous vraiment supprimer <b class="text-900">{{ ville.designation }}</b>?</span>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end gap-2">
+        <button pButton pRipple 
+                label="NON" 
+                class="p-button-text p-button-plain font-Jost"
+                icon="pi pi-times"></button>
+        <button 
+          pButton pRipple      
+          label="OUI" 
+          class="p-button-danger font-Jost" 
+          icon="pi pi-check"
+        >
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>

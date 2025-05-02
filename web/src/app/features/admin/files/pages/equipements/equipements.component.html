@@ -1,0 +1,203 @@
+<div>
+    <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4" >
+          <ng-template pTemplate="left">
+              <div>
+                <button  
+                  pButton 
+                  pRipple 
+                  label="Ajouter" 
+                  icon="pi pi-plus-circle" 
+                  class="p-button-primary mr-2"
+                  (click)="openDialog()"
+                >
+               </button>
+                
+              </div>
+            </ng-template>
+      </p-toolbar>
+  
+      <p-table
+       [value]="equipements"
+       paginator="true"
+       [rows]="10"
+       [rowsPerPageOptions]="[10, 20, 30]"
+       [showCurrentPageReport]="true"
+       class="font-Jost"
+       styleClass="p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm"
+      >
+      <ng-template pTemplate="caption">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
+          <h2 class="text-lg font-semibold text-gray-800">Gestion des Equipements</h2>
+         
+        </div>
+      </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="text-center font-Jost">Icon</th>
+              <th class="text-center font-Jost">Code</th>
+              <th class="text-center font-Jost">Designation</th>
+              <th class="text-center font-Jost">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-equipement >
+            <tr>
+              <td class="text-center"><span class="material-icons">{{ equipement.icon }}</span></td>
+              <td class="text-center font-Jost">{{ equipement.code }}</td>
+              <td class="text-center"> {{ equipement.designation }}</td>
+              
+              <td class="text-center">
+                <div class="flex  gap-2 h-full">
+                  <button
+                    pButton
+                    icon="pi pi-pencil"
+                    class="p-button-sm p-button-rounded p-button-info"
+                    tooltip="Modifier"
+                    tooltipPosition="top"
+                    (click)="editEquipement(equipement)"
+                  ></button>
+                  <button
+                    pButton
+                    icon="pi pi-trash"
+                    class="p-button-sm p-button-rounded p-button-danger"
+                    tooltip="Supprimer"
+                    tooltipPosition="top"
+                    (click)="deleteEquipement(equipement)"
+                  ></button>
+                </div>
+              </td>
+              
+            </tr>
+          </ng-template>
+      </p-table>
+  </div>
+  
+  <p-dialog 
+    header="Ajouter Equipement" 
+    class="font-Jost"
+    [modal]="true" 
+    [(visible)]="dialog" 
+    [style]="{ width: 'min(600px, 90vw)' }"
+    [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
+  >
+    <div class="p-1 space-y-2">
+     <form [formGroup]="formGroup" >
+       <!-- Code Field -->
+       <div class="flex flex-col w-full">
+        <label for="code" class="font-semibold font-Jost text-gray-700">Code</label>
+        <input 
+          pInputText 
+          id="code" 
+          formControlName="code"
+          class="flex-auto w-full sm:w-auto p-2 border rounded-md focus:ring-2 focus:ring-blue-300"
+          autocomplete="off" 
+        />
+        <small class="text-red-500 text-xs" *ngIf="formGroup.controls['code'].dirty &&
+        formGroup.hasError('required', 'code')">
+  *Champ Obligatoire          
+  </small>
+      </div>
+  
+      <!-- Désignation Field -->
+      <div class="flex flex-col w-full">
+        <label for="designation" class="font-semibold font-Jost text-gray-700">Désignation</label>
+        <input 
+          pInputText 
+          id="designation" 
+          formControlName="designation"
+          class="flex-auto w-full sm:w-auto p-2 border rounded-md focus:ring-2 focus:ring-blue-300"
+          autocomplete="off" 
+        />
+        <small class="text-red-500 text-xs" *ngIf="formGroup.controls['designation'].dirty &&
+        formGroup.hasError('required', 'designation')">
+  *Champ Obligatoire          
+  </small>
+      </div>
+  
+      <!-- Search for Icons -->
+      <div class="space-y-2 mb-2">
+        <label class="font-semibold text-gray-700">Rechercher une Icône</label>
+        <input 
+          type="text" 
+          pInputText 
+          formControlName="searchIcon"
+          (input)="filterIcons()" 
+          placeholder="Rechercher une icône..." 
+          class="w-full p-2 border rounded-md focus:ring focus:ring-blue-300"
+        />
+      </div>
+  
+      <!-- Icons Selection -->
+      <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 p-3 max-h-64 overflow-y-auto border rounded-lg shadow-sm">
+        <div 
+          *ngFor="let icon of filteredIcons" 
+          (click)="selectIcon(icon)"
+          class="flex aspect-square items-center justify-center border rounded-lg p-2 cursor-pointer transition-all hover:bg-gray-100 active:scale-95"
+          [class.bg-blue-500]="equipement.icon === icon"
+          [class.text-white]="equipement.icon === icon"
+          [class.border-blue-500]="equipement.icon === icon"
+          [class.shadow-md]="equipement.icon === icon"
+        >
+          <span class="material-icons text-2xl md:text-3xl">{{ icon }}</span>
+        </div>
+      </div>
+  
+      <!-- Selected Icon Preview -->
+      <div *ngIf="equipement.icon" class="flex items-center gap-2 mt-4">
+        <span class="material-icons text-3xl text-blue-500">{{ equipement.icon }}</span>
+        <span class="text-gray-700 font-semibold">{{ equipement.icon }}</span>
+        <small class="p-error" *ngIf="formGroup.get('icon')?.invalid && formGroup.get('icon')?.touched">
+          *Icône obligatoire
+        </small>
+      </div>
+  
+     </form>
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-4">
+        <button 
+          pButton
+          type="button"
+          label="Annuler" 
+          class="font-Jost p-button-outlined w-full"
+          severity="secondary"
+          (click)="annuler()"
+        ></button>
+        <button 
+          pButton
+          type="button"
+          label="Enregistrer" 
+          class="w-full font-Jost"
+        ></button>
+      </div>
+    </div>
+  </p-dialog>
+  
+  <p-dialog 
+    [(visible)]="deleteDialog" 
+    header="Confirmer Suppression" 
+    [modal]="true" 
+    [style]="{ width: 'min(500px, 80vw)', fontFamily: 'Jost' }"
+    [contentStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
+    >
+    <div class="flex align-items-center justify-content-start p-4">
+      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color: #e74c3c"></i>
+      <span *ngIf="equipement" class="text-lg font-Jost">Voulez-vous vraiment supprimer <b class="text-900">{{ equipement.designation }}</b>?</span>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end gap-2 ">
+        <button pButton pRipple 
+                label="NON" 
+                class="p-button-text p-button-plain font-Jost"
+                icon="pi pi-times"
+                (click)="cancelDelete()"></button>
+        <button 
+          pButton pRipple      
+          label="OUI" 
+          class="p-button-danger font-Jost" 
+          icon="pi pi-check"
+        >
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+  
