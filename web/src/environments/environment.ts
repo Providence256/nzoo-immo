@@ -3,7 +3,7 @@
 // src/environments/environment.ts
 export const environment = {
     production: false,
-    apiUrl: 'https://api.dev.nzoo.immo/api',
+    apiUrl: 'http://localhost:5000/api/',
     googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
   };
   

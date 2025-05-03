@@ -47,6 +47,15 @@ namespace API.Controllers
         public async Task<ActionResult<Devise>> CreateDevise(DeviseRequest request)
         {
 
+            if (request.IsFiscale)
+            {
+                var existingFiscaleDevise = await repo.GetAllAsync();
+                var hasFiscaleDevise = existingFiscaleDevise.Any(x => x.IsFiscale == true);
+                if (hasFiscaleDevise)
+                {
+                    return BadRequest("There is already a fiscal devise. You cannot add another one.");
+                }
+            }
             var devise = mapper.Map<Devise>(request);
 
             await repo.AddAsync(devise);

@@ -1,162 +1,322 @@
-<div>
-    <p-toast></p-toast>
-      <p-toolbar styleClass="mb-4" >
-          <ng-template pTemplate="left">
-              <div>
-                <button  
-                  pButton 
-                  pRipple 
-                  label="Ajouter" 
-                  icon="pi pi-plus-circle" 
-                  class="p-button-primary mr-2"
-                  (click)="openDialog()"
-                >
-               </button>
-                
-              </div>
+<div class="ville-container">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <div>
+        <button pButton pRipple label="Ajouter" icon="pi pi-plus-circle" 
+                class="p-button-primary mr-2" (click)="openDialog()">
+        </button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table 
+    [value]="villes" 
+    [loading]="loading" 
+    [paginator]="true" 
+    [scrollable]="true"
+    [rows]="10"
+    responsiveLayout="stack"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    [showCurrentPageReport]="true" 
+    [resizableColumns]="true"
+     currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} villes"
+    styleClass="font-Jost p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm">
+    
+    <ng-template pTemplate="caption">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
+        <h2 class="text-lg font-semibold text-gray-800">Gestion des Villes</h2>
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            placeholder="Rechercher une ville..."
+            class="p-inputtext-sm font-Jost"
+          />
+        </p-iconfield>
+      </div>
+    </ng-template>
+    
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="text-center font-Jost">Code </th>
+        <th class="text-center font-Jost">Designation </th>
+        <th class="text-center font-Jost">Déscription </th>
+        <th class="text-center font-Jost">Image</th>
+        <th class="text-center font-Jost">Actions</th>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="body" let-ville>
+      <tr>
+        <td class="text-center font-Jost">{{ ville.code }}</td>
+        <td class="text-center font-Jost">{{ ville.designation }}</td>
+        <td class="text-center font-Jost">
+          {{ ville.description.length > 100 ? (ville.description | slice:0:20) + '...' : ville.description }}
+        </td>
+        <td class="text-center p-2 md:p-4">
+          <div class=" items-center justify-center h-full gap-2">
+            <ng-container *ngIf="ville.imageUrl; else noImage">
+              <img [src]="ville.imageUrl" alt="Ville"
+                  class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-md shadow hover:scale-105 transition-transform duration-200"
+                  loading="lazy" />
+            </ng-container>
+            <ng-template #noImage>
+              <span class="text-gray-400 dark:text-gray-500 italic text-sm sm:text-base">
+                Pas d'image
+              </span>
             </ng-template>
-      </p-toolbar>
+          </div>
+        </td>
+        
+        <td class="text-center">
+          <div class="flex gap-2 h-full">
+            <button pButton icon="pi pi-pencil"
+                    class="p-button-sm p-button-rounded p-button-info"
+                    pTooltip="Modifier" tooltipPosition="top"
+                    (click)="editVille(ville)"></button>
+            <button pButton icon="pi pi-trash"
+                    class="p-button-sm p-button-rounded p-button-danger"
+                    pTooltip="Supprimer" tooltipPosition="top"
+                    (click)="deleteVille(ville)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center p-4">
+          <div class="flex flex-col items-center justify-center py-6">
+            <i class="pi pi-info-circle text-4xl text-blue-300 mb-2"></i>
+            <span class="text-lg">Aucune ville trouvée</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Add/Edit Dialog -->
+<p-dialog 
+  [header]="ville.id ? 'Modifier la Ville' : 'Ajouter une Ville'"
+  [modal]="true" 
+  [(visible)]="dialog"
+  [breakpoints]="{'960px': '75vw', '640px': '90vw'}" 
+  [style]="{width: '550px'}"
+  [draggable]="false" 
+  [resizable]="false"
+  styleClass="ville-dialog"
+  [contentStyle]="{'border-radius': '8px', 'overflow-y': 'auto', 'max-height': '85vh'}"
+  [closeOnEscape]="true">
   
+  <div class="p-3 sm:p-5">
+    <form [formGroup]="formGroup" class="w-full">
       
-  </div>
-  
-  
-  <p-dialog 
-    header="Ajouter Ville" 
-    class="font-Jost"
-    [modal]="true" 
-    [(visible)]="dialog" 
-    [style]="{ width: 'min(600px, 90vw)' }"
-    [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
-  >
-    <div class="p-1 space-y-2">
-      
-      <form [formGroup]="formGroup">
-        <!-- Code Field -->
-      <div class="flex flex-col  w-full">
-        <label for="code" class="font-semibold font-Jost text-gray-700">Code</label>
-        <input 
-          pInputText 
-          id="code" 
-          formControlName="code"
-          placeholder="Code"
-          class="w-full p-3 placeholder:font-Jost border rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none"
-          autocomplete="off" 
-        />
+      <!-- Code Field -->
+      <div class="mb-5">
+        <label for="code" class="block text-sm font-medium text-gray-700 mb-1">
+          Code <span class="text-red-500">*</span>
+        </label>
+        <span class="p-input-icon-left w-full">
+         
+          <input 
+            pInputText 
+            id="code" 
+            formControlName="code"
+            placeholder="Entrez le code" 
+            autocomplete="off"
+            class="w-full p-inputtext-sm" 
+            [ngClass]="{'ng-dirty': isInvalid('code')}" 
+          />
+        </span>
+        <small *ngIf="isInvalid('code')" class="p-error block mt-1">
+          {{ getErrorMessage('code') }}
+        </small>
       </div>
-  
+
       <!-- Désignation Field -->
-      <div class="flex flex-col  w-full">
-        <label for="designation" class="font-semibold font-Jost text-gray-700">Désignation</label>
-        <input 
-          pInputText 
-          id="designation"
-          formControlName="designation"
-          placeholder="Désignation"
-          class="w-full p-3 border placeholder:font-Jost rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none"
-          autocomplete="off" 
-        />
+      <div class="mb-5">
+        <label for="designation" class="block text-sm font-medium text-gray-700 mb-1">
+          Désignation <span class="text-red-500">*</span>
+        </label>
+        <span class="p-input-icon-left w-full">
+          <input 
+            pInputText 
+            id="designation" 
+            formControlName="designation"
+            placeholder="Entrez la désignation" 
+            autocomplete="off"
+            class="w-full p-inputtext-sm" 
+            [ngClass]="{'ng-dirty': isInvalid('designation')}" 
+          />
+        </span>
+        <small *ngIf="isInvalid('designation')" class="p-error block mt-1">
+          {{ getErrorMessage('designation') }}
+        </small>
       </div>
-  
+      <div class="mb-5">
+        <label for="designation" class="block text-sm font-medium text-gray-700 mb-1">
+          Déscription <span class="text-red-500">*</span>
+        </label>
+        <span class="p-input-icon-left w-full">
+          <textarea pInputText type="text" 
+            formControlName="description" 
+            rows="6" cols="30"  
+            placeholder="Entrer la déscription de ville"
+            [ngClass]="{'ng-dirty': isInvalid('description')}" 
+            class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" >
+          </textarea>
+        </span>
+        <small *ngIf="isInvalid('description')" class="p-error block mt-1">
+          {{ getErrorMessage('description') }}
+        </small>
+      </div>
+
       <!-- File Upload -->
-      <div class="flex flex-col">
-        <label class="font-semibold text-gray-700 mb-2">Photo de la Ville</label>
+      <div class="mb-5">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Photo de la Ville
+        </label>
       
-        <!-- Zone d'upload ou image -->
+        <!-- Zone d'upload -->
         <div *ngIf="!villeImage; else imagePreview"
-          class="flex flex-col items-center border-2 border-dashed 
-                 border-gray-300 p-4 rounded-lg w-full hover:border-green-500 
-                 transition-colors cursor-pointer"
+          class="border-2 border-dashed border-gray-300 rounded-lg 
+                bg-gray-50 hover:bg-gray-100 transition-colors 
+                cursor-pointer flex flex-col items-center justify-center p-6"
           (click)="fileInput.click()">
           
-          <i class="pi pi-cloud-upload text-green-500 text-4xl mb-2"></i>
-          <p class="text-gray-500 text-sm font-Jost text-center">
-            Cliquez pour sélectionner une image
-          </p>
+          <div class="flex flex-col items-center text-center">
+            <i class="pi pi-image text-blue-500 text-3xl mb-3"></i>
+            <p class="text-gray-700 font-medium mb-1">
+              Déposez votre image ici
+            </p>
+            <p class="text-gray-500 text-sm">
+              ou cliquez pour sélectionner un fichier
+            </p>
+            <span class="mt-2 text-xs text-gray-400 px-3">
+              Formats acceptés: JPG, PNG, GIF, WEBP (max 5MB)
+            </span>
+          </div>
+          
           <input 
-            type="file"  
+            type="file" 
+            (change)="onFileSelected($event)" 
             class="hidden" 
             #fileInput 
-            accept="image/*">
+            accept="image/jpeg,image/png,image/gif,image/webp"
+          >
         </div>
       
         <!-- Preview image -->
         <ng-template #imagePreview>
-          <div class="relative w-full max-w-xs">
-            <img 
-              [src]="villeImage" 
-              class="w-full h-40 object-cover rounded-lg shadow-md">
-      
-            <!-- Supprimer -->
-            <button 
-              class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 flex items-center justify-center rounded-full shadow hover:bg-red-600 transition"
-              >
-              <i class="pi pi-times text-xs"></i>
-            </button>
-      
-            <!-- Réuploader (optionnel) -->
-            <button 
-              class="absolute bottom-1 right-1 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600"
-              (click)="fileInput.click()">
-              Changer
-            </button>
+          <div class="flex flex-col items-center">
+            <!-- Image container with shadow and border -->
+            <div class="relative w-full max-w-sm mx-auto rounded-lg overflow-hidden 
+                      shadow-md border border-gray-200 bg-white p-2">
+              <img 
+                [src]="villeImage" 
+                class="w-full h-48 object-contain rounded"
+                alt="Aperçu de l'image">
+          
+              <!-- Actions overlay -->
+              <div class="absolute top-2 right-2 flex gap-2">
+                <!-- Remove button -->
+                <button 
+                  pButton 
+                  pRipple 
+                  type="button"
+                  icon="pi pi-trash" 
+                  class="p-button-rounded p-button-danger p-button-sm"
+                  pTooltip="Supprimer l'image" 
+                  tooltipPosition="top"
+                  (click)="removeImage($event)">
+                </button>
+                
+                <!-- Change button -->
+                <button 
+                  pButton 
+                  pRipple 
+                  type="button"
+                  icon="pi pi-refresh" 
+                  class="p-button-rounded p-button-info p-button-sm"
+                  pTooltip="Changer d'image" 
+                  tooltipPosition="top"
+                  (click)="fileInput.click()">
+                </button>
+              </div>
+            </div>
+            
+            <!-- Filename display -->
+            <div *ngIf="imageFile" class="mt-2 text-sm text-gray-600 text-center">
+              {{ imageFile.name }} ({{ (imageFile.size / 1024).toFixed(1) }} KB)
+            </div>
           </div>
       
-          <!-- Hidden input même ici -->
+          <!-- Hidden input -->
           <input 
             type="file" 
+            (change)="onFileSelected($event)" 
             class="hidden" 
             #fileInput 
-            accept="image/*">
+            accept="image/jpeg,image/png,image/gif,image/webp"
+          >
         </ng-template>
       </div>
+    </form>
+  </div>
+
+  <!-- Dialog Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-end p-3">
+      <button 
+        pButton 
+        pRipple 
+        type="button" 
+        label="Annuler"
+        icon="pi pi-times" 
+        class="p-button-outlined p-button-secondary" 
+        [disabled]="loading"
+        (click)="annuler()">
+      </button>
       
-      </form>
-  
-      <!-- Buttons -->
-      <div class="flex flex-col sm:flex-row gap-3 pt-4">
-        <button 
-          pButton
-          type="button"
-          label="Annuler" 
-          class="font-Jost p-button-outlined w-full"
-          severity="secondary"
-        ></button>
-        <button 
-          pButton
-          type="button"
-          label="Enregistrer" 
-          class="w-full font-Jost"
-        ></button>
-      </div>
+      <button 
+        pButton 
+        pRipple 
+        type="button" 
+        [label]="ville.id ? 'Modifier' : 'Enregistrer'"
+        icon="pi pi-check" 
+        class="p-button-primary" 
+        [loading]="loading" 
+        (click)="addVille()">
+      </button>
     </div>
-  </p-dialog>
+  </ng-template>
+</p-dialog>
+
+<!-- Delete Confirmation Dialog -->
+<p-dialog [(visible)]="deleteDialog" 
+          header="Confirmer la Suppression" 
+          [modal]="true" 
+          [style]="{ width: 'min(500px, 90vw)' }">
+  <div class="flex items-center p-4">
+    <i class="pi pi-exclamation-triangle mr-3 text-yellow-500" style="font-size: 2rem"></i>
+    <span *ngIf="ville" class="text-lg">
+      Voulez-vous vraiment supprimer <b>{{ ville.designation }}</b>?
+      <p class="text-sm text-gray-500 mt-2">Cette action est irréversible.</p>
+    </span>
+  </div>
   
-  
-  <p-dialog 
-    [(visible)]="deleteDialog" 
-    header="Confirmer Suppression" 
-    [modal]="true" 
-    [style]="{ width: 'min(500px, 90vw)', fontFamily: 'Jost' }"
-    [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
-    >
-    <div class="flex align-items-center justify-content-start p-4">
-      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color: #e74c3c"></i>
-      <span *ngIf="ville" class="text-lg font-Jost">Voulez-vous vraiment supprimer <b class="text-900">{{ ville.designation }}</b>?</span>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button pButton pRipple label="Non" 
+              class="p-button-text" icon="pi pi-times"
+              (click)="cancelDelete()"></button>
+      <button pButton pRipple label="Oui" 
+              class="p-button-danger" icon="pi pi-check"
+              [loading]="loading"
+              (click)="confirmDelete(ville.id)"></button>
     </div>
-    <ng-template pTemplate="footer">
-      <div class="flex justify-content-end gap-2">
-        <button pButton pRipple 
-                label="NON" 
-                class="p-button-text p-button-plain font-Jost"
-                icon="pi pi-times"></button>
-        <button 
-          pButton pRipple      
-          label="OUI" 
-          class="p-button-danger font-Jost" 
-          icon="pi pi-check"
-        >
-        </button>
-      </div>
-    </ng-template>
-  </p-dialog>
+  </ng-template>
+</p-dialog>

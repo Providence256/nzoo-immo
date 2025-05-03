@@ -23,11 +23,11 @@ export class VilleService {
         return this.villeApi.find(id);
       }
     
-      createVille(ville: Partial<any>): Observable<any> {
+      createVille(ville: FormData): Observable<any> {
         return this.villeApi.add(ville);
       }
     
-      updateVille(id: number, ville: Partial<any>): Observable<any> {
+      updateVille(id: number, ville: FormData): Observable<any> {
         return this.villeApi.edit(id, ville);
       }
     

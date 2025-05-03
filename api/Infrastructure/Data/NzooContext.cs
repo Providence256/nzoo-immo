@@ -24,6 +24,23 @@ public class NzooContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<TauxChange>()
+                    .HasOne(e => e.Devise)
+                    .WithMany()
+                    .HasForeignKey(e => e.DeviseId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<TauxChange>()
+                    .HasOne(e => e.DeviseReference)
+                    .WithMany()
+                    .HasForeignKey(e => e.DeviseReferenceId)
+                    .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<ListingLocation>()
+                    .HasOne(l => l.Ville)
+                    .WithMany()
+                    .HasForeignKey(l => l.VilleId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NzooContext).Assembly);
     }

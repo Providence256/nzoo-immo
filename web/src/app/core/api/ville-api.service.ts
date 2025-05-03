@@ -27,12 +27,12 @@ export class VilleApiService extends BaseApiService {
         return this.get<any>(`${this.endpoint}/${id}`);
       }
     
-      add(ville: Partial<any>): Observable<any> {
-        return this.post<any>(this.endpoint, ville);
+      add(ville: FormData): Observable<any> {
+        return this.postFormData<any>(this.endpoint, ville);
       }
     
-      edit(id: number, ville: Partial<any>): Observable<any> {
-        return this.put<any>(`${this.endpoint}/${id}`, ville);
+      edit(id: number, ville: FormData): Observable<any> {
+        return this.putFormData<any>(`${this.endpoint}/${id}`, ville);
       }
     
       deleteVille(id: number): Observable<any> {

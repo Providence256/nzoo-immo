@@ -73,7 +73,8 @@ import { DialogService } from 'primeng/dynamicdialog'
 import { CardModule } from 'primeng/card'
 import { MessageService } from 'primeng/api'
 import { providePrimeNG } from 'primeng/config'
-import { DatePickerModule } from 'primeng/datepicker'
+import { IconFieldModule } from 'primeng/iconfield'
+import { InputIconModule } from 'primeng/inputicon'
 
 @NgModule({
   declarations: [],
@@ -98,7 +99,6 @@ import { DatePickerModule } from 'primeng/datepicker'
     ConfirmPopupModule,
     CommonModule,
     DataViewModule,
-    DatePickerModule,
     DialogModule,
     DividerModule,
     DropdownModule,
@@ -152,33 +152,6 @@ import { DatePickerModule } from 'primeng/datepicker'
     ToastModule,
   ],
   exports: [
-    TableModule,
-    ButtonModule,
-    RippleModule,
-    InputTextModule,
-    InputNumberModule,
-    DropdownModule,
-    CalendarModule,
-    CheckboxModule,
-    RadioButtonModule,
-    PanelModule,
-    CardModule,
-    ToolbarModule,
-    ToastModule,
-    ConfirmDialogModule,
-    DialogModule,
-    MenuModule,
-    SidebarModule,
-    ChartModule,
-    SelectButtonModule,
-    FileUploadModule,
-    AvatarModule,
-    BadgeModule,
-    TooltipModule,
-    TagModule,
-    TabViewModule,
-    MenubarModule,
-    BreadcrumbModule,
     AvatarModule,
     AutoCompleteModule,
     AvatarGroupModule,
@@ -199,7 +172,6 @@ import { DatePickerModule } from 'primeng/datepicker'
     ConfirmPopupModule,
     CommonModule,
     DataViewModule,
-    DatePickerModule,
     DialogModule,
     DividerModule,
     DropdownModule,
@@ -207,6 +179,8 @@ import { DatePickerModule } from 'primeng/datepicker'
     FieldsetModule,
     FormsModule,
     GalleriaModule,
+    IconFieldModule,
+    InputIconModule,
     InputSwitchModule,
     InputMaskModule,
     InputNumberModule,

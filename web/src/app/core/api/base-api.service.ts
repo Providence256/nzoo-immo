@@ -38,6 +38,20 @@ export class BaseApiService {
           })
           .pipe(catchError(this.handleError));
       }
+
+      protected postFormData<T>(endpoint: string, data: FormData):Observable<T>{
+        return this.http
+          .post<T>(`${this.config.apiUrl}${endpoint}`, data, {    
+          })
+          .pipe(catchError(this.handleError));
+      }
+
+      protected putFormData<T>(endpoint: string, data: FormData): Observable<T> {
+        return this.http
+          .put<T>(`${this.config.apiUrl}${endpoint}`, data, {
+          })
+          .pipe(catchError(this.handleError));
+      }
     
       protected delete<T>(endpoint: string): Observable<T> {
         return this.http

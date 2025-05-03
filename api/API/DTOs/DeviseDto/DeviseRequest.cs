@@ -1,10 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.DeviseDto;
 
 public class DeviseRequest
 {
-    public required string Code { get; set; }
-    public required string Designation { get; set; }
+    [Required]
+    public string Code { get; set; } = string.Empty;
+    [Required]
+    public string Designation { get; set; } = string.Empty;
     public bool IsFiscale { get; set; }
 }

@@ -18,6 +18,8 @@ export class CommunesComponent implements OnInit {
  communes: any[] = [];
  villes: any[] = []
  commune: any = {}
+ loading: boolean = false
+ submitted: boolean = false
 
     constructor(private breadcrumbService: BreadcrumbService, 
           
@@ -29,15 +31,23 @@ export class CommunesComponent implements OnInit {
           ]);
     }
     ngOnInit(): void {
+       
+
+    }   
+
+
+    initForm(): void{
         this.formGroup = new FormGroup({
             code: new FormControl('', Validators.required),     
             designation: new FormControl('', Validators.required),
             ville: new FormControl('', Validators.required),
         })
+    }
 
-        
-    }   
 
+    loadCommunes(){
+
+    }
 
 
     openDialog(){

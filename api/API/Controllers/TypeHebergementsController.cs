@@ -28,12 +28,13 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TypeHebergement>> CreateTypeHebergement(TypeHebergement type)
+        public async Task<ActionResult<TypeHebergement>> CreateTypeHebergement(TypeHebergementRequest request)
         {
-            await repo.AddAsync(type);
+            var typeHebergement = mapper.Map<TypeHebergement>(request);
+            await repo.AddAsync(typeHebergement);
 
 
-            return CreatedAtAction("GetTypehebergements", new { id = type.Id });
+            return CreatedAtAction("GetTypehebergements", new { id = typeHebergement.Id });
 
 
         }

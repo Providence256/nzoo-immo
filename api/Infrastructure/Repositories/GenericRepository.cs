@@ -9,15 +9,36 @@ public class GenericRepository<T>(NzooContext context) : IGenericRepository<T> w
 {
     public async Task<T> AddAsync(T entity)
     {
-        await context.Set<T>().AddAsync(entity);
-        await context.SaveChangesAsync();
-        return entity;
+        try
+        {
+            await context.Set<T>().AddAsync(entity);
+            await context.SaveChangesAsync();
+            return entity;
+        }
+        catch (DbUpdateException ex)
+        {
+
+            var innerException = ex.InnerException != null
+                    ? ex.InnerException.Message
+                    : "No inner exception Details";
+
+            throw new ApplicationException($"Error adding entity: {ex.Message}. Inner exception: {innerException}");
+        }
     }
 
     public async Task DeleteAsync(T entity)
     {
-        context.Set<T>().Remove(entity);
-        await context.SaveChangesAsync();
+
+        try
+        {
+            context.Set<T>().Remove(entity);
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            var innerException = ex.InnerException != null ? ex.InnerException.Message : "No inner exception details";
+            throw new ApplicationException($"Failed to delete entity: {innerException}", ex);
+        }
     }
 
     public async Task<IReadOnlyList<T>> GetAllAsync()
@@ -32,7 +53,15 @@ public class GenericRepository<T>(NzooContext context) : IGenericRepository<T> w
 
     public async Task UpdateAsync(T entity)
     {
-        context.Set<T>().Update(entity);
-        await context.SaveChangesAsync();
+        try
+        {
+            context.Entry(entity).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            var innerException = ex.InnerException != null ? ex.InnerException.Message : "No inner exception details";
+            throw new ApplicationException($"Failed to update entity: {innerException}", ex);
+        }
     }
 }
