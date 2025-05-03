@@ -16,6 +16,9 @@ public class MappingProfiles : Profile
     {
         CreateMap<Ville, VilleRequest>().ReverseMap();
         CreateMap<Commune, CommuneRequest>().ReverseMap();
+        CreateMap<Commune, CommuneResponse>()
+                            .ForMember(d => d.Ville, o => o.MapFrom(s => s.Ville.Designation))
+                            .ReverseMap();
         CreateMap<Devise, DeviseRequest>().ReverseMap();
         CreateMap<Equipement, EquipementRequest>().ReverseMap();
         CreateMap<TypeHebergement, TypeHebergementRequest>().ReverseMap();

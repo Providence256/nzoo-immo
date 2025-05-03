@@ -1,5 +1,6 @@
 using System;
 using Core.Entities;
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,7 @@ public class GenericRepository<T>(NzooContext context) : IGenericRepository<T> w
         }
     }
 
+
     public async Task DeleteAsync(T entity)
     {
 
@@ -51,6 +53,11 @@ public class GenericRepository<T>(NzooContext context) : IGenericRepository<T> w
         return await context.Set<T>().FindAsync(id);
     }
 
+    public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
+    {
+        return await ApplySpecification(spec).ToListAsync();
+    }
+
     public async Task UpdateAsync(T entity)
     {
         try
@@ -63,5 +70,10 @@ public class GenericRepository<T>(NzooContext context) : IGenericRepository<T> w
             var innerException = ex.InnerException != null ? ex.InnerException.Message : "No inner exception details";
             throw new ApplicationException($"Failed to update entity: {innerException}", ex);
         }
+    }
+
+    public IQueryable<T> ApplySpecification(ISpecification<T> spec)
+    {
+        return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
     }
 }

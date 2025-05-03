@@ -1,8 +1,8 @@
 using API.DTOs.CommuneDto;
 using AutoMapper;
 using Core.Entities;
+using Core.Specification;
 using Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,9 +13,12 @@ namespace API.Controllers
     {
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Commune>>> GetCommunes()
+        public async Task<ActionResult<IReadOnlyList<CommuneResponse>>> GetCommunes()
         {
-            return Ok(await repo.GetAllAsync());
+            var spec = new CommuneSpecification();
+            var communes = await repo.ListAsync(spec);
+            var results = mapper.Map<IReadOnlyList<Commune>, IReadOnlyList<CommuneResponse>>(communes);
+            return Ok(results);
         }
 
         [HttpGet("{id:int}")]

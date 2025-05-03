@@ -1,9 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.RuleDto;
 
 public class RuleRequest
 {
-    public required int RuleId { get; set; }
-    public required bool Iselected { get; set; }
+    [Required]
+    public string Libelle { get; set; } = string.Empty;
 }

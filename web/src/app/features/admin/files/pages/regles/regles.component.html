@@ -1,152 +1,181 @@
 <div>
-    <p-toast></p-toast>
-      <p-toolbar styleClass="mb-4" >
-          <ng-template pTemplate="left">
-              <div>
-                <button  
-                  pButton 
-                  pRipple 
-                  label="Ajouter" 
-                  icon="pi pi-plus-circle" 
-                  class="p-button-primary mr-2"
-                  (click)="openDialog()"
-                >
-              </button>
-                
-              </div>
-            </ng-template>
-      </p-toolbar>
-  
-      <p-table
-       [value]="rules"
-       paginator="true"
-       [rows]="10"
-       [rowsPerPageOptions]="[10, 20, 30]"
-       [showCurrentPageReport]="true"
-       class="font-Jost"
-       styleClass="p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm"
-      >
-      <ng-template pTemplate="caption">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
-          <h2 class="text-lg font-semibold text-gray-800">Gestion des Regles</h2>
-          
-        </div>
-      </ng-template>
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="text-center font-Jost">Designation</th>
-              <th class="text-center font-Jost">Actions</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-rule >
-            <tr>
-              <td class="text-center font-Jost">{{ rule.libelle }}</td>
-            
-              <td class="text-center">
-                <div class="flex  gap-2 h-full">
-                  <button
-                    pButton
-                    icon="pi pi-pencil"
-                    class="p-button-sm p-button-rounded p-button-info"
-                    tooltip="Modifier"
-                    tooltipPosition="top"
-                    (click)="editRule(rule)"
-                  ></button>
-                  <button
-                    pButton
-                    icon="pi pi-trash"
-                    class="p-button-sm p-button-rounded p-button-danger"
-                    tooltip="Supprimer"
-                    tooltipPosition="top"
-                    (click)="deleteRule(rule)"
-                  ></button>
-                </div>
-              </td>
+  <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4" >
+        <ng-template pTemplate="left">
+            <div>
+              <button  
+                pButton 
+                pRipple 
+                label="Ajouter" 
+                icon="pi pi-plus-circle" 
+                class="p-button-primary mr-2"
+                (click)="openDialog()"
+              >
+            </button>
               
-            </tr>
+            </div>
           </ng-template>
-      </p-table>
-  </div>
+    </p-toolbar>
+
+    <p-table
+     [value]="rules"
+     [loading]="loading"
+     paginator="true"
+     [rows]="10"
+     [rowsPerPageOptions]="[10, 20, 30]"
+     responsiveLayout="stack"
+     [showCurrentPageReport]="true"
+     class="font-Jost"
+     styleClass="p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm"
+    >
+    <ng-template pTemplate="caption">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
+        <h2 class="text-lg font-semibold text-gray-800">Gestion des Règles</h2>
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            placeholder="Rechercher une règle..."
+            class="p-inputtext-sm font-Jost"
+          />
+        </p-iconfield>
+      </div>
+    </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-center font-Jost">Désignation</th>
+            <th class="text-center font-Jost">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rule >
+          <tr>
+            <td class="text-center font-Jost">{{ rule.libelle }}</td>
+          
+            <td class="text-center">
+              <div class="flex justify-center gap-2 h-full">
+                <button
+                  pButton
+                  icon="pi pi-pencil"
+                  class="p-button-sm p-button-rounded p-button-info"
+                  pTooltip="Modifier"
+                  tooltipPosition="top"
+                  (click)="editRule(rule)"
+                ></button>
+                <button
+                  pButton
+                  icon="pi pi-trash"
+                  class="p-button-sm p-button-rounded p-button-danger"
+                  pTooltip="Supprimer"
+                  tooltipPosition="top"
+                  (click)="deleteRule(rule)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="2" class="text-center p-4">
+              <div class="flex flex-col items-center justify-center py-6">
+                <i class="pi pi-info-circle text-4xl text-blue-300 mb-2"></i>
+                <span class="text-lg">Aucune règle trouvée</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+    </p-table>
+</div>
 
 
-  <p-dialog 
-  header="Ajouter Regle" 
-  class="font-Jost"
-  [modal]="true" 
-  [(visible)]="dialog" 
-  [style]="{ width: 'min(600px, 90vw)' }"
-  [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
+<p-dialog 
+[header]="rule.id ? 'Modifier Règle' : 'Ajouter Règle'" 
+class="font-Jost"
+[modal]="true" 
+[(visible)]="dialog"
+[breakpoints]="{'960px': '75vw', '640px': '90vw'}"
+[style]="{width: '550px'}"
+[contentStyle]="{'border-radius': '8px', 'overflow-y': 'auto', 'max-height': '85vh'}"
+[closeOnEscape]="true"
 >
-  <div class="p-1 space-y-2">
-   <form [formGroup]="formGroup" >
-     
-    <!-- Désignation Field -->
-    
-    <div class="flex flex-col w-full">
-      <label for="designation" class="font-semibold font-Jost text-gray-700">Libelle</label>
+<div class="p-3 sm:p-5">
+ <form [formGroup]="formGroup" >
+   
+  <!-- Désignation Field -->
+  <div class="mb-5">
+    <label for="libelle" class="block text-sm font-medium text-gray-700 mb-1">
+      Libellé <span class="text-red-500">*</span>
+    </label>
+    <span class="p-input-icon-left w-full">
       <input 
         pInputText 
         id="libelle"
-        placeholder="Libelle"
+        placeholder="Libellé"
         required
         formControlName="libelle"
-        class="flex-auto placeholder:font-Jost w-full sm:w-auto p-2 border rounded-md focus:ring-2 focus:ring-blue-300"
+        class="w-full p-inputtext-sm"
+        [ngClass]="{'ng-dirty': isInvalid('libelle')}"
         autocomplete="off" 
       />
-      <small class="text-red-500 text-xs" *ngIf="formGroup.controls['libelle'].dirty &&
-              formGroup.hasError('required', 'libelle')">
-    *Champ Obligatoire          
+    </span>
+    <small *ngIf="isInvalid('libelle')" class="p-error block mt-1">
+      {{ getErrorMessage('libelle') }}
     </small>
-    </div>
+  </div>
+ </form>
+</div>
 
-   
-   </form>
-
-    <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row gap-3 pt-4">
+  <!-- Buttons -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 pt-3">
       <button 
         pButton
         type="button"
         label="Annuler" 
-        class="font-Jost p-button-outlined w-full"
+        icon="pi pi-times"
+        class="font-Jost p-button-secondary"
         severity="secondary"
+        [disabled]="loading"
         (click)="annuler()"
       ></button>
       <button 
         pButton
         type="button"
-        label="Enregistrer" 
-        class="w-full font-Jost"
-      ></button>
-    </div>
-  </div>
-</p-dialog>
-
-<p-dialog 
-  [(visible)]="deleteDialog" 
-  header="Confirmer Suppression" 
-  [modal]="true" 
-  [style]="{ width: 'min(500px, 80vw)', fontFamily: 'Jost' }"
-  [contentStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
-  >
-  <div class="flex align-items-center justify-content-start p-4">
-    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color: #e74c3c"></i>
-    <span *ngIf="rule" class="text-lg font-Jost">Voulez-vous vraiment supprimer <b class="text-900">{{ rule.libelle }}</b>?</span>
-  </div>
-  <ng-template pTemplate="footer">
-    <div class="flex justify-content-end gap-2 ">
-      <button pButton pRipple 
-              label="NON" 
-              class="p-button-text p-button-plain font-Jost"
-              icon="pi pi-times"
-              (click)="cancelDelete()"></button>
-      <button 
-        pButton pRipple      
-        label="OUI" 
-        class="p-button-danger font-Jost" 
+        [label]="rule.id ? 'Modifier' : 'Enregistrer'" 
         icon="pi pi-check"
-      >
-      </button>
+        class="font-Jost p-button-primary"
+        [loading]="loading"
+        (click)="addRule()"
+      ></button>
     </div>
   </ng-template>
 </p-dialog>
+
+
+  <!-- Delete Confirmation Dialog -->
+  <p-dialog [(visible)]="deleteDialog" 
+  header="Confirmer la Suppression" 
+  [modal]="true" 
+  [style]="{ width: 'min(500px, 90vw)' }">
+  <div class="flex items-center p-4">
+  <i class="pi pi-exclamation-triangle mr-3 text-yellow-500" style="font-size: 2rem"></i>
+  <span *ngIf="rule" class="text-lg">
+  Voulez-vous vraiment supprimer <b>{{ rule.libelle }}</b>?
+  <p class="text-sm text-gray-500 mt-2">Cette action est irréversible.</p>
+  </span>
+  </div>
+  
+  <ng-template pTemplate="footer">
+  <div class="flex justify-end gap-2">
+  <button pButton pRipple label="Non" 
+      class="p-button-text" icon="pi pi-times"
+      (click)="cancelDelete()"></button>
+  <button pButton pRipple label="Oui" 
+      class="p-button-danger" icon="pi pi-check"
+      [loading]="loading"
+      (click)="confirmDelete(rule.id)"></button>
+  </div>
+  </ng-template>
+  </p-dialog>
+
+

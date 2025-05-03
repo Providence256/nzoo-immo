@@ -19,23 +19,33 @@
 
     <p-table
      [value]="typeHebergements"
+     [loading]="loading"
      paginator="true"
      [rows]="10"
      [rowsPerPageOptions]="[10, 20, 30]"
      [showCurrentPageReport]="true"
-     class="font-Jost"
+     responsiveLayout="stack"
+     currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} Type d'hébergement"
      styleClass="p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm"
     >
     <ng-template pTemplate="caption">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
-        <h2 class="text-lg font-semibold text-gray-800">Géstion des Type hebergements</h2>
-        
+        <h2 class="text-lg font-semibold text-gray-800">Gestion des Types d'hébergement</h2>
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            placeholder="Rechercher un type..."
+            class="p-inputtext-sm font-Jost"
+          />
+        </p-iconfield>
       </div>
     </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th class="text-center font-Jost">Code</th>
-            <th class="text-center font-Jost">Designation</th>
+            <th class="text-center font-Jost">Désignation</th>
             <th class="text-center font-Jost">Actions</th>
           </tr>
         </ng-template>
@@ -45,12 +55,12 @@
             <td class="text-center font-Jost">{{ type.designation }}</td>
             
             <td class="text-center">
-              <div class="flex  gap-2 h-full">
+              <div class="flex justify-center gap-2 h-full">
                 <button
                   pButton
                   icon="pi pi-pencil"
                   class="p-button-sm p-button-rounded p-button-info"
-                  tooltip="Modifier"
+                  pTooltip="Modifier"
                   tooltipPosition="top"
                   (click)="editType(type)"
                 ></button>
@@ -58,86 +68,111 @@
                   pButton
                   icon="pi pi-trash"
                   class="p-button-sm p-button-rounded p-button-danger"
-                  tooltip="Supprimer"
+                  pTooltip="Supprimer"
                   tooltipPosition="top"
                   (click)="deleteType(type)"
                 ></button>
               </div>
             </td>
-            
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" class="text-center p-4">
+              <div class="flex flex-col items-center justify-center py-6">
+                <i class="pi pi-info-circle text-4xl text-blue-300 mb-2"></i>
+                <span class="text-lg">Aucun type d'hébergement trouvé</span>
+              </div>
+            </td>
           </tr>
         </ng-template>
     </p-table>
 </div>
 
 <p-dialog 
-  header="Ajouter Type Hebergement" 
+  [header]="typeHebergement.id ? 'Modifier Type Hébergement' : 'Ajouter Type Hébergement'"
   class="font-Jost"
   [modal]="true" 
   [(visible)]="dialog" 
   [style]="{width: 'min(600px, 90vw)'}"
+  [contentStyle]="{ 'max-height': '90vh', 'overflow-y': 'auto' }"
+  [closeOnEscape]="true"
 >
-  <div class="p-1 space-y-2">
-   <form [formGroup]="formGroup">
-     <!-- Code Field -->
-     <div class="flex flex-col w-full">
-      <label for="code" class="font-semibold font-Jost text-gray-700">Code</label>
-      <input 
-        pInputText 
-        id="code"
-        autofocus
-        required
-        placeholder="Code"
-        formControlName="code"
-        class="flex-auto w-full sm:w-auto p-2 border rounded-md focus:ring-2 focus:ring-blue-300"
-        autocomplete="off" 
-      />
-      <small class="text-red-500 text-xs" *ngIf="formGroup.controls['code'].dirty &&
-              formGroup.hasError('required', 'code')">
-    *Champ Obligatoire          
-    </small>
-    </div>
-
+  <div class="p-3 sm:p-5">
+    <form [formGroup]="formGroup">
+      <!-- Code Field -->
+      <div class="mb-5">
+        <label for="code" class="block text-sm font-medium text-gray-700 mb-1">
+          Code <span class="text-red-500">*</span>
+        </label>
+        <span class="p-input-icon-left w-full">
+          <input 
+            pInputText 
+            id="code"
+            autofocus
+            required
+            placeholder="Code"
+            formControlName="code"
+            class="w-full p-inputtext-sm"
+            [ngClass]="{'ng-dirty': isInvalid('code')}"
+            autocomplete="off" 
+          />
+        </span>
+        <small *ngIf="isInvalid('code')" class="p-error block mt-1">
+          {{ getErrorMessage('code') }}
+        </small>
+      </div>
     
-    <!-- Désignation Field -->
-    
-    <div class="flex flex-col w-full">
-      <label for="designation" class="font-semibold font-Jost text-gray-700">Désignation</label>
-      <input 
-        pInputText 
-        id="designation" 
-        required
-        autofocus
-        placeholder="Désignation"
-        formControlName="designation"
-        class="flex-auto w-full sm:w-auto p-2 border rounded-md focus:ring-2 focus:ring-blue-300"
-        autocomplete="off" 
-      />
-      <small class="text-red-500 text-xs" *ngIf="formGroup.controls['designation'].dirty &&
-              formGroup.hasError('required', 'designation')">
-    *Champ Obligatoire          
-    </small>
-    </div>
-   </form>
+      <!-- Désignation Field -->
+      <div class="mb-5">
+        <label for="designation" class="block text-sm font-medium text-gray-700 mb-1">
+          Désignation <span class="text-red-500">*</span>
+        </label>
+        <span class="p-input-icon-left w-full">
+          <input 
+            pInputText 
+            id="designation" 
+            required
+            placeholder="Désignation"
+            formControlName="designation"
+            class="w-full p-inputtext-sm"
+            [ngClass]="{'ng-dirty': isInvalid('designation')}"
+            autocomplete="off" 
+          />
+        </span>
+        <small *ngIf="isInvalid('designation')" class="p-error block mt-1">
+          {{ getErrorMessage('designation') }}
+        </small>
+      </div>
+    </form>
+  </div>
 
     <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row gap-3 pt-4">
-      <button 
-        pButton
-        type="button"
-        label="Annuler" 
-        class="font-Jost p-button-outlined w-full"
-        severity="secondary"
-        (click)="annuler()"
-      ></button>
-      <button 
-        pButton
-        type="button"
-        label="Enregistrer" 
-        class="w-full font-Jost"
-      ></button>
-    </div>
-  </div>
+    <ng-template pTemplate="footer">
+      <div class="flex  gap-2 justify-end p-3">
+        <button 
+        pButton 
+        pRipple 
+        type="button" 
+        label="Annuler"
+        icon="pi pi-times" 
+        class="p-button-outlined p-button-secondary" 
+        [disabled]="loading"
+        (click)="annuler()">
+      </button>
+
+        <button 
+          pButton
+          type="button"
+          [label]="typeHebergement.id ? 'Modifier' : 'Enregistrer'" 
+          icon="pi pi-check"
+          class="font-Jost p-button-primary"
+          [loading]="loading"
+          (click)="addTypeHebergement()"
+        ></button>
+      </div>
+    </ng-template>
+  
 </p-dialog>
 
 <p-dialog 
@@ -149,7 +184,10 @@
   >
   <div class="flex align-items-center justify-content-start p-4">
     <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color: #e74c3c"></i>
-    <span *ngIf="typeHebergement" class="text-lg font-Jost">Voulez-vous vraiment supprimer <b class="text-900">{{ typeHebergement.designation }}</b>?</span>
+    <span *ngIf="typeHebergement" class="text-lg font-Jost">
+      Voulez-vous vraiment supprimer <b class="text-900">{{ typeHebergement.designation }}</b>?
+      <p class="text-sm text-gray-500 mt-2">Cette action est irréversible.</p>
+    </span>
   </div>
   <ng-template pTemplate="footer">
     <div class="flex justify-content-end gap-2">
@@ -163,6 +201,8 @@
         label="OUI" 
         class="p-button-danger font-Jost" 
         icon="pi pi-check"
+        [loading]="loading"
+        (click)="confirmDelete(typeHebergement.id)"
       >
       </button>
     </div>
