@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using API.Helpers;
 using API.Middleware;
 using API.Services;
@@ -41,6 +42,12 @@ builder.Services.AddMvc(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
 });
+
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(x =>
+    {
+        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

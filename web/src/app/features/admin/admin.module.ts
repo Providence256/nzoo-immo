@@ -14,6 +14,7 @@ import { TypeHebergementComponent } from './files/pages/type-hergement/type-hebe
 import { EquipementsComponent } from './files/pages/equipements/equipements.component';
 import { DevisesComponent } from './files/pages/devises/devises.component';
 import { ReglesComponent } from './files/pages/regles/regles.component';
+import { TauxChangeComponent } from './saisies/pages/taux-changes/taux-change.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -49,6 +50,7 @@ const routes: Routes = [
     EquipementsComponent,
     DevisesComponent,
     ReglesComponent,
+    TauxChangeComponent,
     
   ],
   imports: [

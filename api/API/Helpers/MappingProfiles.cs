@@ -2,7 +2,9 @@ using System;
 using API.DTOs.CommuneDto;
 using API.DTOs.DeviseDto;
 using API.DTOs.EquipementDto;
+using API.DTOs.ListingDto;
 using API.DTOs.RuleDto;
+using API.DTOs.TauxChangeDto;
 using API.DTOs.TypehebergementDto;
 using API.DTOs.VilleDto;
 using AutoMapper;
@@ -23,5 +25,27 @@ public class MappingProfiles : Profile
         CreateMap<Equipement, EquipementRequest>().ReverseMap();
         CreateMap<TypeHebergement, TypeHebergementRequest>().ReverseMap();
         CreateMap<Rule, RuleRequest>().ReverseMap();
+        CreateMap<TauxChange, TauxChangeRequest>().ReverseMap();
+
+        //Listing 
+        CreateMap<Listing, ListingResponse>()
+           .ForMember(dest => dest.TypeHebergement, opt => opt.MapFrom(src => src.TypeHebergement!.Designation))
+           .ForMember(dest => dest.Equipements, opt => opt.MapFrom(src => src.Equipements.Select(e => e.Equipement)))
+           .ForMember(dest => dest.Rules, opt => opt.MapFrom(src => src.Rules))
+           .ForMember(dest => dest.PhotoUrls, opt => opt.MapFrom(src => src.Photos.Select(p => p.PhotoUrl)));
+
+        // CreateMap<ListingPhoto, string>().ConvertUsing(p => p.PhotoUrl);
+        CreateMap<ListingPrice, ListingPriceResponse>()
+            .ForMember(dest => dest.CodeDevise, opt => opt.MapFrom(src => src.Devise!.Code));
+
+        CreateMap<ListingLocation, ListingLocationResponse>()
+            .ForMember(dest => dest.Ville, opt => opt.MapFrom(src => src.Ville!.Designation))
+            .ForMember(dest => dest.Commune, opt => opt.MapFrom(src => src.Commune!.Designation));
+
+        CreateMap<Equipement, EquipementResponse>()
+            .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Designation));
+        CreateMap<ListingRule, RuleResponse>()
+            .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Rule!.libelle))
+            .ForMember(dest => dest.IsSelected, opt => opt.MapFrom(src => src.IsSelected));
     }
 }
