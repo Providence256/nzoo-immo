@@ -1,0 +1,140 @@
+<div>
+    <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4" >
+          <ng-template pTemplate="left">
+              <div>
+                <button  
+                  pButton 
+                  pRipple 
+                  label="Ajouter" 
+                  icon="pi pi-plus-circle" 
+                  class="p-button-primary mr-2"
+                  (click)="openDialog()"
+                >
+              </button>
+                
+              </div>
+            </ng-template>
+      </p-toolbar>
+  
+      <p-table>
+          <ng-template #caption>
+              <div class="flex items-center justify-between">
+                  <h5 class="m-0 font-Jost">Géstion des Taux</h5>
+                  <p-iconfield>
+                      <p-inputicon styleClass="pi pi-search font-Jost" />
+                      <input pInputText type="text" placeholder="Search..." />
+                  </p-iconfield>
+              </div>
+          </ng-template>
+          
+      </p-table>
+  </div>
+  
+  <p-dialog 
+    header="Ajouter Taux de Change" 
+    class="font-Jost"
+    [modal]="true" 
+    [(visible)]="dialog" 
+    [style]="{ width: '650px', 'max-width': '95vw' }"
+    [breakpoints]="{ '640px': '90vw' }"
+  >
+    <div class="p-4 md:p-6 space-y-1">
+      <form [formGroup]="formGroup">
+        <!-- Currency Pair Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <!-- From Currency -->
+        <div class="flex flex-col gap-1">
+          <label for="fromCurrency" class="font-semibold text-gray-700">Devise Réference</label>
+          <input 
+          pInputText
+          readonly
+          id="deviseReference"
+          [ariaRequired]=""
+          placeholder="Devise de Réference"
+          formControlName="deviseReference"
+          class="flex-auto w-full placeholder:font-Jost sm:w-auto p-3 border rounded-md focus:ring-2 focus:ring-blue-300"
+          autocomplete="off" 
+        />
+        
+        </div>
+  
+        <!-- To Currency -->
+        <div class="flex flex-col gap-1">
+          <label for="toCurrency" class="font-semibold text-gray-700">Devise de Conversion</label>
+          <p-dropdown 
+            id="deviseConversion"
+            [options]="devises" 
+            optionLabel="code"
+            placeholder="Sélectionnez une devise"
+            formControlName="deviseConversion"
+            class="w-full"
+            [styleClass]="'border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-colors duration-200'"
+          ></p-dropdown>
+          <small class="text-red-500 text-xs" *ngIf="formGroup.controls['deviseConversion'].dirty &&
+          formGroup.hasError('required', 'deviseConversion')">
+            *Champ Obligatoire          
+          </small>
+        </div>
+      </div>
+  
+      <!-- Exchange Rate Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <!-- Rate -->
+        <div class="flex flex-col gap-1">
+          <label for="taux" class="font-semibold text-gray-700">Unité de Reférence</label>
+          <p-inputNumber 
+            id="uniteReference"
+            mode="decimal" 
+            [minFractionDigits]="4"
+            [maxFractionDigits]="6"
+            class="w-full"
+            formControlName="uniteReference"
+            [styleClass]="'p-inputtext-sm border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-colors duration-200'"
+          ></p-inputNumber>
+          <small class="text-red-500 text-xs" *ngIf="formGroup.controls['uniteReference'].dirty &&
+        formGroup.hasError('required', 'uniteReference')">
+          *Champ Obligatoire          
+        </small>
+        </div>
+  
+        <!-- Date -->
+        <div class="flex flex-col gap-1">
+          <label for="taux" class="font-semibold text-gray-700">Taux de Change</label>
+          <p-inputNumber 
+            id="tauxChange"
+            mode="decimal" 
+            [minFractionDigits]="4"
+            [maxFractionDigits]="6"
+            class="w-full"
+            formControlName="tauxChange"
+            [styleClass]="'p-inputtext-sm border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-colors duration-200'"
+          ></p-inputNumber>
+          <small class="text-red-500 text-xs" *ngIf="formGroup.controls['tauxChange'].dirty &&
+        formGroup.hasError('required', 'tauxChange')">
+          *Champ Obligatoire          
+        </small>
+        </div>
+      </div>
+      </form>
+  
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-4">
+        <button 
+          pButton
+          type="button"
+          label="Annuler" 
+          class="font-Jost p-button-outlined w-full"
+          severity="secondary"
+          (click)="annuler()"
+        ></button>
+        <button 
+          pButton
+          type="button"
+          label="Enregistrer" 
+          class="w-full font-Jost"
+          (click)="addtauxChange()"
+        ></button>
+      </div>
+    </div>
+  </p-dialog>

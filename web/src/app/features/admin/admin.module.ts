@@ -31,6 +31,10 @@ const routes: Routes = [
   {
     path: 'files',
     loadChildren: ()=> import('../admin/files/files.module').then((m)=> m.FilesModule)
+  },
+  {
+    path: 'saisies',
+    loadChildren: () => import('../admin/saisies/saisies.module').then((m) => m.SaisiesModule)
   }
   
   // Add other admin routes here
