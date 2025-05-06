@@ -15,6 +15,8 @@ import { EquipementsComponent } from './files/pages/equipements/equipements.comp
 import { DevisesComponent } from './files/pages/devises/devises.component';
 import { ReglesComponent } from './files/pages/regles/regles.component';
 import { TauxChangeComponent } from './saisies/pages/taux-changes/taux-change.component';
+import { AddAnnonceComponent } from './saisies/pages/add-annonce/add-annonce.component';
+import { ListAnnoncesComponent } from './saisies/pages/list-annonce/list-annonces.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -51,6 +53,8 @@ const routes: Routes = [
     DevisesComponent,
     ReglesComponent,
     TauxChangeComponent,
+    AddAnnonceComponent,
+    ListAnnoncesComponent,
     
   ],
   imports: [

@@ -1,322 +1,474 @@
-<div class="flex w-full px-2 sm:px-0">
-    <p-toast></p-toast>
-    <div class="w-full bg-white shadow-xl rounded-lg p-4 sm:p-8">
-        
-        <!-- Progress Bar -->
-        <div class="relative w-full flex items-center mb-4 sm:mb-6">
-            <div class="w-full h-1 bg-gray-200 rounded-full">
-                <div class="h-1 bg-blue-500 rounded-full transition-all duration-500" [style.width.%]="(currentStep / totalSteps) * 100"></div>
-            </div>
+<div>
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+        <div>
+            <button
+            class="px-6 py-2 bg-red-500 font-Jost rounded-md text-white disabled:opacity-50"
+            [routerLink]="['/admin/saisies/list-annonce']"
+            >
+            <i class="pi pi-arrow-left" style="font-size: 13px;"></i> Retour
+        </button>
         </div>
-  
-       <form [formGroup]="stepForm" >
-         <div [formGroupName]="'step' + currentStep">
-          <!-- Step Content -->
-         <div *ngIf="currentStep === 1" class="text-left">
-          <h3 class="text-lg font-semibold font-Jost text-gray-700">Details Annonce</h3>
-         
+      </ng-template>
+</p-toolbar>
+  <div class="w-full bg-white shadow-xl rounded-lg p-4 sm:p-8">
+    
       
-          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-             <!-- Category (Dropdown) - Full Width -->
-             <div class="flex flex-col text-left md:col-span-2">
-              <label class="text-gray-600 text-sm font-Jost font-medium">Type hebergement</label>
-              <p-dropdown 
-                [options]="types" 
-                optionLabel="designation" 
-                filter="true" 
-                placeholder="Selectionne un type"
-                formControlName="type"
-                class="w-full font-Jost  border rounded-md text-gray-700 placeholder:font-Jost">
-              </p-dropdown>
-             </div>
-  
-              <!-- Title -->
-              <div class="flex flex-col text-left">
-                  <label class="text-gray-600 text-sm font-Jost font-medium">Nombre de visiteurs</label>
-                  <input pInputText type="number" min="1" formControlName="nbreVisiteur" placeholder="Ex: 2" 
-                         class="w-full p-2 border text-right rounded-md text-gray-700 placeholder:font-Jost" />
-              </div>
-      
-              <!-- Description -->
-              <div class="flex flex-col text-left">
-                  <label class="text-gray-600 text-sm font-Jost font-medium">Nombre des chambres</label>
-                  <input pInputText type="number" min="0" formControlName="nbreChambre"  placeholder="Ex: 1" 
-                         class="w-full p-2 text-right border rounded-md text-gray-700 placeholder:font-Jost" />
-              </div>
-      
-              <!-- Price -->
-              <div class="flex flex-col text-left">
-                  <label class="text-gray-600 text-sm font-Jost font-medium">Nombre des douches</label>
-                  <input pInputText type="number" min="0" formControlName="nbreDouche" placeholder="Ex: 3" 
-                         class="w-full p-2 border text-right rounded-md text-gray-700 placeholder:font-Jost" />
-              </div>
-      
-              <!-- Location -->
-              <div class="flex flex-col text-left">
-                  <label class="text-gray-600 text-sm font-Jost font-medium">Nombre des Lits</label>
-                  <input pInputText type="number" min="0"  formControlName="nbreLit" placeholder="Ex: 4" 
-                         class="w-full p-2 border text-right rounded-md text-gray-700 placeholder:font-Jost" />
-              </div>
-              
-          </div> 
-          <div class="flex flex-col text-left md:col-span-2">
-            <div class="text-left">
-              <label class="text-gray-600 text-sm font-medium">Équipements</label>
-              
-              <!-- Sélecteur multi-options -->
-              <p-multiSelect 
-                [options]="equipements" 
-                optionLabel="designation" 
-                placeholder="Sélectionnez les équipements"
-                formControlName="equipement"
-                [style]="{'width': '100%'}"
-                [inputStyle]="{'width' : '100%'}"
-                [panelStyle]="{
-                  'max-width': '100vw',
-                  'width': 'auto',
-                  'min-width': 'min(100%, 20rem)'
-                }"
-                class="w-full font-Jost border rounded-md text-gray-700 placeholder:font-Jost"
-                >
-              </p-multiSelect>
-          
-              <!-- Affichage des équipements sélectionnés sous forme de Chips -->
-              <div class="mt-3 flex flex-wrap gap-2">
-                <p-chip 
-                  *ngFor="let equip of selectedEquipments" 
-                  [label]="equip.designation"
-                  class="bg-blue-500 text-white font-Jost flex items-center space-x-2 px-3 py-1 rounded-md">
-                  <i 
-                  class="pi pi-times-circle cursor-pointer text-red-600 hover:text-gray-200"
-                  (click)="removeEquipment(equip)"></i>
-                </p-chip>
-            </div>
+      <!-- Progress Indicator -->
+      <div class="mb-8">
+          <div class="flex justify-between mb-2">
+              <span class="text-sm text-gray-500 font-Jost">Étape {{currentStep}}/{{totalSteps}}</span>
+              <span class="text-sm text-gray-500 font-Jost">{{(currentStep / totalSteps) * 100 | number:'1.0-0'}}% complété</span>
           </div>
-          </div>  
+          <div class="relative w-full flex items-center">
+              <div class="w-full h-2 bg-gray-200 rounded-full">
+                  <div class="h-2 bg-blue-500 rounded-full transition-all duration-500" 
+                       [style.width.%]="(currentStep / totalSteps) * 100"></div>
+              </div>
+          </div>
       </div>
-      
-      
+
+      <form [formGroup]="stepForm">
+          <div [formGroupName]="'step' + currentStep">
+              <!-- Step 1: Details Annonce -->
+              <div *ngIf="currentStep === 1" class="text-left animate__animated animate__fadeIn">
+                  <h3 class="text-xl font-semibold font-Jost text-gray-800 mb-4">Détails de l'hébergement</h3>
+                  
+                  <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <!-- Type hébergement -->
+                      <div class="flex flex-col text-left md:col-span-2">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Type d'hébergement</label>
+                          <p-dropdown 
+                              [options]="types" 
+                              optionLabel="designation" 
+                              filter="true" 
+                              placeholder="Sélectionnez un type d'hébergement"
+                              formControlName="type"
+                              [style]="{'width': '100%'}"
+                              styleClass="w-full font-Jost">
+                          </p-dropdown>
+                          <small *ngIf="currentFormGroup.get('type')?.invalid && currentFormGroup.get('type')?.touched" 
+                                 class="text-red-500 mt-1">Type d'hébergement requis</small>
+                      </div>
   
-        <div *ngIf="currentStep === 2" class="text-left">
-            <h3 class="text-lg font-semibold font-Jost text-gray-700"> Location</h3>
-            
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Category (Dropdown) - Full Width -->
-              <div class="flex flex-col text-left md:col-span-2">
-               <label class="text-gray-600 text-sm font-Jost font-medium">Ville</label>
-               <p-dropdown [options]="villes" optionLabel="designation" formControlName="ville"  filter="true" placeholder="Selectionne une ville"
-                           class="w-full font-Jost  border rounded-md text-gray-700 placeholder:font-Jost"></p-dropdown>
-           </div>
-               <!-- Title -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Commune</label>
-                   <p-dropdown [options]="communes" optionLabel="designation" formControlName="commune" filter="true" placeholder="Selectionne une commune"
-                           class="w-full font-Jost  border rounded-md text-gray-700 placeholder:font-Jost"></p-dropdown>
-               </div>
-       
-               <!-- Description -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Quartier</label>
-                   <input pInputText type="text" formControlName="quartier"  placeholder="Entrer le nom du quartier" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-       
-               <!-- Price -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Avenue</label>
-                   <input pInputText type="text" formControlName="avenue" placeholder="Entrer le nom de l'avenue" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-       
-               <!-- Location -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Numero du domicile</label>
-                   <input pInputText type="text" formControlName="numDomicile"  placeholder="Entrer le numero du domicile" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-            </div>
-        </div>
-  
-        <div *ngIf="currentStep === 3" class="text-left">
-            <h3 class="text-lg font-semibold font-Jost text-gray-700">Photos</h3>
-          
-            <div class="p-6 border border-gray-300 rounded-lg bg-white shadow-md">
-              <label class="block text-gray-700 text-sm font-Jost font-medium mb-2">
-                  Ajouter des images
-              </label>
-          
-              <!-- Drag & Drop / Clickable Upload Box -->
-              <div 
-                  class="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-lg p-6 hover:border-blue-500 transition cursor-pointer"
-                  (click)="fileInput.click()"
-              >
-                  <!-- Upload Icon -->
-                  <i class="pi pi-cloud-upload text-blue-500 text-4xl mb-2"></i>
-          
-                  <p class="text-gray-500 text-sm font-Jost text-center">
-                      Cliquez pour sélectionner des images
-                  </p>
-          
-                  <!-- Hidden Input -->
-                  <input type="file" multiple (change)="onFileSelected($event)" 
-                         class="hidden" #fileInput accept="image/*">
+                      <!-- Nombre de visiteurs -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Nombre de visiteurs</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="number" min="1" formControlName="nbreVisiteur" placeholder="Ex: 2" 
+                                  class="w-full p-2 border text-right rounded-md text-gray-700 placeholder:font-Jost pr-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('nbreVisiteur')?.invalid && currentFormGroup.get('nbreVisiteur')?.touched" 
+                                 class="text-red-500 mt-1">Le nombre de visiteurs est requis</small>
+                      </div>
+      
+                      <!-- Nombre de chambres -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Nombre de chambres</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="number" min="0" formControlName="nbreChambre" placeholder="Ex: 1" 
+                                  class="w-full p-2 text-right border rounded-md text-gray-700 placeholder:font-Jost pr-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('nbreChambre')?.invalid && currentFormGroup.get('nbreChambre')?.touched" 
+                                 class="text-red-500 mt-1">Le nombre de chambres est requis</small>
+                      </div>
+      
+                      <!-- Nombre de douches -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Nombre de douches</label>
+                          <div class="relative">
+                              
+                              <input pInputText type="number" min="0" formControlName="nbreDouche" placeholder="Ex: 3" 
+                                  class="w-full p-2 border text-right rounded-md text-gray-700 placeholder:font-Jost pr-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('nbreDouche')?.invalid && currentFormGroup.get('nbreDouche')?.touched" 
+                                 class="text-red-500 mt-1">Le nombre de douches est requis</small>
+                      </div>
+      
+                      <!-- Nombre de lits -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Nombre de lits</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="number" min="0" formControlName="nbreLit" placeholder="Ex: 4" 
+                                  class="w-full p-2 border text-right rounded-md text-gray-700 placeholder:font-Jost pr-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('nbreLit')?.invalid && currentFormGroup.get('nbreLit')?.touched" 
+                                 class="text-red-500 mt-1">Le nombre de lits est requis</small>
+                      </div>
+                  </div>
+                  
+                  <!-- Équipements -->
+                  <div class="mt-5 flex flex-col text-left md:col-span-2">
+                      <label class="text-gray-700 text-sm font-medium mb-1">Équipements</label>
+                      
+                      <p-multiSelect 
+                          [options]="equipements" 
+                          optionLabel="designation" 
+                          placeholder="Sélectionnez les équipements"
+                          formControlName="equipement"
+                          [style]="{'width': '100%'}"
+                          [panelStyle]="{
+                              'max-width': '100vw',
+                              'width': 'auto',
+                              'min-width': 'min(100%, 20rem)'
+                          }"
+                          styleClass="w-full font-Jost">
+                      </p-multiSelect>
+                      <small *ngIf="currentFormGroup.get('equipement')?.invalid && currentFormGroup.get('equipement')?.touched" 
+                             class="text-red-500 mt-1">Au moins un équipement est requis</small>
+                  
+                      <!-- Chips pour les équipements sélectionnés -->
+                      <div class="mt-3 flex flex-wrap gap-2">
+                          <p-chip 
+                              *ngFor="let equip of selectedEquipments" 
+                              [label]="equip.designation"
+                              styleClass="bg-blue-100 text-blue-800 font-Jost">
+                              <ng-template pTemplate="icon">
+                                  <i class="pi pi-times-circle cursor-pointer text-red-600 hover:text-red-800"
+                                     (click)="removeEquipment(equip)"></i>
+                              </ng-template>
+                          </p-chip>
+                      </div>
+                  </div>  
               </div>
           
-              <!-- Responsive Image Grid -->
-              <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  <div *ngFor="let img of imagePreviews; let i = index" class="relative">
-                     <img [src]="img" class="w-full h-28 sm:h-32 object-cover rounded-md shadow-md">
-          
-                      <!-- Delete Button -->
-                       <button 
-                        class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 flex items-center justify-center rounded-full shadow-lg hover:bg-red-600 transition"
-                        (click)="removeImage(i)"
-                       >
-                          <i class="pi pi-times" style="font-size: 12px;"></i>
-                       </button>
+              <!-- Step 2: Location -->
+              <div *ngIf="currentStep === 2" class="text-left animate__animated animate__fadeIn">
+                  <h3 class="text-xl font-semibold font-Jost text-gray-800 mb-4">Emplacement</h3>
+                  
+                  <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <!-- Ville -->
+                      <div class="flex flex-col text-left md:col-span-2">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Ville</label>
+                          <p-dropdown 
+                              [options]="villes" 
+                              optionLabel="designation" 
+                              formControlName="ville" 
+                              filter="true" 
+                              placeholder="Sélectionnez une ville"
+                              [style]="{'width': '100%'}"
+                              styleClass="w-full font-Jost">
+                          </p-dropdown>
+                          <small *ngIf="currentFormGroup.get('ville')?.invalid && currentFormGroup.get('ville')?.touched" 
+                                 class="text-red-500 mt-1">La ville est requise</small>
+                      </div>
+                      
+                      <!-- Commune -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Commune</label>
+                          <p-dropdown 
+                              [options]="communes" 
+                              optionLabel="designation" 
+                              formControlName="commune" 
+                              filter="true" 
+                              placeholder="Sélectionnez une commune"
+                              [style]="{'width': '100%'}"
+                              styleClass="w-full font-Jost">
+                          </p-dropdown>
+                          <small *ngIf="currentFormGroup.get('commune')?.invalid && currentFormGroup.get('commune')?.touched" 
+                                 class="text-red-500 mt-1">La commune est requise</small>
+                      </div>
+              
+                      <!-- Quartier -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Quartier</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="text" formControlName="quartier" placeholder="Entrer le nom du quartier" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('quartier')?.invalid && currentFormGroup.get('quartier')?.touched" 
+                                 class="text-red-500 mt-1">Le quartier est requis</small>
+                      </div>
+              
+                      <!-- Avenue -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Avenue</label>
+                          <div class="relative">
+                              
+                              <input pInputText type="text" formControlName="avenue" placeholder="Entrer le nom de l'avenue" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('avenue')?.invalid && currentFormGroup.get('avenue')?.touched" 
+                                 class="text-red-500 mt-1">L'avenue est requise</small>
+                      </div>
+              
+                      <!-- Numéro domicile -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Numéro du domicile</label>
+                          <div class="relative">
+                              
+                              <input pInputText type="text" formControlName="numDomicile" placeholder="Entrer le numéro du domicile" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('numDomicile')?.invalid && currentFormGroup.get('numDomicile')?.touched" 
+                                 class="text-red-500 mt-1">Le numéro du domicile est requis</small>
+                      </div>
                   </div>
               </div>
-          </div>
-          
-        </div>
   
-        <div *ngIf="currentStep === 4" class="text-left">
-            <h3 class="text-lg font-semibold font-Jost text-gray-700">Titre & Déscription</h3>
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Title - Full Width -->
-              <div class="flex flex-col text-left md:col-span-2">
-               <label class="text-gray-600 text-sm font-Jost font-medium">Titre</label>
-               <input pInputText type="text" formControlName="title" placeholder="Entrer le titre de votre annonce" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-              </div>
-  
-              <!-- Description -->
-  
-              <div class="flex flex-col text-left md:col-span-2">
-               <label class="text-gray-600 text-sm font-Jost font-medium">Déscription</label>
-               <textarea pInputText type="text" formControlName="description" rows="6" cols="30"  placeholder="Entrer la déscription de votre annonce" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" >
-               </textarea>
-              </div>
-           </div> 
-        </div>
-        <div *ngIf="currentStep === 5" class="text-left">
-            <h3 class="text-lg font-semibold font-Jost text-gray-700">Géstion des Prix</h3>
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Category (Dropdown) - Full Width -->
-              <div class="flex flex-col text-left md:col-span-2">
-               <label class="text-gray-600 text-sm font-Jost font-medium">Devise</label>
-               <p-dropdown [options]="devises" optionLabel="code" formControlName="devise"  filter="true" placeholder="Selectionne une devise"
-                           class="w-full font-Jost  border rounded-md text-gray-700 placeholder:font-Jost">
-               </p-dropdown>
-              </div>
-   
-               <!-- Title -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Prix de base</label>
-                   <input pInputText type="text" formControlName="prixBase" placeholder="Entrer le prix de base" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-       
-               <!-- Description -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Réduction</label>
-                   
-                   <input pInputText type="text" formControlName="reduction"  placeholder="Entrer le % de reduction" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-       
-               <!-- Price -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Réduction hebdomadaire</label>
-                   <input pInputText type="text" formControlName="reductionHebdo" placeholder="Entrer le % de reduction hebdomadaire" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-       
-               <!-- Location -->
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Réduction Mensuelle</label>
-                   <input pInputText type="text"  formControlName="reductionMensu" placeholder="Entrer le % de reduction mensuelle" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Frais de ménage</label>
-                   <input pInputText type="text"  formControlName="fraisMenage" placeholder="Entrer le frais de menage " 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-               <div class="flex flex-col text-left">
-                   <label class="text-gray-600 text-sm font-Jost font-medium">Frais personne supplementaire</label>
-                   <input pInputText type="text"  formControlName="fraisPerso" placeholder="Entrer le frais par personne supplementaire" 
-                          class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost" />
-               </div>
-               
-           </div> 
-           
-          
-        </div>
-        <div *ngIf="currentStep === 6" class="text-left">
-            <h3 class="text-lg font-semibold font-Jost text-gray-700">Politiques & Regles</h3>
-            <p class="text-gray-500 font-Jost text-sm">Les invités doivent accepter le règlement intérieur de votre maison avant de réserver.</p>
-  
-           <div formArrayName="rules">
-            <div *ngFor="let rule of rules; let i = index" class="flex items-center justify-between py-3 border-b last:border-b-0">
-              <span class="text-gray-800 text-sm">{{ rule.libelle }}</span>
-          
-              <div class="flex gap-2">
-                <!-- False (croix rouge) -->
-                <div 
-                  class="w-6 h-6 flex items-center justify-center rounded-full border cursor-pointer 
-                        transition-all duration-200"
-                  [ngClass]="{
-                    'bg-red-500 text-white border-red-500': !stepForm.get('step6.rules.' + i + '.isSelected')?.value, 
-                    'border-gray-300 text-gray-500': stepForm.get('step6.rules.' + i + '.isSelected')?.value === null
-                  }"
-                  (click)="stepForm.get('step6.rules.' + i + '.isSelected')?.setValue(false)"
-                >
-                  <i class="pi pi-times text-lg" style="font-size: 12px;"></i>
-                </div>
+              <!-- Step 3: Photos -->
+              <div *ngIf="currentStep === 3" class="text-left animate__animated animate__fadeIn">
+                  <h3 class="text-xl font-semibold font-Jost text-gray-800 mb-4">Photos</h3>
               
-                <!-- True (check noir) -->
-                <div 
-                  class="w-6 h-6 flex items-center justify-center rounded-full border cursor-pointer 
-                        transition-all duration-200"
-                  [ngClass]="{
-                    'bg-black text-white border-black': stepForm.get('step6.rules.' + i + '.isSelected')?.value,
-                    'border-gray-300 text-gray-500': stepForm.get('step6.rules.' + i + '.isSelected')?.value === null
-                  }"
-                  (click)="stepForm.get('step6.rules.' + i + '.isSelected')?.setValue(true)"
-                >
-                  <i class="pi pi-check text-lg" style="font-size: 12px;"></i>
-                </div>
+                  <div class="p-6 border border-gray-300 rounded-lg bg-white shadow-md">
+                      <label class="block text-gray-700 font-medium mb-3">
+                          Ajouter des images
+                      </label>
+                  
+                      <!-- Enhanced Upload Area -->
+                      <div 
+                          class="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-lg p-8 hover:border-blue-500 transition cursor-pointer bg-gray-50 hover:bg-blue-50"
+                          (click)="fileInput.click()"
+                      >
+                          <!-- Upload Icon -->
+                          <i class="pi pi-cloud-upload text-blue-500 text-5xl mb-4"></i>
+                  
+                          <p class="text-gray-700 font-medium text-center mb-1">
+                              Glissez et déposez ou cliquez pour sélectionner des photos
+                          </p>
+                          <p class="text-gray-500 text-sm font-Jost text-center">
+                              Formats supportés: JPG, PNG, JPEG
+                          </p>
+                  
+                          <!-- Hidden Input -->
+                          <input type="file" multiple (change)="onFileSelected($event)" 
+                              class="hidden" #fileInput accept="image/*">
+                      </div>
+                  
+                      <!-- Image Preview Section -->
+                      <div *ngIf="imagePreviews.length > 0" class="mt-6">
+                          <p class="text-gray-700 font-medium mb-3">
+                              Photos sélectionnées ({{imagePreviews.length}})
+                          </p>
+                          
+                          <!-- Responsive Image Grid with hover effects -->
+                          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                              <div *ngFor="let img of imagePreviews; let i = index" 
+                                   class="relative group overflow-hidden rounded-lg transition-all duration-300 shadow-md hover:shadow-lg">
+                                  <img [src]="img" class="w-full h-32 sm:h-40 object-cover transition-transform duration-300 group-hover:scale-105">
+                          
+                                  <!-- Hover overlay with delete button -->
+                                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all duration-300">
+                                      <button 
+                                          class="bg-red-500 text-white w-8 h-8 rounded-full shadow-lg hover:bg-red-600 transition transform scale-0 group-hover:scale-100 flex items-center justify-center"
+                                          (click)="removeImage(i)"
+                                      >
+                                          <i class="pi pi-trash"></i>
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Step 4: Titre & Description -->
+              <div *ngIf="currentStep === 4" class="text-left animate__animated animate__fadeIn">
+                  <h3 class="text-xl font-semibold font-Jost text-gray-800 mb-4">Titre & Description</h3>
+                  
+                  <div class="mt-6 grid grid-cols-1 gap-5">
+                      <!-- Titre -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Titre de l'annonce</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="text" formControlName="title" placeholder="Entrez un titre accrocheur pour votre annonce" 
+                                     class="w-full p-3 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('title')?.invalid && currentFormGroup.get('title')?.touched" 
+                                 class="text-red-500 mt-1">
+                              Le titre est requis (minimum 20 caractères)
+                          </small>
+                          <small *ngIf="currentFormGroup.get('title')?.valid" class="text-gray-500 mt-1">
+                              {{currentFormGroup.get('title')?.value?.length || 0}}/100 caractères
+                          </small>
+                      </div>
+  
+                      <!-- Description -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Description</label>
+                          <div class="relative">
+                              <textarea pInputTextarea formControlName="description" rows="8" 
+                                  placeholder="Décrivez votre logement en détail (commodités, environnement, attractions à proximité...)" 
+                                  class="w-full p-4 border rounded-md text-gray-700 placeholder:font-Jost">
+                              </textarea>
+                          </div>
+                          <small *ngIf="currentFormGroup.get('description')?.invalid && currentFormGroup.get('description')?.touched" 
+                                 class="text-red-500 mt-1">
+                              La description est requise (minimum 50 caractères)
+                          </small>
+                          <small *ngIf="currentFormGroup.get('description')?.valid" class="text-gray-500 mt-1">
+                              {{currentFormGroup.get('description')?.value?.length || 0}}/2000 caractères
+                          </small>
+                      </div>
+                  </div>
               </div>
               
+              <!-- Step 5: Gestion des Prix -->
+              <div *ngIf="currentStep === 5" class="text-left animate__animated animate__fadeIn">
+                  <h3 class="text-xl font-semibold font-Jost text-gray-800 mb-4">Gestion des Prix</h3>
+                  
+                  <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <!-- Devise -->
+                      <div class="flex flex-col text-left md:col-span-2">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Devise</label>
+                          <p-dropdown 
+                              [options]="devises" 
+                              optionLabel="code" 
+                              formControlName="devise" 
+                              filter="true" 
+                              placeholder="Sélectionnez une devise"
+                              [style]="{'width': '100%'}"
+                              styleClass="w-full font-Jost">
+                          </p-dropdown>
+                          <small *ngIf="currentFormGroup.get('devise')?.invalid && currentFormGroup.get('devise')?.touched" 
+                                 class="text-red-500 mt-1">La devise est requise</small>
+                      </div>
+              
+                      <!-- Prix de base -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Prix de base</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="number" formControlName="prixBase" placeholder="Entrez le prix par nuit" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                          <small *ngIf="currentFormGroup.get('prixBase')?.invalid && currentFormGroup.get('prixBase')?.touched" 
+                                 class="text-red-500 mt-1">Le prix de base est requis</small>
+                      </div>
+              
+                      <!-- Réduction -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Réduction</label>
+                          <div class="relative">
+                              
+                              <input pInputText type="number" min="0" max="100" formControlName="reduction" placeholder="% de réduction standard" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                              <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">%</span>
+                          </div>
+                          <small *ngIf="currentFormGroup.get('reduction')?.invalid && currentFormGroup.get('reduction')?.touched" 
+                                 class="text-red-500 mt-1">La réduction doit être entre 0 et 100%</small>
+                      </div>
+              
+                      <!-- Réduction hebdomadaire -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Réduction hebdomadaire</label>
+                          <div class="relative">
+                              
+                              <input pInputText type="number" min="0" max="100" formControlName="reductionHebdo" placeholder="% de réduction pour 7+ nuits" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                              <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">%</span>
+                          </div>
+                          <small *ngIf="currentFormGroup.get('reductionHebdo')?.invalid && currentFormGroup.get('reductionHebdo')?.touched" 
+                                 class="text-red-500 mt-1">La réduction doit être entre 0 et 100%</small>
+                      </div>
+              
+                      <!-- Réduction mensuelle -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Réduction mensuelle</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="number" min="0" max="100" formControlName="reductionMensu" placeholder="% de réduction pour 30+ nuits" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                              <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">%</span>
+                          </div>
+                          <small *ngIf="currentFormGroup.get('reductionMensu')?.invalid && currentFormGroup.get('reductionMensu')?.touched" 
+                                 class="text-red-500 mt-1">La réduction doit être entre 0 et 100%</small>
+                      </div>
+                      
+                      <!-- Frais de ménage -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Frais de ménage</label>
+                          <div class="relative">
+                             
+                              <input pInputText type="number" min="0" formControlName="fraisMenage" placeholder="Frais de ménage (optionnel)" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                      </div>
+                      
+                      <!-- Frais personne supplémentaire -->
+                      <div class="flex flex-col text-left">
+                          <label class="text-gray-700 text-sm font-Jost font-medium mb-1">Frais par personne supplémentaire</label>
+                          <div class="relative">
+                              
+                              <input pInputText type="number" min="0" formControlName="fraisPerso" placeholder="Frais par personne supplémentaire (optionnel)" 
+                                     class="w-full p-2 border rounded-md text-gray-700 placeholder:font-Jost pl-10" />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Step 6: Politiques & Règles -->
+              <div *ngIf="currentStep === 6" class="text-left animate__animated animate__fadeIn">
+                  <h3 class="text-xl font-semibold font-Jost text-gray-800 mb-2">Politiques & Règles</h3>
+                  <p class="text-gray-500 font-Jost mb-6">Les invités doivent accepter le règlement intérieur de votre hébergement avant de réserver.</p>
+  
+                  <div class="p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
+                      <div formArrayName="rules">
+                          <div *ngFor="let rule of rules; let i = index" 
+                               class="flex items-center justify-between py-4 border-b last:border-b-0">
+                              <span class="text-gray-800">{{ rule.libelle }}</span>
+                          
+                              <div class="flex gap-3 p-radio">
+                                  <!-- Interdit (croix rouge) -->
+                                  <div 
+                                      class="w-8 h-8 flex items-center justify-center rounded-full border-2 cursor-pointer 
+                                            transition-all duration-200"
+                                      [ngClass]="{
+                                          'bg-red-500 text-white border-red-500': !stepForm.get('step6.rules.' + i + '.isSelected')?.value, 
+                                          'border-gray-300 text-gray-400 hover:border-red-300': stepForm.get('step6.rules.' + i + '.isSelected')?.value || 
+                                                                                              stepForm.get('step6.rules.' + i + '.isSelected')?.value === null
+                                      }"
+                                      (click)="stepForm.get('step6.rules.' + i + '.isSelected')?.setValue(false)"
+                                  >
+                                      <i class="pi pi-times text-lg"></i>
+                                  </div>
+                              
+                                  <!-- Autorisé (check vert) -->
+                                  <div 
+                                      class="w-8 h-8 flex items-center justify-center rounded-full border-2 cursor-pointer 
+                                            transition-all duration-200"
+                                      [ngClass]="{
+                                          'bg-green-500 text-white border-green-500': stepForm.get('step6.rules.' + i + '.isSelected')?.value,
+                                          'border-gray-300 text-gray-400 hover:border-green-300': stepForm.get('step6.rules.' + i + '.isSelected')?.value === false || 
+                                                                                                 stepForm.get('step6.rules.' + i + '.isSelected')?.value === null
+                                      }"
+                                      (click)="stepForm.get('step6.rules.' + i + '.isSelected')?.setValue(true)"
+                                  >
+                                      <i class="pi pi-check text-lg"></i>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              </div>
+              </form>
+              <div class="flex justify-between mt-6">
+                <button (click)="prevStep()" [disabled]="currentStep === 1" 
+                    class="px-6 py-2 bg-gray-300 font-Jost rounded-md text-gray-700 disabled:opacity-50">
+                    <i class="pi pi-arrow-left" style="font-size: 13px;"></i> Retour
+                </button>
+                <button (click)="nextStep()" *ngIf="currentStep < totalSteps" 
+                    class="px-6 py-2 bg-blue-500 font-Jost text-white rounded-md">
+                    Suivant <i class="pi pi-arrow-right ml-2" style="font-size: 13px;"></i>
+                </button>
+                <button *ngIf="currentStep === totalSteps" (click)="submitForm()" [disabled]="isLoading" class="px-6 py-2 font-Jost bg-green-500 text-white rounded-md">
+                  <span *ngIf="!isLoading">
+                    <i class="pi pi-save" style="font-size: 13px;"></i> Publier
+                  </span>
+                  <span *ngIf="isLoading">
+                    <i class="pi pi-spinner pi-spin" style="font-size: 13px;"></i> En Cours
+                  </span>
+      
+                </button>
             </div>
-           </div>
-            
         </div>
-         </div>
-       </form>
-        
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between mt-6">
-            <button (click)="prevStep()" [disabled]="currentStep === 1" 
-                class="px-6 py-2 bg-gray-300 font-Jost rounded-md text-gray-700 disabled:opacity-50">
-                <i class="pi pi-arrow-left" style="font-size: 13px;"></i> Retour
-            </button>
-            <button (click)="nextStep()" *ngIf="currentStep < totalSteps" 
-                class="px-6 py-2 bg-blue-500 font-Jost text-white rounded-md">
-                Suivant <i class="pi pi-arrow-right ml-2" style="font-size: 13px;"></i>
-            </button>
-            <button *ngIf="currentStep === totalSteps" (click)="submitForm()" [disabled]="isLoading" class="px-6 py-2 font-Jost bg-green-500 text-white rounded-md">
-              <span *ngIf="!isLoading">
-                <i class="pi pi-save" style="font-size: 13px;"></i> Publier
-              </span>
-              <span *ngIf="isLoading">
-                <i class="pi pi-spinner pi-spin" style="font-size: 13px;"></i> En Cours
-              </span>
-  
-            </button>
-        </div>
-    </div>
-  </div>
-  
+      </div>
+      
+

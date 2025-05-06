@@ -73,7 +73,7 @@ export class AdminSidebarComponent implements OnInit {
           {
             label: 'Annonces',
             icon: 'pi pi-building',
-            routerLink: ['/admin/saisies/admin-annonces/list-annonce']
+            routerLink: ['/admin/saisies/list-annonce']
           }
         ]
       },

@@ -1,0 +1,39 @@
+<div>
+    <p-toolbar styleClass="mb-4" >
+        <ng-template pTemplate="left">
+            <div>
+              <button  
+                pButton
+                pRipple
+                label="Ajouter"
+                icon="pi pi-plus-circle"
+                class="p-button-primary mr-2"
+                [routerLink]="['/admin/saisies/add-annonce']"
+              >
+            </button>
+            </div>
+          </ng-template>
+    </p-toolbar>
+
+    <p-table
+    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} Annonce"
+    styleClass="font-Jost p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm"
+    >
+        <ng-template pTemplate="caption">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3"> 
+             <h2 class="text-lg font-semibold text-gray-800">Gestion des Annonces</h2>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input
+                      pInputText
+                      type="text"
+                      placeholder="Rechercher une annonce..."
+                      class="p-inputtext-sm font-Jost"
+                    />
+                  </p-iconfield>
+            </div>
+        </ng-template>
+        
+    </p-table>
+</div>
+
