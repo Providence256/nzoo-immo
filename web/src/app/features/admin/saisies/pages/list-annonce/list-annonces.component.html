@@ -1,39 +1,267 @@
 <div>
-    <p-toolbar styleClass="mb-4" >
+    <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="left">
-            <div>
-              <button  
-                pButton
-                pRipple
-                label="Ajouter"
-                icon="pi pi-plus-circle"
-                class="p-button-primary mr-2"
-                [routerLink]="['/admin/saisies/add-annonce']"
-              >
-            </button>
+            <div class="flex flex-wrap gap-2 items-center">
+                <button pButton pRipple label="Ajouter" icon="pi pi-plus-circle" class="p-button-primary mr-2"
+                    [routerLink]="['/admin/saisies/add-annonce']">
+                </button>
+                <button pButton pRipple label="Supprimer" icon="pi pi-trash" class="p-button-danger"
+                    (click)="deleteSelectedAnnonces()" [disabled]="!selectedAnnonces || !selectedAnnonces.length">
+                </button>
             </div>
-          </ng-template>
+        </ng-template>
     </p-toolbar>
 
-    <p-table
-    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} Annonce"
-    styleClass="font-Jost p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm"
-    >
+    <p-table #dt 
+        [value]="annonces" 
+        [rows]="10" 
+        [paginator]="true" 
+        [globalFilterFields]="['title', 'typeHebergement', 'location.ville', 'location.commune', 'price.prixBase']"
+        responsiveLayout="stack" 
+        scrollable="true"
+        scrollHeight="400px"
+        [(selection)]="selectedAnnonces" 
+        [rowHover]="true" 
+        dataKey="id"
+        [showCurrentPageReport]="true" 
+        [loading]="loading"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} Annonce"
+        styleClass="font-Jost p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm">
+        
         <ng-template pTemplate="caption">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3"> 
-             <h2 class="text-lg font-semibold text-gray-800">Gestion des Annonces</h2>
-                <p-iconfield>
-                    <p-inputicon styleClass="pi pi-search" />
-                    <input
-                      pInputText
-                      type="text"
-                      placeholder="Rechercher une annonce..."
-                      class="p-inputtext-sm font-Jost"
-                    />
-                  </p-iconfield>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
+                <h2 class="text-lg font-semibold text-gray-800">Gestion des Annonces</h2>
+                <div class="flex">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" [(ngModel)]="searchValue" (input)="onSearch(dt)"
+                            placeholder="Rechercher une annonce..." class="p-inputtext-sm font-Jost" />
+                    </span>
+                </div>
             </div>
         </ng-template>
         
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="id" style="min-width:4rem">ID <p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="title" style="min-width:14rem">Titre <p-sortIcon field="title"></p-sortIcon></th>
+                <th pSortableColumn="typeHebergement" style="min-width:10rem">Type <p-sortIcon field="typeHebergement"></p-sortIcon></th>
+                <th pSortableColumn="location.ville" style="min-width:8rem">Ville <p-sortIcon field="location.ville"></p-sortIcon></th>
+                <th pSortableColumn="location.commune" style="min-width:8rem">Commune <p-sortIcon field="location.commune"></p-sortIcon></th>
+                <th pSortableColumn="price.prixBase" style="min-width:7rem">Prix <p-sortIcon field="price.prixBase"></p-sortIcon></th>
+                <th pSortableColumn="nbreChambres" style="min-width:6rem">Chambres <p-sortIcon field="nbreChambres"></p-sortIcon></th>
+                <th style="min-width:10rem">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-annonce>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="annonce"></p-tableCheckbox>
+                </td>
+                <td><span class="p-column-title">ID</span>{{annonce.id}}</td>
+                <td><span class="p-column-title">Titre</span>
+                    <div class="truncate max-w-xs" [pTooltip]="annonce.title" tooltipPosition="top">
+                        {{annonce.title}}
+                    </div>
+                </td>
+                <td><span class="p-column-title">Type</span>{{annonce.typeHebergement}}</td>
+                <td><span class="p-column-title">Ville</span>{{annonce.location?.ville}}</td>
+                <td><span class="p-column-title">Commune</span>{{annonce.location?.commune}}</td>
+                <td><span class="p-column-title">Prix</span>{{annonce.price?.prixBase}} {{annonce.price?.codeDevise}}</td>
+                <td><span class="p-column-title">Chambres</span>{{annonce.nbreChambres}}</td>
+                <td>
+                    <div class="flex">
+                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
+                            (click)="viewDetails(annonce.id)" pTooltip="Voir détails"></button>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                            [routerLink]="['/admin/saisies/edit-annonce', annonce.id]" pTooltip="Modifier"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                            (click)="deleteAnnonce(annonce.id)" pTooltip="Supprimer"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="9" class="text-center p-4">Aucune annonce trouvée.</td>
+            </tr>
+        </ng-template>
     </p-table>
+
+    <p-dialog [(visible)]="displayAnnonceDetails"
+          [style]="{width: '95vw', maxWidth: '1000px'}"
+          [modal]="true"
+          [dismissableMask]="true"
+          [closeOnEscape]="true"
+          [draggable]="false"
+          [resizable]="false"
+          styleClass="annonce-details-dialog rounded-2xl shadow-lg overflow-hidden">
+
+  <!-- Header -->
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-3">
+      <i class="pi pi-home text-primary text-2xl"></i>
+      <span class="text-xl font-Jost font-semibold">Détails de l'annonce</span>
+    </div>
+  </ng-template>
+
+  <!-- Content -->
+  <div *ngIf="selectedAnnonceDetails" class="space-y-6 p-4">
+
+    <!-- Carousel -->
+    <!-- Carousel section - Updated for full-width image display -->
+<div class="rounded-xl overflow-hidden shadow-md">
+  <div class="flex justify-between items-center bg-slate-50 p-2 text-sm text-gray-600">
+    <span>{{carouselIndex + 1}} / {{selectedAnnonceDetails.photoUrls.length}} Photos</span>
+    <div class="space-x-2">
+      <button pButton icon="pi pi-arrow-left" class="p-button-text p-button-sm" 
+              (click)="prevImage()" [disabled]="carouselIndex === 0"></button>
+      <button pButton icon="pi pi-arrow-right" class="p-button-text p-button-sm" 
+              (click)="nextImage()" [disabled]="carouselIndex === selectedAnnonceDetails.photoUrls.length - 1"></button>
+    </div>
+  </div>
+  <div class="text-center w-full bg-white">
+    <p-image [src]="selectedAnnonceDetails.photoUrls[carouselIndex]"
+             [alt]="selectedAnnonceDetails.title"
+             [preview]="true"
+             imageClass="w-full h-auto object-contain"
+             styleClass="block rounded-b-xl w-full">
+    </p-image>
+  </div>
+  <div class="flex gap-2 overflow-x-auto p-2 bg-slate-50">
+    <img *ngFor="let photo of selectedAnnonceDetails.photoUrls; let i = index"
+         [src]="photo"
+         [alt]="'Thumbnail ' + (i+1)"
+         class="h-14 w-20 object-cover rounded cursor-pointer ring-2"
+         [ngClass]="{'ring-primary ring-offset-2': i === carouselIndex}"
+         (click)="carouselIndex = i" />
+  </div>
 </div>
 
+    <!-- Title & Description -->
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800 mb-2">{{selectedAnnonceDetails.title}}</h2>
+      <div class="flex flex-wrap items-center gap-3 text-sm text-slate-600 mb-4">
+        <span class="bg-teal-100 text-teal-800 px-2 py-1 rounded-md">{{selectedAnnonceDetails.typeHebergement}}</span>
+        <span><i class="pi pi-map-marker text-secondary mr-1"></i>{{selectedAnnonceDetails.location.ville}}</span>
+        <span class="font-semibold bg-red-100 text-red-800 px-2 py-1 rounded-md text-primary">{{selectedAnnonceDetails.price.prixBase}} {{selectedAnnonceDetails.price.codeDevise}}</span>
+      </div>
+      <p class=" text-gray-400 font-Jost leading-relaxed">{{selectedAnnonceDetails.description}}</p>
+    </div>
+
+    <!-- Grid Sections -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- Informations -->
+      <div class="p-4 bg-white rounded-lg shadow-sm">
+        <div class="flex items-center gap-2 font-Jost text-lg font-medium mb-3">
+          <i class="pi pi-info-circle text-primary"></i> Informations
+        </div>
+        <div class="grid grid-cols-2 gap-y-4 text-slate-700 text-sm">
+            <div class="flex items-center font-Jost gap-2">
+              <span class="material-icons text-primary text-base">group</span>
+              {{selectedAnnonceDetails.nbreVisiteurs}} visiteurs
+            </div>
+            <div class="flex items-center font-Jost gap-2">
+              <span class="material-icons text-primary  text-base">bedroom_parent</span>
+              {{selectedAnnonceDetails.nbreChambres}} chambres
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-icons text-primary text-base">bed</span>
+              {{selectedAnnonceDetails.nbreLits}} lits
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-icons text-primary text-base">shower</span>
+              {{selectedAnnonceDetails.nbreDouches}} douches
+            </div>
+          </div>
+          
+      </div>
+
+      <!-- Localisation -->
+      <div class="p-4 bg-white rounded-lg shadow-sm">
+        <div class="flex items-center font-Jost gap-2 text-lg font-medium mb-3">
+          <i class="pi pi-map text-primary"></i> Localisation
+        </div>
+        <ul class="text-sm font-Jost text-slate-700 space-y-1">
+          <li><strong>Adresse: </strong> {{selectedAnnonceDetails.location.avenue}} N°{{selectedAnnonceDetails.location.numeroDomicile}}</li>
+          <li><strong>Quartier: </strong> {{selectedAnnonceDetails.location.quartier}}</li>
+          <li><strong>Commune: </strong> {{selectedAnnonceDetails.location.commune}}</li>
+          <li><strong>Ville: </strong> {{selectedAnnonceDetails.location.ville}}</li>
+        </ul>
+      </div>
+
+      <!-- Prix -->
+      <div class="p-4 bg-white rounded-lg shadow-sm">
+        <div class="flex font-Jost items-center gap-2 text-lg font-medium mb-3">
+          <i class="pi pi-dollar text-primary"></i> Prix
+        </div>
+        <ul class="text-sm font-Jost text-slate-700 space-y-1">
+          <li><strong>Base:</strong> {{selectedAnnonceDetails.price.prixBase}} {{selectedAnnonceDetails.price.codeDevise}}</li>
+          <li><strong>Frais de ménage:</strong> {{selectedAnnonceDetails.price.fraisMenage}} {{selectedAnnonceDetails.price.codeDevise}}</li>
+          <li><strong>Frais de Personne Suplementaire:</strong> {{selectedAnnonceDetails.price.persoSuppl}} {{selectedAnnonceDetails.price.codeDevise}}</li>
+          <li *ngIf="selectedAnnonceDetails.price.reduction > 0" class="text-green-600">
+            Réduction: {{selectedAnnonceDetails.price.reduction}}%
+          </li>
+          <li *ngIf="selectedAnnonceDetails.price.reductionHebdo > 0" class="text-green-600">
+            Réduction hebdomadaire: {{selectedAnnonceDetails.price.reductionHebdo}}%
+          </li>
+          <li *ngIf="selectedAnnonceDetails.price.reductionMensu > 0" class="text-green-600">
+            Réduction mensuelle: {{selectedAnnonceDetails.price.reductionMensu}}%
+          </li>
+        </ul>
+      </div>
+
+      <!-- Équipements -->
+      <div class="p-4 bg-white rounded-lg shadow-sm col-span-1 md:col-span-2 lg:col-span-1">
+        <div class="flex items-center gap-2 text-lg font-medium mb-3">
+          <i class="pi pi-check-square text-primary"></i> Équipements
+        </div>
+        <div class="flex font-Jost flex-wrap gap-3">
+            <div *ngFor="let equipement of selectedAnnonceDetails.equipements"
+                 class="flex items-center gap-2 bg-slate-100 rounded-full px-3 py-1 text-sm text-slate-700 shadow-sm">
+              <span class="material-icons text-primary text-base">
+                {{ getEquipementIconById(equipement.id) }}
+              </span>
+              {{ equipement.nom }}
+            </div>
+          </div>
+      </div>
+
+      <!-- Règles -->
+      <div class="p-4 bg-white rounded-lg shadow-sm col-span-1 md:col-span-2 lg:col-span-1">
+        <div class="flex font-Jost items-center gap-2 text-lg font-medium mb-3">
+          <i class="pi pi-shield text-primary"></i> Règles
+        </div>
+        <ul class="text-sm font-Jost text-slate-700 space-y-2">
+          <li *ngFor="let rule of selectedAnnonceDetails.rules" class="flex items-start gap-2">
+            <i class="pi pi-check-circle text-primary mt-0.5"></i>
+            <span>{{rule.nom}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button pButton type="button" icon="pi pi-times" label="Fermer" 
+              class="p-button-outlined" 
+              (click)="displayAnnonceDetails=false"></button>
+      <button pButton type="button" icon="pi pi-pencil" label="Modifier" 
+              class="p-button-primary" 
+              [routerLink]="['/admin/saisies/edit-annonce', selectedAnnonceDetails?.id]" 
+              (click)="displayAnnonceDetails=false"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+
+</div>

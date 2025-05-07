@@ -2,10 +2,12 @@ using System.Text.Json.Serialization;
 using API.Helpers;
 using API.Middleware;
 using API.Services;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +38,17 @@ builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddCors();
+builder.Services.AddIdentityCore<AppUser>(opt =>
+{
+    opt.Password.RequireNonAlphanumeric = false;
+
+})
+.AddRoles<AppRole>()
+.AddRoleManager<RoleManager<AppRole>>()
+.AddEntityFrameworkStores<NzooContext>();
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 
 
 builder.Services.AddMvc(options =>
@@ -69,6 +82,26 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<NzooContext>();
+var userManager = services.GetRequiredService<UserManager<AppUser>>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+
+try
+{
+    await context.Database.MigrateAsync();
+    await AppIdentityDbContextSeed.SeedUsersAsync(userManager);
+}
+catch (Exception ex)
+{
+
+    logger.LogError(ex, "An error occured during migration");
+}
 
 app.Run();

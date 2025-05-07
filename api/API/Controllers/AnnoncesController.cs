@@ -123,5 +123,20 @@ namespace API.Controllers
             return CreatedAtAction("GetListings", new { id = listing.Id }, listing);
         }
 
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteAnnonce(int id)
+        {
+            var annonce = await listingRepo.GetByIdAsync(id);
+            if (annonce == null) return NotFound();
+
+            await listingRepo.DeleteAsync(annonce);
+
+            return NoContent();
+        }
+
     }
+
+
+
 }

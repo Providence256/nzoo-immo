@@ -43,9 +43,9 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Commune, opt => opt.MapFrom(src => src.Commune!.Designation));
 
         CreateMap<Equipement, EquipementResponse>()
-            .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Designation));
+            .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Designation))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
         CreateMap<ListingRule, RuleResponse>()
-            .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Rule!.libelle))
-            .ForMember(dest => dest.IsSelected, opt => opt.MapFrom(src => src.IsSelected));
+            .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Rule!.libelle));
     }
 }

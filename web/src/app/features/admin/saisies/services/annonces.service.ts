@@ -52,6 +52,9 @@ export class AnnoncesService {
     findAllEquipements(): Observable<any[]> {
         return this.equipementApi.findAll();
     }
+    findEquipementById(id:number) : Observable<any>{
+        return this.equipementApi.find(id);
+    }
 
     // Devises
     findAllDevises(): Observable<any[]> {

@@ -10,3 +10,4 @@
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/refint/Core.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.pdb
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/ref/Core.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/Core/obj/Debug/net8.0/Core.csproj.AssemblyReference.cache

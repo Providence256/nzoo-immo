@@ -1,0 +1,220 @@
+/* Add these styles to your component's CSS file */
+
+/* Dialog Styling */
+::ng-deep .annonce-details-dialog .p-dialog-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem;
+  }
+  
+  ::ng-deep .annonce-details-dialog .p-dialog-content {
+    padding: 1.5rem;
+  }
+  
+  /* General Section Styling */
+  .section-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .info-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .info-item i {
+    font-size: 1.2rem;
+  }
+  
+  /* Image Styling */
+  .carousel-container {
+    background-color: #f8f9fa;
+  }
+  
+  .property-main-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 450px;
+  }
+  
+  .image-container {
+    background-color: #000;
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
+  }
+  
+  .image-container ::ng-deep img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  /* Thumbnail Strip */
+  .thumbnail-strip {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+  
+  .thumbnail-strip::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .thumbnail-strip::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+  }
+  
+  .thumbnail-item {
+    flex: 0 0 auto;
+    width: 70px;
+    height: 50px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+  }
+  
+  .thumbnail-item:hover {
+    opacity: 0.9;
+  }
+  
+  .thumbnail-active {
+    opacity: 1;
+    border-color: var(--primary-color, #3B82F6);
+  }
+  
+  .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Badges */
+  .type-badge, .location-badge, .price-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  
+  .type-badge {
+    background-color: #e9ecef;
+    color: #495057;
+  }
+  
+  .location-badge {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+  }
+  
+  .price-badge {
+    background-color: var(--primary-color, #3B82F6);
+    color: white;
+  }
+  
+  /* Equipement chips */
+  .equipement-chip {
+    background-color: #f0f8ff !important;
+    color: var(--primary-color, #3B82F6) !important;
+    border: 1px solid #e6f2ff !important;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .image-container {
+      padding-bottom: 75%; /* 4:3 aspect ratio on mobile */
+    }
+    
+    .thumbnail-item {
+      width: 60px;
+      height: 40px;
+    }
+    
+    .info-list-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+  }
+  
+  /* Preview Image Enhancement */
+  ::ng-deep .p-image-preview-container {
+    position: relative;
+  }
+  
+  ::ng-deep .p-image-preview-indicator {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+  }
+  
+  ::ng-deep .p-image-preview-icon {
+    color: #fff;
+    font-size: 1.5rem;
+  }
+  /* Add these styles to your component's CSS file */
+
+/* Make the image viewer take up the full screen */
+:host ::ng-deep .p-image-preview-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1100;
+}
+
+/* Style the preview image to fit the screen */
+:host ::ng-deep .p-image-preview {
+  max-width: 100vw !important;
+  max-height: 98vh !important;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Ensure the dialog itself allows for proper image display */
+:host ::ng-deep .annonce-details-dialog .p-dialog-content {
+  overflow-x: hidden;
+}
+
+/* Make thumbnails more prominent */
+:host ::ng-deep .annonce-details-dialog .p-image {
+  width: 100%;
+}
+
+/* Improve the preview toolbar */
+:host ::ng-deep .p-image-preview-indicator {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+:host ::ng-deep .p-image-preview-indicator:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}

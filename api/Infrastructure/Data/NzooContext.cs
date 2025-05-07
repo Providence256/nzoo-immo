@@ -1,11 +1,13 @@
 using Core.Entities;
+using Core.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class NzooContext(DbContextOptions options) : DbContext(options)
+public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, AppRole, int>(options)
 {
-
     public DbSet<Ville> Villes { get; set; }
     public DbSet<Commune> Communes { get; set; }
     public DbSet<Devise> Devises { get; set; }
@@ -24,6 +26,15 @@ public class NzooContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<AppUser>()
+                    .HasOne(ur => ur.Role)
+                    .WithMany(u => u.Users)
+                    .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+
+
+
         modelBuilder.Entity<TauxChange>()
                     .HasOne(e => e.Devise)
                     .WithMany()
