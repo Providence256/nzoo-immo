@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using API.Helpers;
 using API.Middleware;
@@ -7,10 +8,12 @@ using Core.Interfaces;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +37,7 @@ builder.Services.AddDbContext<NzooContext>(opt =>
 });
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
@@ -45,8 +49,21 @@ builder.Services.AddIdentityCore<AppUser>(opt =>
 })
 .AddRoles<AppRole>()
 .AddRoleManager<RoleManager<AppRole>>()
+.AddSignInManager<SignInManager<AppUser>>()
 .AddEntityFrameworkStores<NzooContext>();
-builder.Services.AddAuthentication();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:Key"]!)),
+                        ValidIssuer = builder.Configuration["Token:Issuer"],
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                    };
+                });
 builder.Services.AddAuthorization();
 
 

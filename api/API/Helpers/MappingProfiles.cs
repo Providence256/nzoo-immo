@@ -26,6 +26,9 @@ public class MappingProfiles : Profile
         CreateMap<TypeHebergement, TypeHebergementRequest>().ReverseMap();
         CreateMap<Rule, RuleRequest>().ReverseMap();
         CreateMap<TauxChange, TauxChangeRequest>().ReverseMap();
+        CreateMap<TauxChange, TauxChangeResponse>()
+                              .ForMember(d => d.DeviseCode, o => o.MapFrom(s => s.Devise.Code))
+                              .ReverseMap();
 
         //Listing 
         CreateMap<Listing, ListingResponse>()

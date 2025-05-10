@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class TauxChangeApiService extends BaseApiService {
-  private endpoint = 'taux-changes';
+  private endpoint = 'tauxchanges';
   private deviseEndpoint = 'devises';
 
   constructor(http: HttpClient, config: HttpConfigService) {

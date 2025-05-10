@@ -1,6 +1,7 @@
 using API.DTOs.TauxChangeDto;
 using AutoMapper;
 using Core.Entities;
+using Core.Specification;
 using Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +16,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<TauxChangeResponse>>> GetTauxChanges()
         {
-            var tauxChanges = await repo.GetAllAsync();
-            return Ok(mapper.Map<IReadOnlyList<TauxChangeResponse>>(tauxChanges));
+            var spec = new TauxChangeSpecification();
+            var tauxChange = await repo.ListAsync(spec);
+            var results = mapper.Map<IReadOnlyList<TauxChange>, IReadOnlyList<TauxChangeResponse>>(tauxChange);
+            return Ok(results);
         }
 
         [HttpGet("{id:int}")]
