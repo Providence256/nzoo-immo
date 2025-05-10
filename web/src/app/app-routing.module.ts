@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientLayoutComponent } from './core/layout/client-layout/client-layout.component';
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
-import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
 import { DashboardComponent } from './features/admin/dashboard/components/dashboard.component';
 
 // Import your auth guard for admin routes
@@ -27,6 +26,10 @@ const routes: Routes = [
       {
         path:'booking',
         loadChildren: () => import('./features/booking/booking.module').then((m) => m.BookingModule)
+      },
+      {
+        path: 'auth',
+        loadChildren: () => import('./features/auth/auth.module').then((m) => m.AuthModule)
       }
       
     ]

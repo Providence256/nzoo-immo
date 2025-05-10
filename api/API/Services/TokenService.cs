@@ -40,11 +40,6 @@ public class TokenService : ITokenService
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-        if (roles.Any())
-        {
-            var roleName = roles.First();
-            var role = await roleManager.FindByNameAsync(roleName);
-        }
 
         var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

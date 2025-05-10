@@ -1,0 +1,83 @@
+
+<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto mt-6">
+    <div class="text-center mb-5">
+      <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
+      <span class="text-600 font-medium">Sign in to continue</span>
+    </div>
+  
+    <p-toast></p-toast>
+  
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="formgroup-inline mb-3">
+        <div class="field w-full">
+          <label for="email" class="block text-900 font-medium mb-2">Email</label>
+          <p-inputGroup>
+            <p-inputGroupAddon>
+              <i class="pi pi-envelope"></i>
+            </p-inputGroupAddon>
+            <input id="email" type="email" pInputText formControlName="email" 
+                  [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }" 
+                  placeholder="Email address" class="w-full">
+          </p-inputGroup>
+          <small *ngIf="submitted && f['email'].errors" class="p-error">
+            <div *ngIf="f['email'].errors['required']">Email is required</div>
+            <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
+          </small>
+        </div>
+      </div>
+  
+      <div class="formgroup-inline mb-3">
+        <div class="field w-full">
+          <label for="password" class="block text-900 font-medium mb-2">Password</label>
+          <p-inputGroup>
+            <p-inputGroupAddon>
+              <i class="pi pi-lock"></i>
+            </p-inputGroupAddon>
+            <p-password id="password" formControlName="password" 
+                      [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['password'].errors }" 
+                      [feedback]="false" [toggleMask]="true" 
+                      placeholder="Password" styleClass="w-full"></p-password>
+          </p-inputGroup>
+          <small *ngIf="submitted && f['password'].errors" class="p-error">
+            <div *ngIf="f['password'].errors['required']">Password is required</div>
+            <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
+          </small>
+        </div>
+      </div>
+  
+      <div class="flex align-items-center justify-content-between mb-4">
+        <div class="flex align-items-center">
+          <p-checkbox id="rememberMe" [binary]="true" formControlName="rememberMe" 
+                      styleClass="mr-2"></p-checkbox>
+          <label for="rememberMe" class="text-900">Remember me</label>
+        </div>
+        <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" 
+           routerLink="/auth/forgot-password">Forgot password?</a>
+      </div>
+  
+      <div class="flex flex-column gap-2 mb-3">
+        <button pButton pRipple type="submit" label="Sign In" [loading]="loading" 
+                class="p-button-primary"></button>
+        
+        <div class="relative mb-3">
+          <div class="absolute left-0 right-0 top-50 border-top-1 border-300"></div>
+          <div class="text-center relative">
+            <span class="bg-white px-2 text-600 text-sm">or continue with</span>
+          </div>
+        </div>
+        
+        <button pButton pRipple type="button" label="Sign in with Google" icon="pi pi-google" 
+                (click)="loginWithGoogle()" [loading]="loading" 
+                class="p-button-outlined p-button-secondary"></button>
+        
+        <button pButton pRipple type="button" label="Sign in with Facebook" icon="pi pi-facebook" 
+                (click)="loginWithFacebook()" [loading]="loading" 
+                class="p-button-outlined p-button-info"></button>
+      </div>
+  
+      <div class="text-center mt-5">
+        <span class="text-600 mr-2">Don't have an account?</span>
+        <a routerLink="/auth/register" class="font-medium no-underline text-blue-500">Create one now!</a>
+      </div>
+    </form>
+  </div>

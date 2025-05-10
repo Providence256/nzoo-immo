@@ -1,8 +1,12 @@
 using System.Security.Claims;
 using API.DTOs.AccountDto;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities.Identity;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +27,13 @@ namespace API.Controllers
         {
             var user = await userManager.FindByEmailAsync(loginDto.Email);
 
-            if (user == null) return Unauthorized("You are not authorised");
+            if (user == null) return Unauthorized("You are not authorized");
 
             var result = await signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (!result.Succeeded) return Unauthorized("Password not correct");
+
+            var roles = await userManager.GetRolesAsync(user);
 
             return new UserDto
             {
@@ -35,7 +41,82 @@ namespace API.Controllers
                 Email = user.Email!,
                 DisplayName = user.DisplayName,
                 Token = await tokenService.CreateToken(user),
+                Role = roles.FirstOrDefault()!,
+
             };
+        }
+
+        [HttpGet("google-login")]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action(nameof(GoogleResponse)),
+                Items =
+                {
+                    {"returnUrl", Url.Content("~/")}
+                }
+            };
+
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("google-response")]
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded)
+                return Unauthorized();
+
+            var emailClaim = authenticateResult.Principal.FindFirst(ClaimTypes.Email);
+            if (emailClaim == null)
+                return BadRequest("Email not provided by google authentication");
+
+            var email = emailClaim.Value;
+
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                var nameClaim = authenticateResult.Principal.FindFirst(ClaimTypes.Name);
+                var name = nameClaim?.Value ?? "Google User";
+
+                var nameParts = name.Split(' ');
+                var firstName = nameParts.FirstOrDefault() ?? "";
+                var lastName = nameParts.Length > 1 ? nameParts.Last() : "";
+
+                user = new AppUser
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DisplayName = name,
+                    Email = email,
+                    UserName = email,
+                    EmailConfirmed = true,
+                };
+
+                var result = await userManager.CreateAsync(user);
+
+                if (!result.Succeeded)
+                    return BadRequest("Failed to create user from Google auth");
+
+                await userManager.AddToRoleAsync(user, RoleType.Client.ToString());
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
+            var UserDto = new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                DisplayName = user.DisplayName,
+                Token = await tokenService.CreateToken(user),
+                Role = roles.FirstOrDefault()!,
+            };
+
+            var redirectUrl = $"{Url.Content("~/")}/auth-callback?token={UserDto.DisplayName}";
+
+            return Redirect(redirectUrl);
         }
 
         [HttpPost("register")]
@@ -45,7 +126,7 @@ namespace API.Controllers
 
             if (findByEmail != null)
             {
-                return BadRequest("Email already Exists");
+                return BadRequest("Email already exists");
             }
 
             var user = new AppUser
@@ -61,12 +142,14 @@ namespace API.Controllers
 
             if (!result.Succeeded) return BadRequest("Not Registered");
 
+            // Assign Client role to newly registered users
+            await userManager.AddToRoleAsync(user, RoleType.Client.ToString());
 
             return new UserDto
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
-                Email = user.Email,
+                Email = user.Email!,
                 Token = await tokenService.CreateToken(user),
             };
         }
@@ -88,10 +171,12 @@ namespace API.Controllers
         }
 
         [HttpGet("emailexists")]
-        public bool CheckEmailExistsAsync(string email)
+        public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
         {
-            return userManager.FindByEmailAsync(email) != null;
+            return await userManager.FindByEmailAsync(email) != null;
         }
+
+
     }
 
 

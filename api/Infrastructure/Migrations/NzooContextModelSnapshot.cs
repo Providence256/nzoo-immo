@@ -218,9 +218,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -240,8 +237,6 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -720,17 +715,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Ville");
                 });
 
-            modelBuilder.Entity("Core.Entities.Identity.AppUser", b =>
-                {
-                    b.HasOne("Core.Entities.Identity.AppRole", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("Core.Entities.Listing", b =>
                 {
                     b.HasOne("Core.Entities.TypeHebergement", "TypeHebergement")
@@ -905,11 +889,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Core.Entities.Identity.AppRole", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Core.Entities.Listing", b =>

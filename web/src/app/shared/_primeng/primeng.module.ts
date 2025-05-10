@@ -72,9 +72,10 @@ import { TimelineModule } from 'primeng/timeline'
 import { DialogService } from 'primeng/dynamicdialog'
 import { CardModule } from 'primeng/card'
 import { MessageService } from 'primeng/api'
-import { providePrimeNG } from 'primeng/config'
 import { IconFieldModule } from 'primeng/iconfield'
 import { InputIconModule } from 'primeng/inputicon'
+import {InputGroupModule} from 'primeng/inputgroup'
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon'
 
 @NgModule({
   declarations: [],
@@ -150,6 +151,8 @@ import { InputIconModule } from 'primeng/inputicon'
     TableModule,
     ToggleButtonModule,
     ToastModule,
+    InputGroupModule,
+    InputGroupAddonModule
   ],
   exports: [
     AvatarModule,
@@ -225,6 +228,9 @@ import { InputIconModule } from 'primeng/inputicon'
     TableModule,
     ToggleButtonModule,
     ToastModule,
+    InputGroupAddonModule,
+    InputGroupModule,
+    
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

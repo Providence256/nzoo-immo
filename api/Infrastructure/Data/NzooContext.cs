@@ -27,11 +27,6 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AppUser>()
-                    .HasOne(ur => ur.Role)
-                    .WithMany(u => u.Users)
-                    .HasForeignKey(ur => ur.RoleId)
-                    .IsRequired();
 
 
 

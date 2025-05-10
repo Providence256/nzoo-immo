@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "PPJY76kbeGQ=",
+  "dgSpecHash": "n1AHN725+m0=",
   "success": true,
   "projectFilePath": "/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/API.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "/Users/macbookpro/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",
     "/Users/macbookpro/.nuget/packages/cloudinarydotnet/1.27.5/cloudinarydotnet.1.27.5.nupkg.sha512",
     "/Users/macbookpro/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
+    "/Users/macbookpro/.nuget/packages/microsoft.aspnetcore.authentication.google/8.0.14/microsoft.aspnetcore.authentication.google.8.0.14.nupkg.sha512",
     "/Users/macbookpro/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.14/microsoft.aspnetcore.authentication.jwtbearer.8.0.14.nupkg.sha512",
     "/Users/macbookpro/.nuget/packages/microsoft.aspnetcore.cryptography.internal/8.0.14/microsoft.aspnetcore.cryptography.internal.8.0.14.nupkg.sha512",
     "/Users/macbookpro/.nuget/packages/microsoft.aspnetcore.cryptography.keyderivation/8.0.14/microsoft.aspnetcore.cryptography.keyderivation.8.0.14.nupkg.sha512",
