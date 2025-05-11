@@ -8,6 +8,7 @@ import { Apartment } from '../../../../core/models/apartment.model';
 import { User } from '../../../../core/models/user.model';
 import { switchMap } from 'rxjs/operators';
 import { PropertyService } from '../../../../core/services/property.service';
+import { AnnoncesService } from '../../../admin/saisies/services/annonces.service';
 
 @Component({
   selector: 'app-apartment-detail',
@@ -15,7 +16,7 @@ import { PropertyService } from '../../../../core/services/property.service';
   styleUrls: ['./apartment-detail.component.scss'],
 })
 export class ApartmentDetailComponent implements OnInit {
-  apartment?: Apartment;
+ 
   loading = true;
   error = '';
   currentUser: User | null = null;
@@ -25,6 +26,8 @@ export class ApartmentDetailComponent implements OnInit {
   bookingError = '';
   comparablePrices: any[] = [];
   loadingComparisons = false;
+  annonce: any = {}
+  equipements : any[] = []
 
   currentImageIndex: number = 0;
   currentImage: string = '';
@@ -42,6 +45,7 @@ export class ApartmentDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private apiService: PropertyService,
+    private annonceService: AnnoncesService,
     private authService: AuthService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
@@ -64,6 +68,9 @@ export class ApartmentDetailComponent implements OnInit {
       guests: [1, [Validators.required, Validators.min(1)]]
     });
 
+    this.loadAnnonce();
+    this.loadEquipements()
+
     this.bookingForm.get('checkIn')?.valueChanges.subscribe(val => {
       if (val) {
         this.rangeDates[0] = val;
@@ -76,47 +83,37 @@ export class ApartmentDetailComponent implements OnInit {
       }
     });
 
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = params.get('id') as string;
-        return this.apiService.getPropertyById(id);
-      })
-    ).subscribe({
-      next: (data) => {
-        this.apartment = data;
-        this.loading = false;
+   
+  }
+
+  loadAnnonce(){
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if(!id) return;
+    this.annonceService.find(+id).subscribe({
+      next: annonce => {
+        this.annonce = annonce,
+        this.loading = false
+        this.currentImage = this.annonce.photoUrls[this.currentImageIndex];
         
-        // Check if current user is the owner
-        if (this.currentUser && this.apartment!.hostId === this.currentUser.id) {
-          this.isOwner = true;
-        }
-        
-        // Load price comparisons
-        this.loadPriceComparisons();
       },
-      error: (err) => {
-        this.error = 'Error loading apartment details';
-        this.loading = false;
-        console.error(err);
-      }
-    });
+      error: error => console.log(error)
+    })
   }
 
-  loadPriceComparisons(): void {
-    if (!this.apartment?.id) return;
-    
-    this.loadingComparisons = true;
-    // this.apiService.getComparablePrices(this.apartment.id).subscribe({
-    //   next: (data) => {
-    //     this.comparablePrices = data;
-    //     this.loadingComparisons = false;
-    //   },
-    //   error: () => {
-    //     this.loadingComparisons = false;
-    //   }
-    // });
-  }
+  loadEquipements(): void {
+    this.annonceService.findAllEquipements().subscribe({
+        next:(data) => {
+            this.equipements = data
+        },
+        error:(err) => {
+            console.error('Erreur chargement équipements')
+        }
+    })
+}
 
+
+  
   submitBooking(): void {
     this.bookingSubmitted = true;
     
@@ -133,7 +130,7 @@ export class ApartmentDetailComponent implements OnInit {
     }
     
     const bookingData = {
-      apartmentId: this.apartment!.id,
+      apartmentId: this.annonce!.id,
       checkIn: this.bookingForm.value.checkIn,
       checkOut: this.bookingForm.value.checkOut,
       guests: this.bookingForm.value.guests
@@ -163,24 +160,24 @@ export class ApartmentDetailComponent implements OnInit {
   }
 
   nextImage(): void {
-    if (!this.apartment) return;
+    if (!this.annonce) return;
     
-    this.currentImageIndex = (this.currentImageIndex + 1) % this.apartment.media.imageUrls.length;
-    this.currentImage = this.apartment.media.imageUrls[this.currentImageIndex];
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.annonce.photoUrls.length;
+    this.currentImage = this.annonce.photoUrls[this.currentImageIndex];
   }
 
   prevImage(): void {
-    if (!this.apartment) return;
+    if (!this.annonce) return;
     
-    this.currentImageIndex = (this.currentImageIndex - 1 + this.apartment.media.imageUrls.length) % this.apartment.media.imageUrls.length;
-    this.currentImage = this.apartment.media.imageUrls[this.currentImageIndex];
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.annonce.photoUrls.length) % this.annonce.photoUrls.length;
+    this.currentImage = this.annonce.photoUrls[this.currentImageIndex];
   }
 
   selectImage(index: number): void {
-    if (!this.apartment) return;
+    if (!this.annonce) return;
     
     this.currentImageIndex = index;
-    this.currentImage = this.apartment.media.imageUrls[this.currentImageIndex];
+    this.currentImage = this.annonce.photoUrls[this.currentImageIndex];
   }
 
 
@@ -197,23 +194,39 @@ export class ApartmentDetailComponent implements OnInit {
   
   nextModalImage(event?: Event): void {
     if (event) event.stopPropagation();
-    if (!this.apartment) return;
+    if (!this.annonce) return;
     
-    this.modalImageIndex = (this.modalImageIndex + 1) % this.apartment.media.imageUrls.length;
+    this.modalImageIndex = (this.modalImageIndex + 1) % this.annonce.photoUrls.length;
   }
   
   prevModalImage(event?: Event): void {
     if (event) event.stopPropagation();
-    if (!this.apartment) return;
+    if (!this.annonce) return;
     
-    this.modalImageIndex = (this.modalImageIndex - 1 + this.apartment.media.imageUrls.length) % this.apartment.media.imageUrls.length;
+    this.modalImageIndex = (this.modalImageIndex - 1 + this.annonce.photoUrls.length) % this.annonce.photoUrls.length;
   }
   
   selectModalImage(index: number, event: Event): void {
     event.stopPropagation();
-    if (!this.apartment) return;
+    if (!this.annonce) return;
     
     this.modalImageIndex = index;
+  }
+
+  getEquipementIconById(id: number) {
+     
+    const equipement = this.equipements.find(e => e.id === id);
+   
+    return equipement.icon;
+     
+   }
+
+   formatPrice(property: any): string{
+    if(property && property.price && property.price.prixBase){
+      return `${property.price.prixBase} ${property.price.codeDevise || 'USD'}`
+    }
+  
+    return 'Prix non disponible';
   }
 
 

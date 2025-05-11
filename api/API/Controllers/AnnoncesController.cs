@@ -32,6 +32,16 @@ namespace API.Controllers
             return Ok(listings);
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ListingResponse>> GetListing(int id)
+        {
+            var spec = new ListingSpecification(id);
+            var listing = await listingRepo.ApplySpecification(spec)
+                            .ProjectTo<ListingResponse>(mapper.ConfigurationProvider)
+                            .FirstOrDefaultAsync(x => x.Id == id);
+            return Ok(listing);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateListing(ListingRequest request)

@@ -10,14 +10,14 @@
       <!-- Filter buttons -->
       <div class="flex flex-wrap justify-center gap-4">
         <button 
-          *ngFor="let category of categories" 
-          (click)="filterProperties(category)" 
+          *ngFor="let typeHebergement of typeHebergements" 
+          (click)="filterProperties(typeHebergement.designation)" 
           [ngClass]="{
-            'bg-blue-600 text-white': selectedCategory === category,
-            'border-blue-600 text-blue-600': selectedCategory !== category
+            'bg-blue-600 text-white': selectedTypeHebergement === typeHebergement.designation,
+            'border-blue-600 text-blue-600': selectedTypeHebergement !== typeHebergement.designation
           }"
           class="px-5 py-2 rounded-full border font-Jost hover:bg-blue-600 hover:text-white transition-all duration-300">
-          {{ category }}
+          {{ typeHebergement.designation }}
         </button>
       </div>
       
@@ -27,12 +27,12 @@
     <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4">
       <div *ngFor="let property of filteredProperties"
            [@fadeInUp]
-           [routerLink]="['/detail-annonce', property.id]"
+           [routerLink]="['/apartements', property.id]"
            class="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer">
         
         <!-- Image + Favorite -->
         <div class="relative w-full h-56 overflow-hidden group">
-          <img [src]="property.image" [alt]="property.title"
+          <img [src]="property.photoUrls[0]" [alt]="property.title"
                class="w-full h-full object-cover transform group-hover:scale-105 transition-all duration-300">
         
           <button class="absolute top-3 right-3 w-10 h-10 bg-white/70 hover:bg-white rounded-full shadow backdrop-blur-md flex items-center justify-center transition-all duration-300">
@@ -52,19 +52,19 @@
             <div class="flex items-center text-gray-500 text-xs gap-4">
               <div class="flex items-center gap-1">
                 <span class="material-icons text-blue-500 text-lg">group</span>
-                <span>{{ property.visiteurs }}</span>
+                <span>{{ property.nbreVisiteurs }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <span class="material-icons text-blue-500 text-lg">bedroom_parent</span>
-                <span>{{ property.chambres }}</span>
+                <span>{{ property.nbreChambres }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <span class="material-icons text-blue-500 text-lg">bed</span>
-                <span>{{ property.lits }}</span>
+                <span>{{ property.nbreLits }}</span>
               </div>
             </div>
-            <div class="text-gold-500 text-sm font-bold font-Jost mt-2">
-              {{ property.price }}
+            <div class="text-primary-500 text-sm font-bold font-Jost mt-2">
+              {{ formatPrice(property) }}
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@
     <!-- Load More Button -->
     <div class="flex justify-center mt-12">
       <button 
-        *ngIf="propertiesToShow < properties.length"
+        *ngIf="propertiesToShow < annonces.length"
         (click)="loadMore()"
         class="px-8 py-3 rounded-full bg-blue-600 text-white font-Jost font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg">
         Charger plus

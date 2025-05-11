@@ -309,9 +309,10 @@ export class AddAnnonceComponent implements OnInit {
       // Step 6
       const rules = formValues.step6.rules;
       if (rules && Array.isArray(rules)) {
-        rules.forEach((rule: any, index: number) => {
+        rules
+        .filter((rule:any) => rule.isSelected === true)
+        .forEach((rule: any, index: number) => {
           formData.append(`Rules[${index}].RuleId`, rule.ruleId);
-          formData.append(`Rules[${index}].IsSelected`, rule.isSelected);
         });
       }
 

@@ -1,0 +1,1495 @@
+[
+  {
+    "id": 1,
+    "title": "Appartement Meublé à Ma Campagne",
+    "description": "Située dans le quartier résidentiel prisé de Ma Campagne, dans la commune de Ngaliema à Kinshasa, cette maison offre un cadre de vie paisible et sécurisé, apprécié tant par les familles que par les expatriés. Le quartier est réputé pour ses rues arborées, ses villas spacieuses et son atmosphère tranquille, tout en étant à proximité des commodités urbaines.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Appartement",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942503/nzoo/ndkcc5nrtirwp2msyi5u.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942505/nzoo/f4kg3nofbxbbge8mgiem.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942507/nzoo/ricn1pls0qn8eiwkmwpz.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942508/nzoo/l4xovvuvi6uqpusfsdsm.jpg"
+    ],
+    "price": {
+      "prixBase": 70,
+      "reduction": 0,
+      "reductionHebdo": 0,
+      "reductionMensu": 0,
+      "fraisMenage": 10,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Ngaliema",
+      "quartier": "Jolie Parc",
+      "avenue": "Nguma",
+      "numeroDomicile": "56BIS"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": false
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": false
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": false
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": false
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": false
+      },
+      {
+        "nom": "Les animaux ne sont pas autorisés, sauf indication contraire dans l'annonce.",
+        "isSelected": false
+      },
+      {
+        "nom": "Seules les personnes enregistrées peuvent séjourner dans le logement",
+        "isSelected": false
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "Studio Moderne à Bandal",
+    "description": "Studio contemporain entièrement rénové au cœur de Bandalungwa, quartier animé et populaire de Kinshasa. Décoration épurée, équipements modernes et emplacement idéal pour découvrir l'ambiance vibrante de la capitale congolaise.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Studio",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942544/nzoo/studio_bandal_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942545/nzoo/studio_bandal_2.jpg"
+    ],
+    "price": {
+      "prixBase": 55,
+      "reduction": 0,
+      "reductionHebdo": 5,
+      "reductionMensu": 15,
+      "fraisMenage": 10,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Bandalungwa",
+      "quartier": "Bandal Centre",
+      "avenue": "Mayamba",
+      "numeroDomicile": "23"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Maison Coloniale à Lingwala",
+    "description": "Magnifique maison de style colonial restaurée avec goût, située dans le quartier historique de Lingwala. Cette demeure d'époque offre des espaces de caractère aux plafonds hauts et aux sols d'origine. Un voyage dans le temps alliant charme d'antan et confort contemporain.",
+    "nbreVisiteurs": 5,
+    "nbreChambres": 3,
+    "nbreDouches": 2,
+    "nbreLits": 3,
+    "typeHebergement": "Maison",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942546/nzoo/maison_lingwala_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942547/nzoo/maison_lingwala_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942548/nzoo/maison_lingwala_3.jpg"
+    ],
+    "price": {
+      "prixBase": 160,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 15,
+      "fraisMenage": 25,
+      "persoSuppl": 20,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Lingwala",
+      "quartier": "Centre",
+      "avenue": "Kasa-Vubu",
+      "numeroDomicile": "18"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 6,
+        "nom": "Parking Privé"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 10,
+        "nom": "Jardin"
+      },
+      {
+        "id": 18,
+        "nom": "Mobilier d'Époque"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Attention particulière demandée pour le mobilier d'époque",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Appartement Neuf à Kin Plaza",
+    "description": "Appartement haut de gamme dans le complexe résidentiel moderne de Kin Plaza. Ce logement neuf offre des prestations premium dans un cadre sécurisé avec accès à des commodités partagées : piscine, salle de sport, restaurants. L'alliance parfaite entre confort occidental et hospitalité congolaise.",
+    "nbreVisiteurs": 4,
+    "nbreChambres": 2,
+    "nbreDouches": 2,
+    "nbreLits": 2,
+    "typeHebergement": "Appartement",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942549/nzoo/apt_kinplaza_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942550/nzoo/apt_kinplaza_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942551/nzoo/apt_kinplaza_3.jpg"
+    ],
+    "price": {
+      "prixBase": 200,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 20,
+      "fraisMenage": 30,
+      "persoSuppl": 25,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Gombe",
+      "quartier": "Centre-Ville",
+      "avenue": "Kin Plaza",
+      "numeroDomicile": "B45"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 5,
+        "nom": "Piscine Partagée"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 8,
+        "nom": "Sécurité 24/7"
+      },
+      {
+        "id": 15,
+        "nom": "Salle de Sport"
+      },
+      {
+        "id": 19,
+        "nom": "Ascenseur"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Veuillez respecter le règlement de la résidence",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "title": "Maisonnette au Bord du Fleuve",
+    "description": "Petite maison pittoresque située en bordure du fleuve Congo, à proximité de la commune de la N'sele. Ce havre de paix offre une expérience unique au contact de la nature, idéal pour se ressourcer loin du tumulte de la ville. Vue imprenable sur le fleuve et couchers de soleil spectaculaires.",
+    "nbreVisiteurs": 4,
+    "nbreChambres": 2,
+    "nbreDouches": 1,
+    "nbreLits": 2,
+    "typeHebergement": "Maison",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942552/nzoo/maison_fleuve_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942553/nzoo/maison_fleuve_2.jpg"
+    ],
+    "price": {
+      "prixBase": 80,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 15,
+      "fraisMenage": 15,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "N'sele",
+      "quartier": "Bord du Fleuve",
+      "avenue": "Malebo",
+      "numeroDomicile": "3"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 10,
+        "nom": "Jardin"
+      },
+      {
+        "id": 12,
+        "nom": "Vue Panoramique"
+      },
+      {
+        "id": 20,
+        "nom": "Barbecue"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Les animaux sont autorisés avec accord préalable",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Attention particulière à l'environnement naturel",
+        "isSelected": true
+      }
+    ]
+  },
+  
+  {
+    "id": 11,
+    "title": "Studio Économique à Kintambo",
+    "description": "Studio fonctionnel et économique situé dans le quartier populaire de Kintambo. Idéal pour les voyageurs au budget limité souhaitant découvrir la vie kinoise authentique. Proche des marchés locaux et des transports en commun.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Studio",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942532/nzoo/studio_kintambo_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942533/nzoo/studio_kintambo_2.jpg"
+    ],
+    "price": {
+      "prixBase": 30,
+      "reduction": 0,
+      "reductionHebdo": 5,
+      "reductionMensu": 15,
+      "fraisMenage": 5,
+      "persoSuppl": 8,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Kintambo",
+      "quartier": "Kintambo Magasin",
+      "avenue": "Marché",
+      "numeroDomicile": "14"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 16,
+        "nom": "Ventilateur"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": false
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Duplex Design à Bon Marché",
+    "description": "Élégant duplex à l'architecture contemporaine situé dans le quartier de Bon Marché. Sur deux niveaux, ce logement lumineux offre un espace de vie spacieux et des finitions soignées. Idéal pour un séjour urbain confortable.",
+    "nbreVisiteurs": 4,
+    "nbreChambres": 2,
+    "nbreDouches": 2,
+    "nbreLits": 2,
+    "typeHebergement": "Duplex",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942534/nzoo/duplex_bonmarche_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942535/nzoo/duplex_bonmarche_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942536/nzoo/duplex_bonmarche_3.jpg"
+    ],
+    "price": {
+      "prixBase": 145,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 20,
+      "fraisMenage": 25,
+      "persoSuppl": 20,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Barumbu",
+      "quartier": "Bon Marché",
+      "avenue": "Commerce",
+      "numeroDomicile": "32"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 9,
+        "nom": "Balcon"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Appartement Vue Fleuve à Kingabwa",
+    "description": "Appartement confortable offrant une vue exceptionnelle sur le fleuve Congo depuis Kingabwa. Ce logement lumineux dispose d'un balcon pour profiter du panorama. Décoration soignée mêlant touches locales et confort moderne.",
+    "nbreVisiteurs": 3,
+    "nbreChambres": 2,
+    "nbreDouches": 1,
+    "nbreLits": 2,
+    "typeHebergement": "Appartement",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942537/nzoo/apt_kingabwa_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942538/nzoo/apt_kingabwa_2.jpg"
+    ],
+    "price": {
+      "prixBase": 90,
+      "reduction": 0,
+      "reductionHebdo": 8,
+      "reductionMensu": 15,
+      "fraisMenage": 15,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Limete",
+      "quartier": "Kingabwa",
+      "avenue": "Bord du Fleuve",
+      "numeroDomicile": "27"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 9,
+        "nom": "Balcon"
+      },
+      {
+        "id": 12,
+        "nom": "Vue Panoramique"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Cottage Tropical à Binza",
+    "description": "Charmant cottage niché dans un écrin de verdure à Binza. Cette petite maison indépendante offre intimité et tranquillité, entourée d'un jardin tropical luxuriant. Architecture traditionnelle revisitée avec des matériaux naturels et locaux.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Maison",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942539/nzoo/cottage_binza_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942540/nzoo/cottage_binza_2.jpg"
+    ],
+    "price": {
+      "prixBase": 75,
+      "reduction": 0,
+      "reductionHebdo": 5,
+      "reductionMensu": 15,
+      "fraisMenage": 15,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Ngaliema",
+      "quartier": "Binza",
+      "avenue": "Verte",
+      "numeroDomicile": "4"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 10,
+        "nom": "Jardin"
+      },
+      {
+        "id": 17,
+        "nom": "Hamac"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Les animaux sont autorisés avec accord préalable",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "Appartement Familial à Lemba",
+    "description": "Grand appartement familial idéalement situé dans le quartier résidentiel de Lemba. Parfait pour les familles nombreuses ou les groupes d'amis, cet espace généreux offre tout le confort nécessaire pour un séjour agréable. Proche des universités et des commerces.",
+    "nbreVisiteurs": 7,
+    "nbreChambres": 4,
+    "nbreDouches": 2,
+    "nbreLits": 5,
+    "typeHebergement": "Appartement",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942541/nzoo/apt_lemba_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942542/nzoo/apt_lemba_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942543/nzoo/apt_lemba_3.jpg"
+    ],
+    "price": {
+      "prixBase": 130,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 20,
+      "fraisMenage": 25,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Lemba",
+      "quartier": "Résidentiel",
+      "avenue": "Université",
+      "numeroDomicile": "45"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 6,
+        "nom": "Parking Privé"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 9,
+        "nom": "Balcon"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Villa Moderne à Gombe",
+    "description": "Magnifique villa contemporaine située au cœur de la Gombe, quartier diplomatique et d'affaires de Kinshasa. Cette propriété de standing offre un espace généreux, un jardin bien entretenu et une piscine privée. Idéale pour les séjours professionnels haut de gamme ou les familles en quête de confort et de sécurité.",
+    "nbreVisiteurs": 6,
+    "nbreChambres": 3,
+    "nbreDouches": 2,
+    "nbreLits": 4,
+    "typeHebergement": "Villa",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942510/nzoo/villa_gombe_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942511/nzoo/villa_gombe_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942512/nzoo/villa_gombe_3.jpg"
+    ],
+    "price": {
+      "prixBase": 250,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 20,
+      "fraisMenage": 30,
+      "persoSuppl": 25,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Gombe",
+      "quartier": "Batetela",
+      "avenue": "Roi Baudouin",
+      "numeroDomicile": "12"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 5,
+        "nom": "Piscine"
+      },
+      {
+        "id": 6,
+        "nom": "Parking Privé"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 8,
+        "nom": "Sécurité 24/7"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Les animaux ne sont pas autorisés, sauf indication contraire dans l'annonce.",
+        "isSelected": true
+      },
+      {
+        "nom": "Seules les personnes enregistrées peuvent séjourner dans le logement",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Studio Cosy au Centre-Ville",
+    "description": "Charmant studio rénové situé dans le centre-ville animé de Kinshasa. Parfait pour les voyageurs solo ou les couples en quête d'un pied-à-terre pratique et confortable. À proximité des commerces, restaurants et transports.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Studio",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942513/nzoo/studio_centre_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942514/nzoo/studio_centre_2.jpg"
+    ],
+    "price": {
+      "prixBase": 45,
+      "reduction": 0,
+      "reductionHebdo": 5,
+      "reductionMensu": 15,
+      "fraisMenage": 8,
+      "persoSuppl": 10,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Lingwala",
+      "quartier": "Ndolo",
+      "avenue": "Commerce",
+      "numeroDomicile": "34"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Appartement Familial à Limete",
+    "description": "Spacieux appartement de 3 chambres idéal pour les familles, situé dans le quartier résidentiel de Limete. L'appartement offre une vue dégagée sur la ville et dispose d'un grand balcon pour profiter des soirées kinshasa.",
+    "nbreVisiteurs": 5,
+    "nbreChambres": 3,
+    "nbreDouches": 2,
+    "nbreLits": 3,
+    "typeHebergement": "Appartement",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942515/nzoo/apt_limete_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942516/nzoo/apt_limete_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942517/nzoo/apt_limete_3.jpg"
+    ],
+    "price": {
+      "prixBase": 120,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 15,
+      "fraisMenage": 20,
+      "persoSuppl": 15,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Limete",
+      "quartier": "Industriel",
+      "avenue": "Kabasele",
+      "numeroDomicile": "78"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 9,
+        "nom": "Balcon"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Seules les personnes enregistrées peuvent séjourner dans le logement",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Bungalow Paisible à Mbinza",
+    "description": "Charmant bungalow niché dans un jardin tropical à Mbinza, offrant calme et sérénité. Cette propriété indépendante dispose d'une terrasse ombragée et d'un espace extérieur privé, idéal pour se ressourcer loin de l'agitation urbaine.",
+    "nbreVisiteurs": 3,
+    "nbreChambres": 2,
+    "nbreDouches": 1,
+    "nbreLits": 2,
+    "typeHebergement": "Maison",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942518/nzoo/bungalow_mbinza_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942519/nzoo/bungalow_mbinza_2.jpg"
+    ],
+    "price": {
+      "prixBase": 85,
+      "reduction": 0,
+      "reductionHebdo": 5,
+      "reductionMensu": 15,
+      "fraisMenage": 15,
+      "persoSuppl": 20,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Ngaliema",
+      "quartier": "Mbinza",
+      "avenue": "Lukusa",
+      "numeroDomicile": "45"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 10,
+        "nom": "Jardin"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": false
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Les animaux sont autorisés avec accord préalable",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Loft Moderne à Bandalungwa",
+    "description": "Loft contemporain entièrement rénové situé à Bandalungwa, alliance parfaite entre modernité et confort. Espace ouvert lumineux avec de grandes fenêtres, mobilier design et équipements dernière génération. Idéal pour les voyageurs urbains exigeants.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Loft",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942520/nzoo/loft_bandalungwa_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942521/nzoo/loft_bandalungwa_2.jpg"
+    ],
+    "price": {
+      "prixBase": 95,
+      "reduction": 0,
+      "reductionHebdo": 8,
+      "reductionMensu": 18,
+      "fraisMenage": 15,
+      "persoSuppl": 20,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Bandalungwa",
+      "quartier": "Matonge",
+      "avenue": "Libenga",
+      "numeroDomicile": "23"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 11,
+        "nom": "Smart Home"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Penthouse Vue Fleuve à Kingabwa",
+    "description": "Luxueux penthouse offrant une vue imprenable sur le fleuve Congo, situé à Kingabwa. Ce logement d'exception dispose d'une vaste terrasse panoramique, parfaite pour admirer les couchers de soleil sur le fleuve. Intérieur raffiné avec matériaux nobles et design contemporain.",
+    "nbreVisiteurs": 4,
+    "nbreChambres": 2,
+    "nbreDouches": 2,
+    "nbreLits": 2,
+    "typeHebergement": "Penthouse",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942522/nzoo/penthouse_kingabwa_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942523/nzoo/penthouse_kingabwa_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942524/nzoo/penthouse_kingabwa_3.jpg"
+    ],
+    "price": {
+      "prixBase": 180,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 20,
+      "fraisMenage": 25,
+      "persoSuppl": 30,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Limete",
+      "quartier": "Kingabwa",
+      "avenue": "Fleuve",
+      "numeroDomicile": "8"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 9,
+        "nom": "Terrasse"
+      },
+      {
+        "id": 11,
+        "nom": "Smart Home"
+      },
+      {
+        "id": 12,
+        "nom": "Vue Panoramique"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Seules les personnes enregistrées peuvent séjourner dans le logement",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Maison de Charme à Binza-Pigeon",
+    "description": "Belle maison traditionnelle rénovée dans le quartier résidentiel de Binza-Pigeon. Cette demeure de caractère allie le charme de l'architecture congolaise au confort moderne. Grand jardin ombragé et espace extérieur pour se détendre.",
+    "nbreVisiteurs": 6,
+    "nbreChambres": 3,
+    "nbreDouches": 2,
+    "nbreLits": 4,
+    "typeHebergement": "Maison",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942525/nzoo/maison_binza_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942526/nzoo/maison_binza_2.jpg"
+    ],
+    "price": {
+      "prixBase": 140,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 15,
+      "fraisMenage": 20,
+      "persoSuppl": 20,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Ngaliema",
+      "quartier": "Binza-Pigeon",
+      "avenue": "Mbaka",
+      "numeroDomicile": "17"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 6,
+        "nom": "Parking Privé"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 10,
+        "nom": "Jardin"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": false
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Les animaux sont autorisés avec accord préalable",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Appartement Business à Gombe",
+    "description": "Appartement fonctionnel spécialement aménagé pour les voyageurs d'affaires, situé dans le quartier des affaires de la Gombe. Espace de travail dédié, connexion internet haute vitesse et tous les équipements nécessaires pour travailler efficacement.",
+    "nbreVisiteurs": 2,
+    "nbreChambres": 1,
+    "nbreDouches": 1,
+    "nbreLits": 1,
+    "typeHebergement": "Appartement",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942527/nzoo/apt_business_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942528/nzoo/apt_business_2.jpg"
+    ],
+    "price": {
+      "prixBase": 110,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 25,
+      "fraisMenage": 20,
+      "persoSuppl": 25,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Gombe",
+      "quartier": "Centre d'Affaires",
+      "avenue": "Colonel Tshatshi",
+      "numeroDomicile": "5"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi Haute Vitesse"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 13,
+        "nom": "Espace de Travail"
+      },
+      {
+        "id": 14,
+        "nom": "Imprimante"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Villa avec Piscine à Macampagne",
+    "description": "Somptueuse villa avec piscine privée située dans le quartier prisé de Macampagne. Cette propriété d'exception offre des prestations haut de gamme : vastes espaces de vie, jardin tropical luxuriant, personnel de maison disponible sur demande. Le séjour idéal pour des vacances luxueuses à Kinshasa.",
+    "nbreVisiteurs": 8,
+    "nbreChambres": 4,
+    "nbreDouches": 3,
+    "nbreLits": 5,
+    "typeHebergement": "Villa",
+    "photoUrls": [
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942529/nzoo/villa_macampagne_1.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942530/nzoo/villa_macampagne_2.jpg",
+      "https://res.cloudinary.com/dyqcpr4wz/image/upload/v1746942531/nzoo/villa_macampagne_3.jpg"
+    ],
+    "price": {
+      "prixBase": 300,
+      "reduction": 0,
+      "reductionHebdo": 10,
+      "reductionMensu": 20,
+      "fraisMenage": 40,
+      "persoSuppl": 30,
+      "codeDevise": "USD"
+    },
+    "location": {
+      "ville": "Kinshasa",
+      "commune": "Ngaliema",
+      "quartier": "Macampagne",
+      "avenue": "Ambassadeurs",
+      "numeroDomicile": "88"
+    },
+    "equipements": [
+      {
+        "id": 1,
+        "nom": "Wifi"
+      },
+      {
+        "id": 2,
+        "nom": "Télévision"
+      },
+      {
+        "id": 3,
+        "nom": "Climatisation"
+      },
+      {
+        "id": 4,
+        "nom": "Eau Chaude"
+      },
+      {
+        "id": 5,
+        "nom": "Piscine"
+      },
+      {
+        "id": 6,
+        "nom": "Parking Privé"
+      },
+      {
+        "id": 7,
+        "nom": "Cuisine Équipée"
+      },
+      {
+        "id": 8,
+        "nom": "Sécurité 24/7"
+      },
+      {
+        "id": 10,
+        "nom": "Jardin"
+      },
+      {
+        "id": 15,
+        "nom": "Salle de Sport"
+      }
+    ],
+    "rules": [
+      {
+        "nom": "Check-in et check-out doivent se faire dans les plages horaires définies",
+        "isSelected": true
+      },
+      {
+        "nom": "Le logement est non-fumeur. Des frais de nettoyage peuvent être appliqués en cas de non-respect",
+        "isSelected": true
+      },
+      {
+        "nom": "Les soirées, fêtes ou tout rassemblement bruyant sont strictement interdits.",
+        "isSelected": true
+      },
+      {
+        "nom": "Le calme est exigé, en particulier après 22h, afin de respecter les voisins",
+        "isSelected": true
+      },
+      {
+        "nom": "Merci de prendre soin des meubles, électroménagers et autres équipements fournis.",
+        "isSelected": true
+      },
+      {
+        "nom": "Seules les personnes enregistrées peuvent séjourner dans le logement",
+        "isSelected": true
+      }
+    ]
+  }
+]

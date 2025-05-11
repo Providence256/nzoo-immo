@@ -412,23 +412,9 @@
                       <div formArrayName="rules">
                           <div *ngFor="let rule of rules; let i = index" 
                                class="flex items-center justify-between py-4 border-b last:border-b-0">
-                              <span class="text-gray-800">{{ rule.libelle }}</span>
+                              <span class="text-gray-800 font-Jost">{{ rule.libelle }}</span>
                           
                               <div class="flex gap-3 p-radio">
-                                  <!-- Interdit (croix rouge) -->
-                                  <div 
-                                      class="w-8 h-8 flex items-center justify-center rounded-full border-2 cursor-pointer 
-                                            transition-all duration-200"
-                                      [ngClass]="{
-                                          'bg-red-500 text-white border-red-500': !stepForm.get('step6.rules.' + i + '.isSelected')?.value, 
-                                          'border-gray-300 text-gray-400 hover:border-red-300': stepForm.get('step6.rules.' + i + '.isSelected')?.value || 
-                                                                                              stepForm.get('step6.rules.' + i + '.isSelected')?.value === null
-                                      }"
-                                      (click)="stepForm.get('step6.rules.' + i + '.isSelected')?.setValue(false)"
-                                  >
-                                      <i class="pi pi-times text-lg"></i>
-                                  </div>
-                              
                                   <!-- Autorisé (check vert) -->
                                   <div 
                                       class="w-8 h-8 flex items-center justify-center rounded-full border-2 cursor-pointer 

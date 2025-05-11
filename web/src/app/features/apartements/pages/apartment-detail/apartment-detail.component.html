@@ -38,13 +38,13 @@
     <!-- Apartment Header -->
     <div class="flex flex-col md:flex-row justify-between items-start border-b border-gray-200 pb-6">
       <div class="space-y-2">
-        <h1 class="text-3xl font-bold text-gray-900">{{ apartment!.title }}</h1>
+        <h1 class="text-3xl font-bold text-gray-900">{{ annonce.title }}</h1>
         <div class="flex items-center text-gray-600">
           <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <span>{{ apartment!.location.address }}, {{ apartment!.location.city }}, {{ apartment!.location.country }}</span>
+          <span>{{ annonce.location.ville }}, {{ annonce.location.commune }}, {{ annonce.location.quartier }}</span>
     
         </div>
       </div>
@@ -83,18 +83,18 @@
             <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
             </svg>
-            View Photos
+            Voir Photos 
           </button>
         </div>
         
         <div class="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
-          {{ currentImageIndex + 1 }} / {{ apartment!.media.imageUrls.length }}
+          {{ currentImageIndex + 1 }} / {{ annonce!.photoUrls.length }}
         </div>
       </div>
       
       <!-- Thumbnail Navigation -->
       <div class="flex overflow-x-auto py-4 px-2 bg-gray-50 scrollbar-hide">
-        <div *ngFor="let image of apartment!.media.imageUrls; let i = index" 
+        <div *ngFor="let image of annonce!.photoUrls; let i = index" 
              class="flex-shrink-0 mx-1 cursor-pointer transition-all duration-200"
              [ngClass]="{'border-2 border-indigo-600': i === currentImageIndex, 'border-2 border-transparent': i !== currentImageIndex}"
              (click)="selectImage(i)">
@@ -117,7 +117,7 @@
         <!-- Image Container -->
         <div class="relative max-w-5xl w-full h-full flex items-center justify-center" (click)="$event.stopPropagation()">
           <!-- Main Image -->
-          <img [src]="apartment!.media.imageUrls[modalImageIndex]" class="max-h-full max-w-full object-contain" alt="Full size apartment photo">
+          <img [src]="annonce!.photoUrls[modalImageIndex]" class="max-h-full max-w-full object-contain" alt="Full size apartment photo">
           
           <!-- Navigation Arrows -->
           <button (click)="prevModalImage($event)" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 focus:outline-none">
@@ -136,12 +136,12 @@
         <div class="absolute bottom-6 left-0 right-0">
           <div class="flex justify-center items-center">
             <div class="bg-black bg-opacity-75 rounded-full px-4 py-2 text-white text-sm">
-              {{ modalImageIndex + 1 }} / {{ apartment!.media.imageUrls.length }}
+              {{ modalImageIndex + 1 }} / {{ annonce!.photoUrls.length }}
             </div>
           </div>
           
           <div class="flex justify-center mt-4 overflow-x-auto p-2 max-w-3xl mx-auto">
-            <div *ngFor="let image of apartment!.media.imageUrls; let i = index" 
+            <div *ngFor="let image of annonce!.photoUrls; let i = index" 
                   class="flex-shrink-0 mx-1 cursor-pointer transition-all duration-200"
                   [ngClass]="{'border-2 border-white': i === modalImageIndex, 'border-2 border-transparent': i !== modalImageIndex}"
                   (click)="selectModalImage(i, $event)">
@@ -162,30 +162,7 @@
         <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
           <h2 class="text-xl font-semibold text-gray-900 mb-4">Features</h2>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="flex items-start">
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.bedroomCount }} Bedroom<span *ngIf="apartment!.features.bedroomCount > 1">s</span></h3>
-                <p class="text-sm text-gray-500">Comfortable spaces</p>
-              </div>
-            </div>
-            
-            <div class="flex items-start">
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.bathroomCount }} Bathroom<span *ngIf="apartment!.features.bathroomCount > 1">s</span></h3>
-                <p class="text-sm text-gray-500">With amenities</p>
-              </div>
-            </div>
-            
+
             <div class="flex items-start">
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
                 <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -193,41 +170,105 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.maxOccupancy }} Guest<span *ngIf="apartment!.features.maxOccupancy > 1">s</span></h3>
-                <p class="text-sm text-gray-500">Maximum occupancy</p>
+                <h3 class="text-lg font-medium text-gray-900">{{ annonce.nbreVisiteurs }} Visiteur<span *ngIf="annonce.nbreVisiteurs > 1">s</span></h3>
+                <p class="text-sm font-Jost text-gray-500">Occupation maximale</p>
+              </div>
+            </div>
+
+            <div class="flex items-start">
+              <!-- Conteneur de l’icône -->
+              <div class="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center">
+                <!-- Icône plus grande, parfaitement centrée -->
+                <span
+                  class="material-icons text-indigo-600 text-3xl leading-none"
+                  aria-hidden="true"
+                >
+                  bedroom_parent
+                </span>
+              </div>
+            
+              <!-- Texte -->
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">
+                  {{ annonce.nbreChambres }} Chambre<span *ngIf="annonce.nbreChambres > 1">s</span>
+                </h3>
+                <p class="text-sm font-Jost text-gray-500">Espaces Comfortable</p>
               </div>
             </div>
             
+            
             <div class="flex items-start">
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
+              <!-- Conteneur de l’icône -->
+              <div class="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center">
+                <!-- Icône plus grande, parfaitement centrée -->
+                <span
+                  class="material-icons text-indigo-600 text-3xl leading-none"
+                  aria-hidden="true"
+                >
+                  bed
+                </span>
               </div>
+            
+              <!-- Texte -->
               <div class="ml-3">
-                <h3 class="text-lg font-medium text-gray-900">{{ apartment!.features.area }} m²</h3>
-                <p class="text-sm text-gray-500">Living space</p>
+                <h3 class="text-lg font-medium text-gray-900">
+                  {{ annonce.nbreLits }} Lit<span *ngIf="annonce.nbreLits > 1">s</span>
+                </h3>
               </div>
             </div>
+            <div class="flex items-start">
+              <!-- Conteneur de l’icône -->
+              <div class="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center">
+                <!-- Icône plus grande, parfaitement centrée -->
+                <span
+                  class="material-icons text-indigo-600 text-3xl leading-none"
+                  aria-hidden="true"
+                >
+                  shower
+                </span>
+              </div>
+            
+              <!-- Texte -->
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">
+                  {{ annonce.nbreDouches }} Douche<span *ngIf="annonce.nbreDouches > 1">s</span>
+                </h3>
+                
+              </div>
+            </div>
+             
           </div>
         </section>
         
         <!-- Description Section -->
         <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">Description</h2>
-          <p class="text-gray-700 whitespace-pre-line">{{ apartment!.description }}</p>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Déscription</h2>
+          <p class="text-gray-500 font-Jost whitespace-pre-line">{{ annonce.description }}</p>
         </section>
         
         <!-- Amenities Section -->
         <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">Amenities</h2>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div *ngFor="let amenity of apartment!.features.amenities" class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              <span class="text-gray-700">{{ amenity }}</span>
-            </div>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Equipements</h2>
+          <div class="grid font-Jost grid-cols-2 md:grid-cols-3 gap-4">
+            <div *ngFor="let equipement of annonce.equipements"
+            class="flex items-center gap-2 bg-slate-100 rounded-full px-3 py-1 text-sm text-slate-700 shadow-sm">
+         <span class="material-icons text-primary text-base">
+           {{ getEquipementIconById(equipement.id) }}
+         </span>
+         {{ equipement.nom }}
+       </div>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Règles</h2>
+          <div class="p-4 bg-white rounded-lg shadow-sm col-span-1 md:col-span-2 lg:col-span-1">
+            <ul class="text-sm font-Jost text-slate-700 space-y-2">
+              <li *ngFor="let rule of annonce.rules" class="flex items-start gap-2">
+                <i class="pi pi-check-circle text-green-700 text-primary mt-0.5"></i>
+                <span>{{rule.nom}}</span>
+              </li>
+            </ul>
           </div>
         </section>
         
@@ -254,11 +295,11 @@
               <tbody class="bg-white divide-y divide-gray-200">
                 <!-- Current Apartment -->
                 <tr class="bg-indigo-50">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">{{ apartment!.title }} (Current)</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ apartment!.price.currency }} {{ apartment!.price.amount }} / {{ apartment!.price.period }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ apartment!.features.area }} m²</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ apartment!.features.bedroomCount }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ apartment!.features.bathroomCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">{{ annonce!.title }} (Current)</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ annonce!.price.currency }} {{ annonce!.price.amount }} / {{ annonce!.price.period }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ annonce!.features.area }} m²</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ annonce!.features.bedroomCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ annonce!.features.bathroomCount }}</td>
                 </tr>
                 
                 <!-- Comparable Properties -->
@@ -282,8 +323,8 @@
             <div class="bg-indigo-600 p-6 text-center">
               <h2 class="text-xl font-bold text-white">Reserve cet apartement</h2>
               <div class="mt-2 text-white">
-                <span class="text-3xl font-bold">{{ apartment!.price.currency }} {{ apartment!.price.amount }}</span>
-                <span class="text-lg">/ {{ apartment!.price.period }}</span>
+                <span class="text-3xl font-bold">{{ formatPrice(annonce) }} </span>
+                <span class="text-lg">/ {{ annonce!.price.period }}</span>
               </div>
             </div>
             
@@ -305,7 +346,7 @@
                 <div class="space-y-2">
                   <label for="guests" class="block text-sm font-medium text-gray-700">Nombre des visiteurs</label>
                   <app-guest-selector
-                  [maxOccupancy]="apartment?.features?.maxOccupancy || 16"
+                  [maxOccupancy]="annonce.nbreVisiteurs || 16"
         
                 ></app-guest-selector>
                 </div>
