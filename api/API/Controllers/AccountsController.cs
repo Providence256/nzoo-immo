@@ -67,7 +67,7 @@ namespace API.Controllers
             var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             if (!authenticateResult.Succeeded)
-                return Unauthorized();
+                return BadRequest("Google authentication failed");
 
             var emailClaim = authenticateResult.Principal.FindFirst(ClaimTypes.Email);
             if (emailClaim == null)
@@ -105,7 +105,7 @@ namespace API.Controllers
             }
 
             var roles = await userManager.GetRolesAsync(user);
-            var UserDto = new UserDto
+            var userDto = new UserDto
             {
                 Id = user.Id,
                 Email = user.Email!,
@@ -114,7 +114,9 @@ namespace API.Controllers
                 Role = roles.FirstOrDefault()!,
             };
 
-            var redirectUrl = $"{Url.Content("~/")}/auth-callback?token={UserDto.DisplayName}";
+            var frontendUrl = "http://localhost:4200";
+            var redirectUrl = $"{frontendUrl}/auth-callback?token={userDto.Token}&email={userDto.Email}&displayName={userDto.DisplayName}&role={userDto.Role}";
+
 
             return Redirect(redirectUrl);
         }

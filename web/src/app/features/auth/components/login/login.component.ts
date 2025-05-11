@@ -82,29 +82,11 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle(): void {
+
+    sessionStorage.setItem('returnUrl', this.returnUrl)
     this.loading = true;
     this.authService.loginWithGoogle()
-      .pipe(finalize(() => {
-        this.loading = false;
-      }))
-      .subscribe({
-        next: () => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: 'Google login successful' 
-          });
-          this.router.navigate([this.returnUrl]);
-        },
-        error: error => {
-          this.errorMessage = error.error?.message || 'Google login failed';
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: this.errorMessage 
-          });
-        }
-      });
+     
   }
 
   loginWithFacebook(): void {

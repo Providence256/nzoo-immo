@@ -104,27 +104,7 @@ export class RegisterComponent implements OnInit {
   loginWithGoogle(): void {
     this.loading = true;
     this.authService.loginWithGoogle()
-      .pipe(finalize(() => {
-        this.loading = false;
-      }))
-      .subscribe({
-        next: () => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: 'Google login successful' 
-          });
-          this.router.navigate(['/']);
-        },
-        error: error => {
-          const errorMessage = error.error?.message || 'Google login failed';
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: errorMessage 
-          });
-        }
-      });
+      
   }
 
   loginWithFacebook(): void {

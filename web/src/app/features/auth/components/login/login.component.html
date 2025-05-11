@@ -1,83 +1,121 @@
-
-<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto mt-6">
-    <div class="text-center mb-5">
-      <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
-      <span class="text-600 font-medium">Sign in to continue</span>
+<!-- Modern Login Component -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100 p-4">
+  <div class="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
+    <!-- Card Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-8 text-center">
+      <h1 class="text-white text-3xl font-bold mb-2">Welcome Back</h1>
+      <p class="text-indigo-100">Sign in to continue to your account</p>
     </div>
-  
-    <p-toast></p-toast>
-  
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="formgroup-inline mb-3">
-        <div class="field w-full">
-          <label for="email" class="block text-900 font-medium mb-2">Email</label>
+
+    <!-- Card Body -->
+    <div class="p-8">
+      <p-toast></p-toast>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label for="email" class="block font-Jost text-sm font-medium text-gray-700">Email</label>
           <p-inputGroup>
             <p-inputGroupAddon>
-              <i class="pi pi-envelope"></i>
+              <i class="pi pi-envelope text-gray-500"></i>
             </p-inputGroupAddon>
-            <input id="email" type="email" pInputText formControlName="email" 
-                  [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }" 
-                  placeholder="Email address" class="w-full">
+            <input 
+              id="email" 
+              type="email" 
+              pInputText 
+              formControlName="email" 
+              [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }" 
+              placeholder="name@example.com" 
+              class="w-full p-input-filled"
+            >
           </p-inputGroup>
-          <small *ngIf="submitted && f['email'].errors" class="p-error">
+          <small *ngIf="submitted && f['email'].errors" class="text-red-500">
             <div *ngIf="f['email'].errors['required']">Email is required</div>
             <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
           </small>
         </div>
-      </div>
-  
-      <div class="formgroup-inline mb-3">
-        <div class="field w-full">
-          <label for="password" class="block text-900 font-medium mb-2">Password</label>
-          <p-inputGroup>
-            <p-inputGroupAddon>
-              <i class="pi pi-lock"></i>
-            </p-inputGroupAddon>
-            <p-password id="password" formControlName="password" 
-                      [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['password'].errors }" 
-                      [feedback]="false" [toggleMask]="true" 
-                      placeholder="Password" styleClass="w-full"></p-password>
-          </p-inputGroup>
-          <small *ngIf="submitted && f['password'].errors" class="p-error">
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-Jost font-medium text-gray-700">Mot de Passe</label>
+            <p-password 
+              id="password" 
+              formControlName="password" 
+              [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['password'].errors }" 
+              [feedback]="false" 
+              [toggleMask]="true" 
+              placeholder="••••••••" 
+              styleClass="w-full p-input-filled"
+            ></p-password>
+     
+          <small *ngIf="submitted && f['password'].errors" class="text-red-500">
             <div *ngIf="f['password'].errors['required']">Password is required</div>
             <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
           </small>
-        </div>
-      </div>
-  
-      <div class="flex align-items-center justify-content-between mb-4">
-        <div class="flex align-items-center">
-          <p-checkbox id="rememberMe" [binary]="true" formControlName="rememberMe" 
-                      styleClass="mr-2"></p-checkbox>
-          <label for="rememberMe" class="text-900">Remember me</label>
-        </div>
-        <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" 
-           routerLink="/auth/forgot-password">Forgot password?</a>
-      </div>
-  
-      <div class="flex flex-column gap-2 mb-3">
-        <button pButton pRipple type="submit" label="Sign In" [loading]="loading" 
-                class="p-button-primary"></button>
-        
-        <div class="relative mb-3">
-          <div class="absolute left-0 right-0 top-50 border-top-1 border-300"></div>
-          <div class="text-center relative">
-            <span class="bg-white px-2 text-600 text-sm">or continue with</span>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center">
+              <p-checkbox id="rememberMe" [binary]="true" formControlName="rememberMe" styleClass="mr-2"></p-checkbox>
+              <label for="rememberMe" class="text-sm font-Jost text-gray-600">Remember me</label>
+            </div>
+            <a routerLink="/auth/forgot-password" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
+              Forgot password?
+            </a>
           </div>
         </div>
-        
-        <button pButton pRipple type="button" label="Sign in with Google" icon="pi pi-google" 
-                (click)="loginWithGoogle()" [loading]="loading" 
-                class="p-button-outlined p-button-secondary"></button>
-        
-        <button pButton pRipple type="button" label="Sign in with Facebook" icon="pi pi-facebook" 
-                (click)="loginWithFacebook()" [loading]="loading" 
-                class="p-button-outlined p-button-info"></button>
+
+        <!-- Submit Button -->
+        <button 
+          pButton 
+          pRipple 
+          type="submit" 
+          label="Sign In" 
+          [loading]="loading" 
+          class="w-full p-button-primary p-button-rounded p-button-raised font-semibold py-3"
+        ></button>
+
+        <!-- Divider -->
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-200"></div>
+          </div>
+          <div class="relative flex justify-center text-xs uppercase">
+            <span class="bg-white px-4 text-gray-500 font-semibold">or continue with</span>
+          </div>
+        </div>
+
+        <!-- Social Logins -->
+        <div class="grid grid-cols-2 gap-3">
+          <button 
+            pButton 
+            pRipple 
+            type="button" 
+            label="Google" 
+            icon="pi pi-google" 
+            (click)="loginWithGoogle()" 
+            [loading]="loading" 
+            class="p-button-outlined p-button-secondary p-button-rounded"
+          ></button>
+
+          <button 
+            pButton 
+            pRipple 
+            type="button" 
+            label="Facebook" 
+            icon="pi pi-facebook" 
+            (click)="loginWithFacebook()" 
+            [loading]="loading" 
+            class="p-button-outlined p-button-info p-button-rounded"
+          ></button>
+        </div>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="text-center mt-8">
+        <span class="text-gray-600 text-sm">Don't have an account? </span>
+        <a routerLink="/auth/register" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition">
+          Create one now
+        </a>
       </div>
-  
-      <div class="text-center mt-5">
-        <span class="text-600 mr-2">Don't have an account?</span>
-        <a routerLink="/auth/register" class="font-medium no-underline text-blue-500">Create one now!</a>
-      </div>
-    </form>
+    </div>
   </div>
+</div>

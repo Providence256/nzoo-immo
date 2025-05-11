@@ -1,109 +1,189 @@
-<!-- src/app/features/auth/components/register/register.component.html -->
-<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto mt-6">
-    <div class="text-center mb-5">
-      <div class="text-900 text-3xl font-medium mb-3">Create an Account</div>
-      <span class="text-600 font-medium">Sign up to get started</span>
+<!-- Modern Register Component -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100 p-4">
+  <div class="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden">
+    <!-- Card Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-8 text-center">
+      <h1 class="text-white text-3xl font-bold mb-2">Create Account</h1>
+      <p class="text-indigo-100">Join our community today</p>
     </div>
-  
-    <p-toast></p-toast>
-  
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="formgrid grid mb-3">
-        <div class="field col-12 md:col-6">
-          <label for="firstName" class="block text-900 font-medium mb-2">First Name</label>
-          <input id="firstName" type="text" pInputText formControlName="firstName" 
+
+    <!-- Card Body -->
+    <div class="p-8">
+      <p-toast></p-toast>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Name Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-user text-gray-500"></i>
+              <input 
+                id="firstName" 
+                type="text" 
+                pInputText 
+                formControlName="firstName" 
                 [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['firstName'].errors }" 
-                placeholder="First name" class="w-full">
-          <small *ngIf="submitted && f['firstName'].errors" class="p-error">
-            <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
-          </small>
-        </div>
-        
-        <div class="field col-12 md:col-6">
-          <label for="lastName" class="block text-900 font-medium mb-2">Last Name</label>
-          <input id="lastName" type="text" pInputText formControlName="lastName" 
+                placeholder="John" 
+                class="w-full"
+              >
+            </span>
+            <small *ngIf="submitted && f['firstName'].errors" class="text-red-500">
+              <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
+            </small>
+          </div>
+
+          <div class="space-y-2">
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-user text-gray-500"></i>
+              <input 
+                id="lastName" 
+                type="text" 
+                pInputText 
+                formControlName="lastName" 
                 [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['lastName'].errors }" 
-                placeholder="Last name" class="w-full">
-          <small *ngIf="submitted && f['lastName'].errors" class="p-error">
-            <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
-          </small>
-        </div>
-      </div>
-  
-      <div class="field mb-3">
-        <label for="email" class="block text-900 font-medium mb-2">Email</label>
-        <p-inputGroup>
-          <p-inputGroupAddon>
-            <i class="pi pi-envelope"></i>
-          </p-inputGroupAddon>
-          <input id="email" type="email" pInputText formControlName="email" 
-                [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }" 
-                placeholder="Email address" class="w-full">
-        </p-inputGroup>
-        <small *ngIf="submitted && f['email'].errors" class="p-error">
-          <div *ngIf="f['email'].errors['required']">Email is required</div>
-          <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
-        </small>
-      </div>
-  
-      <div class="field mb-3">
-        <label for="password" class="block text-900 font-medium mb-2">Password</label>
-        <p-password id="password" formControlName="password" 
-                  [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['password'].errors }" 
-                  [toggleMask]="true" 
-                  styleClass="w-full" placeholder="Create password"></p-password>
-        <small *ngIf="submitted && f['password'].errors" class="p-error">
-          <div *ngIf="f['password'].errors['required']">Password is required</div>
-          <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
-        </small>
-      </div>
-  
-      <div class="field mb-3">
-        <label for="confirmPassword" class="block text-900 font-medium mb-2">Confirm Password</label>
-        <p-password id="confirmPassword" formControlName="confirmPassword" 
-                  [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['confirmPassword'].errors }" 
-                  [feedback]="false" [toggleMask]="true" 
-                  styleClass="w-full" placeholder="Confirm password"></p-password>
-        <small *ngIf="submitted && f['confirmPassword'].errors" class="p-error">
-          <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
-          <div *ngIf="f['confirmPassword'].errors['passwordMismatch']">Passwords do not match</div>
-        </small>
-      </div>
-  
-      <div class="field-checkbox mb-4">
-        <p-checkbox formControlName="acceptTerms" [binary]="true" id="acceptTerms"
-                  [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['acceptTerms'].errors }"></p-checkbox>
-        <label for="acceptTerms" class="ml-2">
-          I agree to the <a href="#" class="text-primary font-medium">terms and conditions</a>
-        </label>
-        <div *ngIf="submitted && f['acceptTerms'].errors" class="p-error mt-2">
-          <div *ngIf="f['acceptTerms'].errors['required']">You must accept the terms and conditions</div>
-        </div>
-      </div>
-  
-      <div class="flex flex-column gap-2 mb-3">
-        <button pButton pRipple type="submit" label="Register" [loading]="loading" 
-                class="p-button-primary"></button>
-        
-        <div class="relative mb-3">
-          <div class="absolute left-0 right-0 top-50 border-top-1 border-300"></div>
-          <div class="text-center relative">
-            <span class="bg-white px-2 text-600 text-sm">or sign up with</span>
+                placeholder="Doe" 
+                class="w-full"
+              >
+            </span>
+            <small *ngIf="submitted && f['lastName'].errors" class="text-red-500">
+              <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
+            </small>
           </div>
         </div>
-        
-        <button pButton pRipple type="button" label="Sign up with Google" icon="pi pi-google" 
-                (click)="loginWithGoogle()" [loading]="loading" 
-                class="p-button-outlined p-button-secondary"></button>
-        
-        <button pButton pRipple type="button" label="Sign up with Facebook" icon="pi pi-facebook" 
-                (click)="loginWithFacebook()" [loading]="loading" 
-                class="p-button-outlined p-button-info"></button>
+
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <p-inputGroup>
+            <p-inputGroupAddon>
+              <i class="pi pi-envelope text-gray-500"></i>
+            </p-inputGroupAddon>
+            <input 
+              id="email" 
+              type="email" 
+              pInputText 
+              formControlName="email" 
+              [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }" 
+              placeholder="name@example.com" 
+              class="w-full"
+            >
+          </p-inputGroup>
+          <small *ngIf="submitted && f['email'].errors" class="text-red-500">
+            <div *ngIf="f['email'].errors['required']">Email is required</div>
+            <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
+          </small>
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <p-password 
+            id="password" 
+            formControlName="password"
+            [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['password'].errors }" 
+            [toggleMask]="true"
+            styleClass="w-full" 
+            placeholder="Create a strong password"
+          ></p-password>
+          <small *ngIf="submitted && f['password'].errors" class="text-red-500">
+            <div *ngIf="f['password'].errors['required']">Password is required</div>
+            <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
+          </small>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="space-y-2">
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <p-password 
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['confirmPassword'].errors }" 
+            [feedback]="false" 
+            [toggleMask]="true"
+            styleClass="w-full" 
+            placeholder="Confirm your password"
+          ></p-password>
+          <small *ngIf="submitted && f['confirmPassword'].errors" class="text-red-500">
+            <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
+            <div *ngIf="f['confirmPassword'].errors['passwordMismatch']">Passwords do not match</div>
+          </small>
+        </div>
+
+        <!-- Terms & Conditions -->
+        <div class="flex items-start space-x-2">
+          <div class="flex items-center h-5">
+            <p-checkbox 
+              formControlName="acceptTerms" 
+              [binary]="true" 
+              id="acceptTerms"
+              [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['acceptTerms'].errors }"
+            ></p-checkbox>
+          </div>
+          <div class="ml-2">
+            <label for="acceptTerms" class="text-sm text-gray-600">
+              I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Terms of Service</a> and <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Privacy Policy</a>
+            </label>
+            <div *ngIf="submitted && f['acceptTerms'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="f['acceptTerms'].errors['required']">You must accept the terms and conditions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          pButton 
+          pRipple 
+          type="submit" 
+          label="Create Account" 
+          [loading]="loading" 
+          class="w-full p-button-primary p-button-rounded p-button-raised font-semibold py-3 mt-2"
+        ></button>
+
+        <!-- Divider -->
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-200"></div>
+          </div>
+          <div class="relative flex justify-center text-xs uppercase">
+            <span class="bg-white px-4 text-gray-500 font-semibold">or sign up with</span>
+          </div>
+        </div>
+
+        <!-- Social Logins -->
+        <div class="grid grid-cols-2 gap-3">
+          <button 
+            pButton 
+            pRipple 
+            type="button" 
+            label="Google" 
+            icon="pi pi-google" 
+            (click)="loginWithGoogle()" 
+            [loading]="loading" 
+            class="p-button-outlined p-button-secondary p-button-rounded"
+          ></button>
+
+          <button 
+            pButton 
+            pRipple 
+            type="button" 
+            label="Facebook" 
+            icon="pi pi-facebook" 
+            (click)="loginWithFacebook()" 
+            [loading]="loading" 
+            class="p-button-outlined p-button-info p-button-rounded"
+          ></button>
+        </div>
+      </form>
+
+      <!-- Sign In Link -->
+      <div class="text-center mt-8">
+        <span class="text-gray-600 text-sm">Already have an account? </span>
+        <a routerLink="/auth/login" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition">
+          Sign in instead
+        </a>
       </div>
-  
-      <div class="text-center mt-5">
-        <span class="text-600 mr-2">Already have an account?</span>
-        <a routerLink="/auth/login" class="font-medium no-underline text-blue-500">Sign in</a>
-      </div>
-    </form>
+    </div>
   </div>
+</div>
