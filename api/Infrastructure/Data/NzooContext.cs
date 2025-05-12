@@ -21,6 +21,8 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     public DbSet<ListingPhoto> ListingPhotos { get; set; }
     public DbSet<ListingPrice> ListingPrices { get; set; }
     public DbSet<ListingRule> ListingRules { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<BookingAvailability> BookingAvailabilities { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
