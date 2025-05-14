@@ -14,7 +14,7 @@ public class BaseSpecification<T> : ISpecification<T>
         Criteria = criteria;
     }
 
-    public Expression<Func<T, bool>> Criteria { get; }
+    public Expression<Func<T, bool>> Criteria { get; set; }
 
     public List<Expression<Func<T, object>>> Includes { get; } =
             new List<Expression<Func<T, object>>>();

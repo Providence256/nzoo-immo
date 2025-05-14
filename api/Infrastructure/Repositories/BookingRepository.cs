@@ -71,18 +71,41 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
         return bookedDates.Distinct().ToList();
     }
 
-    public Task<IReadOnlyList<Booking>> GetBookingByListingIdAsync(int listingId)
+    public async Task<IReadOnlyList<Booking>> GetBookingByListingIdAsync(int listingId)
     {
-        throw new NotImplementedException();
+        var spec = new BookingSpecification()
+        {
+            Criteria = b => b.ListingId == listingId
+        };
+
+        return await ApplySpecification(spec).ToListAsync();
     }
 
-    public Task<bool> CheckBookingOverlapAsync(int listingId)
+    public async Task<bool> CheckBookingOverlapAsync(int listingId)
     {
-        throw new NotImplementedException();
+        return await _context.Bookings
+            .AnyAsync(b => b.ListingId == listingId &&
+                     b.Status != BookingStatus.Cancelled &&
+                     b.Status != BookingStatus.Rejected);
     }
 
-    public Task<IReadOnlyList<DateTime>> GetBookedDateForListingAsync(int listingId)
+    public async Task<IReadOnlyList<DateTime>> GetBookedDateForListingAsync(int listingId)
     {
-        throw new NotImplementedException();
+        var bookings = await _context.Bookings.Where(b => b.ListingId == listingId && b.Status != BookingStatus.Cancelled &&
+                        b.Status != BookingStatus.Rejected &&
+                        b.CheckOutDate >= DateTime.UtcNow).ToListAsync();
+
+        var bookedDates = new List<DateTime>();
+        foreach (var booking in bookings)
+        {
+            var currentDate = booking.CheckInDate.Date;
+            while (currentDate < booking.CheckOutDate.Date)
+            {
+                bookedDates.Add(currentDate);
+                currentDate = currentDate.AddDays(1);
+            }
+        }
+
+        return bookedDates.Distinct().OrderBy(d => d).ToList();
     }
 }

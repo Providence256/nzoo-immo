@@ -1,7 +1,8 @@
-using Core.Entities;
-using Core.Specification;
-using Infrastructure;
-using Microsoft.AspNetCore.Http;
+using API.DTOs.BookingDto;
+using API.Helpers;
+using API.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -9,74 +10,195 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class BookingsController(
-        IGenericRepository<Booking> bookingRepo,
-        IGenericRepository<Listing> listingRepo,
-        IGenericRepository<BookingAvailability> availabilityRepo
+       IBookingService bookingService,
+       IMapper mapper
         ) : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
+
+        [HttpPost("check-availability")]
+        public async Task<ActionResult<AvailabilityCheckResponse>> CheckAvailability([FromBody] AvailabilityCheckRequest request)
         {
-            var bookings = await bookingRepo.GetAllAsync();
-            return Ok(bookings);
-        }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBooking(int id)
-        {
-            var booking = await bookingRepo.GetByIdAsync(id);
-            if (booking == null) return NotFound();
-            return Ok(booking);
+            try
+            {
+                var response = await bookingService.CheckAvailabilityAsync(request);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while checking availability");
+            }
         }
         [HttpPost]
-        public async Task<ActionResult<Booking>> CreateBooking([FromBody] Booking booking)
+        public async Task<ActionResult<BookingResponse>> CreateBooking([FromBody] BookingRequest request)
         {
-            // 1. Vérifier que le logement existe
-            var listing = await listingRepo.GetByIdAsync(booking.ListingId);
-            if (listing == null)
-                return BadRequest("Listing not found");
 
-            // 2. Vérifier la disponibilité (Booking et BookingAvailability)
-            bool isAvailable = await IsListingAvailable(booking.ListingId, booking.CheckInDate, booking.CheckOutDate);
-            if (!isAvailable)
-                return BadRequest("Listing is not available for the selected dates");
 
-            booking.Status = BookingStatus.Pending;
-            var createdBooking = await bookingRepo.AddAsync(booking);
-            return CreatedAtAction(nameof(GetBooking), new { id = createdBooking.Id }, createdBooking);
+            try
+            {
+                var userId = User.GetUserId();
+                var booking = await bookingService.CreateBooking(request, userId);
+
+                // Map to response DTO
+                var response = mapper.Map<BookingResponse>(booking);
+
+                return CreatedAtAction(nameof(GetBookingById), new { id = booking.Id }, response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while creating booking");
+            }
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BookingResponse>> GetBookingById(int id)
+        {
+            try
+            {
+
+                var booking = await bookingService.GetBookingByIdAsync(id, User.GetUserId());
+                if (booking == null)
+                {
+                    return NotFound();
+                }
+
+                var response = mapper.Map<BookingResponse>(booking);
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while retrieving the booking");
+            }
         }
 
-        [HttpPut("cancel/{id}")]
-        public async Task<IActionResult> CancelBooking(int id, [FromBody] string reason)
+        [Authorize]
+        [HttpPut("{id}/cancel")]
+        public async Task<ActionResult> CancelBooking(int id, [FromBody] BookingCancellationRequest request)
         {
-            var booking = await bookingRepo.GetByIdAsync(id);
-            if (booking == null) return NotFound();
 
-            booking.Status = BookingStatus.Cancelled;
-            booking.CancellationDate = DateTime.UtcNow;
-            booking.CancellationReason = reason;
 
-            await bookingRepo.UpdateAsync(booking);
-            return NoContent();
+            try
+            {
+                var userId = User.GetUserId();
+                var success = await bookingService.CancelBookingStatusAsync(id, userId, request.Reason);
+
+                if (success)
+                {
+                    return NoContent();
+                }
+
+                return BadRequest("Unable to cancel booking");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while cancelling the booking");
+            }
         }
 
-        private async Task<bool> IsListingAvailable(int listingId, DateTime checkIn, DateTime checkOut)
+        [HttpPut("{id}/status")]
+        public async Task<ActionResult> UpdateBookingStatus(int id, [FromBody] BookingStatusUpdateRequest request)
         {
-            // 1. Vérifier les réservations existantes
-            var spec = new BookingSpecificationActiveInRange(listingId, checkIn, checkOut);
-            var existingBookings = await bookingRepo.ListAsync(spec);
 
-            if (existingBookings.Any()) return false;
 
-            // 2. Vérifier les dates bloquées manuellement
-            var blocked = await availabilityRepo.GetAllAsync();
-            return !blocked.Any(b =>
-                b.ListingId == listingId &&
-                b.IsBlocked &&
-                b.BlockedDate >= checkIn.Date &&
-                b.BlockedDate <= checkOut.Date);
+            try
+            {
+                var success = await bookingService.UpdateBookingStatusAsync(id, request.Status, request.Reason);
+
+                if (success)
+                {
+                    return NoContent();
+                }
+
+                return BadRequest("Unable to update booking status");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while updating booking status");
+            }
         }
 
+        [Authorize]
+        [HttpPost("block-date")]
+        public async Task<ActionResult> BlockDate([FromBody] BlockDateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            try
+            {
+                var userId = User.GetUserId();
+                var success = await bookingService.BlockDateAsync(request, userId);
+
+                if (success)
+                {
+                    return NoContent();
+                }
+
+                return BadRequest("Unable to block date");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while blocking the date");
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("unblock-date")]
+        public async Task<ActionResult> UnblockDate([FromQuery] int listingId, [FromQuery] DateTime date)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                var success = await bookingService.UnblockDateAsync(listingId, date, userId);
+
+                if (success)
+                {
+                    return NoContent();
+                }
+
+                return BadRequest("Unable to unblock date");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while unblocking the date");
+            }
+        }
 
     }
 }

@@ -224,9 +224,28 @@ public class BookingService : IBookingService
         return booking;
     }
 
-    public Task<bool> UnblockDateAsync(int listingId, DateTime date, int hostId)
+    public Task<Booking?> GetBookingByIdAsync(int id, int userId)
     {
         throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlyList<Booking>> GetUserBookingsAsync(int userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> UnblockDateAsync(int listingId, DateTime date, int hostId)
+    {
+        var blockedDate = await bookingAvailabilityRepository.GetBlockedDateAsync(listingId, date);
+
+        if (blockedDate == null)
+        {
+            return true;
+        }
+
+        await bookingAvailabilityRepository.DeleteAsync(blockedDate);
+
+        return true;
     }
 
     public async Task<bool> UpdateBookingStatusAsync(int bookingId, BookingStatus status, string? reason = null)
