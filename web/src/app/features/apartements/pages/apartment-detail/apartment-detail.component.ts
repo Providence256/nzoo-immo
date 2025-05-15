@@ -2,11 +2,8 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../../../core/http/api.service';
 import { AuthService } from '../../../../core/authentication/auth.service';
-import { Apartment } from '../../../../core/models/apartment.model';
 import { User } from '../../../../core/models/user.model';
-import { switchMap } from 'rxjs/operators';
 import { PropertyService } from '../../../../core/services/property.service';
 import { AnnoncesService } from '../../../admin/saisies/services/annonces.service';
 
@@ -28,6 +25,8 @@ export class ApartmentDetailComponent implements OnInit {
   loadingComparisons = false;
   annonce: any = {}
   equipements : any[] = []
+  checkingAvailability = false
+  isAvailable = true
 
   currentImageIndex: number = 0;
   currentImage: string = '';
@@ -95,9 +94,25 @@ export class ApartmentDetailComponent implements OnInit {
         this.annonce = annonce,
         this.loading = false
         this.currentImage = this.annonce.photoUrls[this.currentImageIndex];
+
+        if(this.bookingForm){
+          const guestsControl = this.bookingForm.get('guests')
+          if(guestsControl){
+            guestsControl.setValidators([
+              Validators.required,
+              Validators.min(1),
+              Validators.max(this.annonce.nbreVisiteurs || 16)
+            ])
+            guestsControl.updateValueAndValidity()
+          }
+        }
         
       },
-      error: error => console.log(error)
+      error: error => {
+        console.log(error);
+        this.error = 'Failed to load apartment details'
+        this.loading = false
+      }
     })
   }
 
@@ -112,42 +127,30 @@ export class ApartmentDetailComponent implements OnInit {
     })
 }
 
+checkDateAvailability() : void {
+  const checkIn = this.bookingForm.get('checkIn')?.value
+  const checkOut = this.bookingForm.get('checkOut')?.value
+
+  if(!checkIn || !checkOut || !this.annonce?.id){
+    return;
+  }
+
+  this.checkingAvailability = true;
+  this.isAvailable = true
+
+
+}
 
   
-  submitBooking(): void {
+  goToConfirmBooking(): void {
     this.bookingSubmitted = true;
     
     if (this.bookingForm.invalid) {
       return;
     }
+
+    console.log(this.bookingForm.valid)
     
-    if (!this.currentUser) {
-      // Redirect to login if not authenticated
-      this.router.navigate(['/login'], { 
-        queryParams: { returnUrl: this.router.url } 
-      });
-      return;
-    }
-    
-    const bookingData = {
-      apartmentId: this.annonce!.id,
-      checkIn: this.bookingForm.value.checkIn,
-      checkOut: this.bookingForm.value.checkOut,
-      guests: this.bookingForm.value.guests
-    };
-    
-    // this.apiService.createBooking(bookingData).subscribe({
-    //   next: (response) => {
-    //     // Navigate to payment page with booking ID
-    //     this.router.navigate(['/payments/process'], { 
-    //       queryParams: { bookingId: response.id } 
-    //     });
-    //   },
-    //   error: (err) => {
-    //     this.bookingError = err.error?.message || 'Error creating booking';
-    //     console.error(err);
-    //   }
-    // });
   }
 
   onDateRangeSelect(event: { startDate: Date, endDate: Date }) {

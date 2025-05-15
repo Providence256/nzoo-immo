@@ -324,17 +324,16 @@
               <h2 class="text-xl font-bold text-white">Reserve cet apartement</h2>
               <div class="mt-2 text-white">
                 <span class="text-3xl font-bold">{{ formatPrice(annonce) }} </span>
-                <span class="text-lg">/ {{ annonce!.price.period }}</span>
+                <span class="text-lg">/ {{ annonce.price.period }}</span>
               </div>
             </div>
             
             <div class="p-6">
-              <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()" class="space-y-4">
+              <form [formGroup]="bookingForm" (ngSubmit)="goToConfirmBooking()" class="space-y-4">
                 <div class="mb-4" >
                   <label for="checkIn" class="block text-sm font-medium text-gray-700 mb-1">Select Dates</label>
                   <app-date-range-picker 
                   (dateRangeSelected)="onDateRangeSelect($event)"
-                  
                 ></app-date-range-picker>
                 <div *ngIf="bookingForm.get('checkIn')?.value || bookingForm.get('checkOut')?.value" 
                   class="text-sm text-gray-600 mt-2">
@@ -342,6 +341,38 @@
                 {{ bookingForm.get('checkIn')?.value | date:'mediumDate' }} - 
                 {{ bookingForm.get('checkOut')?.value | date:'mediumDate' }}
               </div>
+
+              <div *ngIf="checkingAvailability" class="ml-2 flex items-center">
+                <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="ml-1">Checking availability...</span>
+              </div>
+
+              <div *ngIf="!checkingAvailability" class="ml-2">
+                <span *ngIf="isAvailable" class="text-green-600 flex items-center">
+                  <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Available
+                </span>
+                <span *ngIf="!isAvailable" class="text-red-600 flex items-center">
+                  <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Not available
+                </span>
+              </div>
+
+              <!-- Error message if dates are required but not filled -->
+            <div *ngIf="bookingSubmitted && bookingForm.get('checkIn')?.invalid" class="text-red-600 text-sm mt-1">
+              Please select check-in date
+            </div>
+            <div *ngIf="bookingSubmitted && bookingForm.get('checkOut')?.invalid" class="text-red-600 text-sm mt-1">
+              Please select check-out date
+            </div>
+
                 </div>
                 <div class="space-y-2">
                   <label for="guests" class="block text-sm font-medium text-gray-700">Nombre des visiteurs</label>
@@ -349,6 +380,9 @@
                   [maxOccupancy]="annonce.nbreVisiteurs || 16"
         
                 ></app-guest-selector>
+                <div *ngIf="bookingSubmitted && bookingForm.get('guests')?.invalid" class="text-red-600 text-sm mt-1">
+                  Please select a valid number of guests (1-{{ annonce.nbreVisiteurs }})
+                </div>
                 </div>
                 
                 <div *ngIf="bookingError" class="bg-red-50 border-l-4 border-red-500 p-4 text-sm text-red-700">
@@ -356,9 +390,17 @@
                 </div>
                 
                 <button type="submit" 
-                        class="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
-                  Réserver
-                </button>
+                  [disabled]="loading"
+                  class="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                   <span *ngIf="!loading">Réserver</span>
+                    <span *ngIf="loading" class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                      Processing...
+                  </span>
+               </button>
               </form>
               
             </div>

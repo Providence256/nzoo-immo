@@ -1,4 +1,3 @@
-using System;
 using API.DTOs.BookingDto;
 using Core.Entities;
 using Core.Interfaces;
@@ -18,7 +17,6 @@ public class BookingService : IBookingService
         IBookingAvailabilityRepository bookingAvailabilityRepository,
         IGenericRepository<Listing> listingRepo,
         IGenericRepository<ListingPrice> priceRepo
-
       )
     {
         this.bookingRepository = bookingRepository;
@@ -122,7 +120,6 @@ public class BookingService : IBookingService
             request.ListingId, request.CheckInDate, request.CheckOutDate
         );
 
-
         var allUnavailableDates = blockedDates.Concat(bookedDates).Distinct().OrderBy(d => d).ToList();
 
         var unavailableDateRanges = new List<DateRange>();
@@ -206,7 +203,7 @@ public class BookingService : IBookingService
 
         if (!availabilityCheck.IsAvailable)
         {
-            throw new InvalidOperationException("The requested date are not available");
+            throw new InvalidOperationException("The requested dates are not available");
         }
 
         var booking = new Booking
@@ -224,14 +221,27 @@ public class BookingService : IBookingService
         return booking;
     }
 
-    public Task<Booking?> GetBookingByIdAsync(int id, int userId)
+    public async Task<Booking?> GetBookingByIdAsync(int id, int userId)
     {
-        throw new NotImplementedException();
+        var booking = await bookingRepository.GetBookingByIdWithDetailsAsync(id);
+
+        if (booking == null)
+        {
+            return null;
+        }
+
+        // Check if the user is authorized to view this booking
+        if (booking.UserId != userId)
+        {
+            throw new UnauthorizedAccessException("You are not authorized to view this booking");
+        }
+
+        return booking;
     }
 
-    public Task<IReadOnlyList<Booking>> GetUserBookingsAsync(int userId)
+    public async Task<IReadOnlyList<Booking>> GetUserBookingsAsync(int userId)
     {
-        throw new NotImplementedException();
+        return await bookingRepository.GetBookingsByUserIdAsync(userId);
     }
 
     public async Task<bool> UnblockDateAsync(int listingId, DateTime date, int hostId)

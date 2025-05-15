@@ -22,23 +22,26 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
         return await ApplySpecification(spec).FirstOrDefaultAsync();
     }
 
-    public async Task<IReadOnlyList<Booking>> GetBookingsByListingIdAsync(int listingId)
+    public async Task<IReadOnlyList<Booking>> GetBookingsByUserIdAsync(int userId)
     {
-        var spec = new BookingSpecification(listingId, true);
+        var spec = new BookingSpecification(userId, true);
         return await ApplySpecification(spec).ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Booking>> GetBookingsByUserIdAsync(int userId)
+    public async Task<IReadOnlyList<Booking>> GetBookingByListingIdAsync(int listingId)
     {
-        var spec = new BookingSpecification(userId, false);
+        var spec = new BookingSpecification()
+        {
+            Criteria = b => b.ListingId == listingId
+        };
+
         return await ApplySpecification(spec).ToListAsync();
     }
 
     public async Task<bool> CheckBookingOverlapAsync(int listingId, DateTime checkInDate, DateTime checkOutDate, int? excludeBookingId = null)
     {
         var spec = new BookingSpecification(listingId, checkInDate, checkOutDate, excludeBookingId);
-        var overlappingBookings = await ApplySpecification(spec).AnyAsync();
-        return overlappingBookings;
+        return await ApplySpecification(spec).AnyAsync();
     }
 
     public async Task<IReadOnlyList<DateTime>> GetBookedDatesForListingAsync(int listingId, DateTime startDate, DateTime endDate)
@@ -64,44 +67,6 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
                 {
                     bookedDates.Add(currentDate);
                 }
-                currentDate = currentDate.AddDays(1);
-            }
-        }
-
-        return bookedDates.Distinct().ToList();
-    }
-
-    public async Task<IReadOnlyList<Booking>> GetBookingByListingIdAsync(int listingId)
-    {
-        var spec = new BookingSpecification()
-        {
-            Criteria = b => b.ListingId == listingId
-        };
-
-        return await ApplySpecification(spec).ToListAsync();
-    }
-
-    public async Task<bool> CheckBookingOverlapAsync(int listingId)
-    {
-        return await _context.Bookings
-            .AnyAsync(b => b.ListingId == listingId &&
-                     b.Status != BookingStatus.Cancelled &&
-                     b.Status != BookingStatus.Rejected);
-    }
-
-    public async Task<IReadOnlyList<DateTime>> GetBookedDateForListingAsync(int listingId)
-    {
-        var bookings = await _context.Bookings.Where(b => b.ListingId == listingId && b.Status != BookingStatus.Cancelled &&
-                        b.Status != BookingStatus.Rejected &&
-                        b.CheckOutDate >= DateTime.UtcNow).ToListAsync();
-
-        var bookedDates = new List<DateTime>();
-        foreach (var booking in bookings)
-        {
-            var currentDate = booking.CheckInDate.Date;
-            while (currentDate < booking.CheckOutDate.Date)
-            {
-                bookedDates.Add(currentDate);
                 currentDate = currentDate.AddDays(1);
             }
         }
