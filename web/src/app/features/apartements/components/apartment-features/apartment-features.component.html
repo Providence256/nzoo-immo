@@ -1,0 +1,7 @@
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-slate-700">
+    <div *ngFor="let feature of features" class="flex items-center space-x-2">
+      <i [class]="feature.icon + ' text-xl text-primary'"></i>
+      <span class="text-sm">{{ feature.label }}: <strong>{{ feature.value }}</strong></span>
+    </div>
+  </div>
+  

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
 import {
   addDays, addMonths, endOfMonth, format,
   isBefore, isSameDay, isWithinInterval, startOfDay,
@@ -13,6 +13,8 @@ import { fr, se } from 'date-fns/locale';
 })
 export class DateRangePickerComponent implements OnInit, AfterViewInit {
   @Output() dateRangeSelected = new EventEmitter<{ startDate: Date, endDate: Date }>();
+  @Input() unavailableDates: Date[] = []
+  @Input() minDate: Date = new Date()
 
   today: Date = new Date();
   selectedStartDate!: Date | null;
@@ -43,7 +45,6 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       startOfMonth(addMonths(this.today, 1))
     ];
     this.checkViewportSize();
-    console.log('[INIT] DateRangePickerComponent initialized');
   }
 
   ngAfterViewInit(): void {
@@ -98,8 +99,6 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
   }
 
   onDateClick(date: Date) {
-
-      console.log('Clicked date:', date);
     if (this.selectedStartDate && this.selectedEndDate) {
       this.selectedStartDate = date;
       this.selectedEndDate = null;
@@ -146,8 +145,6 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
   }
 
   emitSelectedRange() {
-    
-    console.log('Emit range:', this.selectedStartDate, this.selectedEndDate);
     if (this.selectedStartDate && this.selectedEndDate) {
       console.log('Selected range:', this.selectedStartDate, this.selectedEndDate);
       this.dateRangeSelected.emit({
@@ -210,6 +207,30 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
 
   isDisabled(date: Date): boolean {
     return isBefore(date, startOfDay(this.today));
+  }
+
+  isDateUnavailable(date : Date) : boolean{
+    return this.unavailableDates.some(unavailableDate => this.isSameDay(date, unavailableDate))
+  }
+
+  
+  // Check if a range contain any unavailable dates
+  isRangeAvailable(start: Date, end: Date): boolean {
+    const currentDate = new Date(start);
+    currentDate.setHours(0,0,0,0)
+
+    const endDate = new Date(end)
+    end.setHours(0,0,0,0)
+
+    while(currentDate <= endDate){
+      if(this.isDateUnavailable(currentDate)){
+        return false;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+
+    return true;
   }
 
   isToday(date: Date): boolean {

@@ -1,0 +1,15 @@
+<div class="space-y-2">
+    <div class="aspect-w-16 aspect-h-9">
+      <img [src]="images[selectedImageIndex]" alt="Image principale" class="rounded-xl object-cover w-full h-full" />
+    </div>
+    <div class="flex justify-between">
+      <button (click)="previousImage()" [disabled]="selectedImageIndex === 0" class="px-2">⟨</button>
+      <button (click)="openModal.emit()" class="text-sm text-primary hover:underline">Voir toutes les photos</button>
+      <button (click)="nextImage()" [disabled]="selectedImageIndex === images.length - 1" class="px-2">⟩</button>
+    </div>
+    <div class="flex space-x-2 overflow-auto mt-2">
+      <img *ngFor="let image of images; let i = index" [src]="image" (click)="selectImage(i)"
+           [class.border-primary]="i === selectedImageIndex"
+           class="h-16 w-24 object-cover rounded cursor-pointer border-2 border-transparent hover:border-primary transition" />
+    </div>
+  </div>

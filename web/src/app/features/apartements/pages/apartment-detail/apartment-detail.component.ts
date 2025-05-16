@@ -27,6 +27,7 @@ export class ApartmentDetailComponent implements OnInit {
   equipements : any[] = []
   checkingAvailability = false
   isAvailable = true
+  unavailableDates: Date[] = []
 
   currentImageIndex: number = 0;
   currentImage: string = '';
@@ -141,6 +142,30 @@ checkDateAvailability() : void {
 
 }
 
+checkRangeAvailability(startDate: Date, endDate: Date) : boolean{
+  if(!startDate || !endDate) return true
+
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+
+  for(let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)){
+    const currentDay = new Date(day)
+
+    if(this.unavailableDates.some(unavailableDate => 
+          this.isSameDay(currentDay, unavailableDate))){
+            return false
+    }
+
+  }
+
+  return true
+}
+
+isSameDay(date1: Date, date2: Date): boolean{
+  return date1.getFullYear() === date2.getFullYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
+}
   
   goToConfirmBooking(): void {
     this.bookingSubmitted = true;
@@ -149,12 +174,34 @@ checkDateAvailability() : void {
       return;
     }
 
-    console.log(this.bookingForm.valid)
+    const checkIn = this.bookingForm.get('checkIn')?.value
+    const checkOut = this.bookingForm.get('checkOut')?.value
+
+    if(!this.checkRangeAvailability(checkIn, checkOut)){
+      this.bookingError = 'Ces dates ne sont pas disponibles. Veuillez sélectionner d\'autres dates.'
+      return;
+    }
+
+
+    const bookingData = {
+      annonceId : this.annonce.id,
+      checkIn: this.bookingForm.get('checkIn')?.value,
+      checkOut: this.bookingForm.get('checkOut')?.value,
+      guests: this.bookingForm.get('guests')?.value,
+      price: this.annonce.price
+    }
+
+    this.router.navigate(['/booking/confirm'],{
+      state: {
+        bookingData: bookingData,
+        apartment: this.annonce,
+      }
+    })
+
     
   }
 
   onDateRangeSelect(event: { startDate: Date, endDate: Date }) {
-    console.log('Form values after date range selection:', event);
     this.bookingForm.patchValue({
       checkIn: event.startDate,
       checkOut: event.endDate
