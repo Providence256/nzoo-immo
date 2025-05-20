@@ -331,7 +331,7 @@
             <div class="p-6">
               <form [formGroup]="bookingForm" (ngSubmit)="goToConfirmBooking()" class="space-y-4">
                 <div class="mb-4" >
-                  <label for="checkIn" class="block text-sm font-medium text-gray-700 mb-1">Select Dates</label>
+                  <label for="checkIn" class="block text-sm font-medium text-gray-700 mb-1">Selectionner Dates</label>
                   <app-date-range-picker 
                   (dateRangeSelected)="onDateRangeSelect($event)"
                 ></app-date-range-picker>
@@ -355,22 +355,22 @@
                   <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
-                  Available
+                  Disponible
                 </span>
                 <span *ngIf="!isAvailable" class="text-red-600 flex items-center">
                   <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  Not available
+                  Pas Disponible
                 </span>
               </div>
 
               <!-- Error message if dates are required but not filled -->
             <div *ngIf="bookingSubmitted && bookingForm.get('checkIn')?.invalid" class="text-red-600 text-sm mt-1">
-              Please select check-in date
+             Veuillez sélectionner la date d'arrivée
             </div>
             <div *ngIf="bookingSubmitted && bookingForm.get('checkOut')?.invalid" class="text-red-600 text-sm mt-1">
-              Please select check-out date
+              Veuillez sélectionner la date de départ
             </div>
 
                 </div>

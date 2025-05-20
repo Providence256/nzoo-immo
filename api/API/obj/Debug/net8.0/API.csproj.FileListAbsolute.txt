@@ -158,3 +158,5 @@
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.Bcl.Memory.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.Google.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Pipelines.Sockets.Unofficial.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/StackExchange.Redis.dll

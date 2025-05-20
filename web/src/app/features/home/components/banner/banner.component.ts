@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,8 +19,11 @@ export class BannerComponent {
   @ViewChild('videoContainer') videoContainer!: ElementRef;
   parallaxScale = 0;
 
+  constructor(private cdr: ChangeDetectorRef){}
+
   ngAfterViewInit() {
     this.onWindowScroll();
+    this.cdr.detectChanges()
   }
 
   @HostListener('window:scroll')

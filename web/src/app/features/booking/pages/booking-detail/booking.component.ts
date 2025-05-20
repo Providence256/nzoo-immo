@@ -6,9 +6,8 @@ import { Subscription } from 'rxjs';
 import { take, finalize } from 'rxjs/operators';
 import { PropertyService } from '../../../../core/services/property.service';
 import { Apartment } from '../../../../core/models/apartment.model';
-// import { ApartmentService } from '../../services/apartment.service';
-// import { AuthService } from '../../services/auth.service';
-// import { PaymentService } from '../../services/payment.service';
+import { AuthService } from '../../../../core/authentication/auth.service';
+import { AnnoncesService } from '../../../admin/saisies/services/annonces.service';
 
 interface PaymentMethod {
   id: string;
@@ -27,15 +26,13 @@ interface BookingDetails {
   infants: number;
 }
 
-
-
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html'
 })
 export class BookingComponent implements OnInit, OnDestroy {
-  apartmentId: string;
-  apartment?: Apartment;
+  apartmentId: number;
+  apartment: any = {};
   loading = true;
   error: string | null = null;
   bookingDetails: BookingDetails = {
@@ -46,11 +43,29 @@ export class BookingComponent implements OnInit, OnDestroy {
     infants: 0
   };
   paymentForm: FormGroup;
-  isLoggedIn = false;
+  isLoggedIn = false; // Default to true for testing, will be updated in checkAuthStatus
   user: any = null;
   isSubmitting = false;
   bookingSuccess = false;
-  paymentMethods: PaymentMethod[] = [];
+  paymentMethods: PaymentMethod[] = [
+    // Mock data for payment methods
+    {
+      id: 'pm_123456',
+      brand: 'visa',
+      last4: '4242',
+      expMonth: 12,
+      expYear: 2025,
+      isDefault: true
+    },
+    {
+      id: 'pm_654321',
+      brand: 'mastercard',
+      last4: '8888',
+      expMonth: 10,
+      expYear: 2026,
+      isDefault: false
+    }
+  ];
   
   // Calculated fields
   totalNights = 0;
@@ -66,21 +81,24 @@ export class BookingComponent implements OnInit, OnDestroy {
     public router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-     private apartmentService: PropertyService,
-    // private authService: AuthService,
-    // private paymentService: PaymentService,
+    private annonceService: AnnoncesService,
+    private authService: AuthService,
   ) {
-    this.apartmentId = '';
+    this.apartmentId = 0;
     this.paymentForm = this.fb.group({
       paymentMethodId: ['', Validators.required],
       nameOnCard: ['', Validators.required],
       agreeToTerms: [false, Validators.requiredTrue]
     });
+
+    const navigation = this.router.getCurrentNavigation()
+    console.log(navigation?.extras?.state)
   }
 
   ngOnInit(): void {
-    // this.checkAuthStatus();
+    this.checkAuthStatus();
     this.getRouteParams();
+    this.getBookingDataFromState();
     this.saveBookingIntent();
   }
 
@@ -89,39 +107,36 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  // checkAuthStatus(): void {
-  //   const authSub = this.authService.isAuthenticated().subscribe(
-  //     (isLoggedIn) => {
-  //       this.isLoggedIn = isLoggedIn;
-  //       if (isLoggedIn) {
-  //         this.getUserInfo();
-  //         this.loadSavedPaymentMethods();
-  //       }
-  //     },
-  //     (error) => {
-  //       this.error = 'Authentication check failed. Please try again.';
-  //       console.error('Auth check error:', error);
-  //     }
-  //   );
-  //   this.subscriptions.push(authSub);
-  // }
-
-  // getUserInfo(): void {
-  //   const userSub = this.authService.getCurrentUser().subscribe(
-  //     (user) => {
-  //       this.user = user;
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching user info:', error);
-  //     }
-  //   );
-  //   this.subscriptions.push(userSub);
-  // }
+  checkAuthStatus(): void {
+    // Subscribe to auth state from AuthService
+    // const authSub = this.authService.currentUser.subscribe(
+    //   (user) => {
+    //     this.isLoggedIn = !!user;
+    //     this.user = user;
+        
+    //     if (this.isLoggedIn) {
+    //       // In a real app, this would load user's payment methods
+    //       // For now we're using the mock data
+    //       if (this.paymentMethods.length > 0) {
+    //         this.paymentForm.patchValue({
+    //           paymentMethodId: this.paymentMethods[0].id,
+    //           nameOnCard: this.user?.name || ''
+    //         });
+    //       }
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Auth check error:', error);
+    //     this.isLoggedIn = false;
+    //   }
+    // );
+    // this.subscriptions.push(authSub);
+  }
 
   getRouteParams(): void {
     const paramSub = this.route.paramMap.subscribe(params => {
-      this.apartmentId = params.get('1') || '1';
-     
+      this.apartmentId =  3;
+      
       if (this.apartmentId) {
         this.loadApartmentDetails();
         
@@ -151,23 +166,54 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.subscriptions.push(paramSub);
   }
 
+  // Get booking data passed from the apartment detail page through router state
+  getBookingDataFromState(): void {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras?.state;
+      console.log(this.router.getCurrentNavigation())
+    if (state && state['bookingData']) {
+      this.apartmentId = state['bookingData'].annonceId;
+      this.bookingDetails = {
+        checkIn: state['bookingData'].checkIn,
+        checkOut: state['bookingData'].checkOut,
+        guests: state['bookingData'].guests,
+        children: 0, // Assuming these aren't passed from the detail page
+        infants: 0
+      };
+      
+      // If apartment info is passed through state, use it
+      if (state['apartment']) {
+        this.apartment = state['apartment'];
+        this.loading = false;
+        this.calculateBookingDetails();
+      } else {
+        // Otherwise, load from API
+        this.loadApartmentDetails();
+      }
+    }
+  }
+
   loadApartmentDetails(): void {
+    if (!this.apartmentId) {
+      this.error = 'No apartment ID provided';
+      this.loading = false;
+      return;
+    }
+    
     this.loading = true;
-     const apartmentSub = this.apartmentService.getPropertyById('1').pipe(
-       finalize(() => this.loading = false)
-     ).subscribe(
+    const apartmentSub = this.annonceService.find(this.apartmentId).pipe(
+      finalize(() => this.loading = false)
+    ).subscribe(
       (data) => {
         this.apartment = data;
-        console.log(data)
-         this.calculateBookingDetails();
+        this.calculateBookingDetails();
       },
       (error) => {
-         this.error = 'Failed to load apartment details. Please try again.';
-         console.error('Apartment load error:', error);
-       }
-     );
-     this.subscriptions.push(apartmentSub);
-     
+        this.error = 'Failed to load apartment details. Please try again.';
+        console.error('Apartment load error:', error);
+      }
+    );
+    this.subscriptions.push(apartmentSub);
   }
 
   saveBookingIntent(): void {
@@ -218,15 +264,26 @@ export class BookingComponent implements OnInit, OnDestroy {
         throw new Error('Invalid date range');
       }
       
-      console.log('Total nights:', this.totalNights);
-      // Calculate subtotal
-      this.subtotal = this.apartment.price.amount * this.totalNights;
+      // Calculate subtotal (handle both price structures)
+      if (this.apartment.price && typeof this.apartment.price === 'object') {
+        // Handle if price is an object with amount property
+        if (this.apartment.price.amount) {
+          this.subtotal = this.apartment.price.amount * this.totalNights;
+        } 
+        // Handle if price has prixBase property (from annonce object)
+        else if (this.apartment.price.prixBase) {
+          this.subtotal = this.apartment.price.prixBase * this.totalNights;
+        }
+      } else if (typeof this.apartment.price === 'number') {
+        // If price is just a number
+        this.subtotal = this.apartment.price * this.totalNights;
+      }
       
-      // Add cleaning fee (this could be a property of the apartment)
-      this.cleaningFee = this.apartment.price.amount * 0.1; // Example: 10% of one night
+      // Add cleaning fee (10% of one night)
+      this.cleaningFee = this.subtotal / this.totalNights * 0.1;
       
-      // Add service fee
-      this.serviceFee = this.subtotal * 0.12; // Example: 12% service fee
+      // Add service fee (12% of subtotal)
+      this.serviceFee = this.subtotal * 0.12;
       
       // Calculate total
       this.totalPrice = this.subtotal + this.cleaningFee + this.serviceFee;
@@ -234,25 +291,6 @@ export class BookingComponent implements OnInit, OnDestroy {
       console.error('Error calculating booking details:', error);
       this.error = 'There was an error calculating your booking. Please try again.';
     }
-  }
-
-  loadSavedPaymentMethods(): void {
-    // const paymentSub = this.paymentService.getSavedPaymentMethods().subscribe(
-    //   (methods) => {
-    //     this.paymentMethods = methods;
-    //     if (methods.length > 0) {
-    //       this.paymentForm.patchValue({
-    //         paymentMethodId: methods[0].id,
-    //         nameOnCard: methods[0].cardHolderName || this.user?.fullName || ''
-    //       });
-    //     }
-    //   },
-    //   (error) => {
-    //     console.error('Error loading payment methods:', error);
-    //     this.notificationService.showError('Unable to load payment methods. Please try again.');
-    //   }
-    // );
-    // this.subscriptions.push(paymentSub);
   }
 
   addNewPaymentMethod(): void {
@@ -312,28 +350,51 @@ export class BookingComponent implements OnInit, OnDestroy {
       paymentMethodId: this.paymentForm.get('paymentMethodId')?.value,
       nameOnCard: this.paymentForm.get('nameOnCard')?.value,
       totalAmount: this.totalPrice,
-      currency: this.apartment?.price.currency || 'USD'
+      currency: this.getCurrency()
     };
     
-    // const bookingSub = this.apartmentService.createBooking(bookingData).pipe(
+    // Simulate a successful booking request
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.bookingSuccess = true;
+      
+      // Clear booking intent from session storage
+      sessionStorage.removeItem('bookingIntent');
+      
+      // Navigate to confirmation page after a brief delay
+      setTimeout(() => {
+        this.router.navigate(['/bookings/confirmation', 'mock-booking-id']);
+      }, 1500);
+    }, 2000);
+    
+    // In a real app, you would call a service to create the booking
+    // this.bookingService.createBooking(bookingData).pipe(
     //   finalize(() => this.isSubmitting = false)
     // ).subscribe(
     //   (response) => {
     //     this.bookingSuccess = true;
-    //     // Clear booking intent from session storage
     //     sessionStorage.removeItem('bookingIntent');
-    //     this.notificationService.showSuccess('Booking successful!');
-        
-    //     // Navigate to confirmation page
+    //     
     //     setTimeout(() => {
     //       this.router.navigate(['/bookings/confirmation', response.bookingId]);
     //     }, 1500);
     //   },
     //   (error) => {
     //     this.error = error.message || 'Failed to process your booking. Please try again.';
-    //     this.notificationService.showError(this.error);
     //   }
     // );
-    // this.subscriptions.push(bookingSub);
+  }
+  
+  getCurrency(): string {
+    if (this.apartment?.price) {
+      if (typeof this.apartment.price === 'object') {
+        // Check if it has currency or codeDevise property
+        return this.apartment.price.currency || 
+               this.apartment.price.codeDevise || 
+               'USD';
+      }
+    }
+    
+    return 'USD';
   }
 }
