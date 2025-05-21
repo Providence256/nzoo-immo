@@ -5,14 +5,12 @@ import {
   HostListener,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/authentication/auth.service';
 import { User } from '../../../../core/models/user.model';
-import { PropertyService } from '../../../../core/services/property.service';
 import { AnnoncesService } from '../../../admin/saisies/services/annonces.service';
 import { BookingSessionService } from '../../services/booking-session.service';
-import { th } from 'date-fns/locale';
 
 @Component({
   selector: 'app-apartment-detail',
@@ -54,8 +52,6 @@ export class ApartmentDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private apiService: PropertyService,
     private annonceService: AnnoncesService,
     private authService: AuthService,
     private fb: FormBuilder,

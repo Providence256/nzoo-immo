@@ -34,6 +34,9 @@ export class BookingComponent implements OnInit, OnDestroy {
   serviceFee = 0;
   totalPrice = 0;
 
+  isDatePickerOpen = false;
+  isGuestSelectorOpen = false;
+
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
@@ -267,6 +270,11 @@ export class BookingComponent implements OnInit, OnDestroy {
     }
 
     return 'USD';
+  }
+
+  toggleDatePicker(): void {
+    this.isDatePickerOpen = !this.isDatePickerOpen;
+    this.isGuestSelectorOpen = false;
   }
 
   formatDate(date: Date): string {

@@ -18,10 +18,10 @@ import { BreadcrumbComponent } from '../core/layout/admin-layout/breadcrumb/brea
 import { AdminSidebarItemComponent } from '../core/layout/admin-layout/admin-sidebar/admin-siderbaritem.component';
 import { BreadcrumbService } from '../core/services/breadcrumb.service';
 import { AdminMenuService } from '../core/services/admin-menu.service';
+import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
+import { GuestSelectorComponent } from './components/guest-selector/guest-selector.component';
 
 // Shared components that will be used throughout the app
-
-
 
 @NgModule({
   declarations: [
@@ -35,8 +35,9 @@ import { AdminMenuService } from '../core/services/admin-menu.service';
     AdminHeaderComponent,
     AdminSidebarComponent,
     BreadcrumbComponent,
-    AdminSidebarItemComponent
-    
+    AdminSidebarItemComponent,
+    DateRangePickerComponent,
+    GuestSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -49,30 +50,30 @@ import { AdminMenuService } from '../core/services/admin-menu.service';
   exports: [
     // Re-export Angular modules
     CommonModule,
-    RouterModule, 
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     PrimengModule,
-    
+
     // Re-export PrimeNG modules
-  
-    
+
     // Export shared components
     LoadingSpinnerComponent,
     PageHeaderComponent,
     FooterComponent,
     HeaderComponent,
 
-
     AdminHeaderComponent,
     AdminSidebarComponent,
     BreadcrumbComponent,
+    DateRangePickerComponent,
+    GuestSelectorComponent,
   ],
   providers: [
     // Add any shared services here
     BreadcrumbService,
     AdminMenuService,
-  ]
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

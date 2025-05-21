@@ -170,11 +170,6 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
 
   emitSelectedRange() {
     if (this.selectedStartDate && this.selectedEndDate) {
-      console.log(
-        'Selected range:',
-        this.selectedStartDate,
-        this.selectedEndDate
-      );
       this.dateRangeSelected.emit({
         startDate: this.selectedStartDate,
         endDate: this.selectedEndDate,

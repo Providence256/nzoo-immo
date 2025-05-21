@@ -1,0 +1,213 @@
+/* Add to your component styles or global styles */
+:host {
+  @apply block w-full;
+  font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+}
+
+:host ::ng-deep .date-picker-dialog {
+  @apply shadow-lg;
+}
+
+:host ::ng-deep .date-picker-dialog .p-dialog-header {
+  @apply border-b border-gray-200 bg-white py-3 px-6;
+}
+
+:host ::ng-deep .date-picker-dialog .p-dialog-title {
+  @apply text-gray-800 font-medium text-lg;
+}
+
+:host ::ng-deep .date-picker-dialog .p-dialog-content {
+  @apply p-0 overflow-hidden;
+  max-height: 80vh !important;
+  height: auto !important;
+}
+
+/* Fix for the dialog to show both calendar and buttons */
+.date-picker-container {
+  @apply block max-h-[calc(80vh-120px)];
+}
+
+.date-picker-container .dropdown {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  margin-top: 8px;
+  box-shadow: none !important;
+}
+
+.date-picker-container .calendars-container {
+  max-height: calc(80vh - 280px);
+  overflow-y: auto;
+}
+
+/* Style the date range wrapper to match your design */
+.date-range-wrapper {
+  @apply w-full relative;
+}
+
+/* Input Fields */
+.date-range-wrapper .inputs-container {
+  @apply flex items-center border border-gray-200 rounded-full bg-white shadow-sm transition-all;
+}
+
+.date-range-wrapper .inputs-container:hover {
+  @apply shadow;
+}
+
+.date-range-wrapper .input {
+  @apply py-2.5 px-4 flex-1 cursor-pointer transition-colors rounded-full;
+}
+
+.date-range-wrapper .input:hover {
+  @apply bg-gray-50;
+}
+
+.date-range-wrapper .input.active {
+  @apply bg-gray-100;
+}
+
+.date-range-wrapper .label {
+  @apply text-xs font-semibold text-gray-800 uppercase mb-0.5;
+}
+
+.date-range-wrapper .value {
+  @apply text-gray-600 text-sm;
+}
+
+.date-range-wrapper .separator {
+  @apply h-6 w-px bg-gray-200;
+}
+
+.date-range-wrapper .clear-btn {
+  @apply w-8 h-8 flex items-center justify-center text-gray-800 hover:bg-gray-100 rounded-full mx-2 transition-colors;
+}
+
+/* Calendar styling */
+.dropdown {
+  @apply bg-white rounded-2xl w-full max-w-3xl z-50;
+}
+
+.dropdown-header {
+  @apply flex items-center justify-between p-3 border-b border-gray-200;
+}
+
+.nav-btn {
+  @apply border border-gray-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors text-gray-800;
+}
+
+.month-labels {
+  @apply flex-1 flex justify-center gap-12 font-semibold text-base text-gray-800;
+}
+
+@media (max-width: 600px) {
+  .month-labels {
+    @apply gap-0;
+  }
+  
+  .month-labels span {
+    @apply w-full text-center;
+  }
+}
+
+.calendars-container {
+  @apply flex p-4 gap-4;
+}
+
+@media (max-width: 600px) {
+  .calendars-container {
+    @apply p-2 flex-col;
+  }
+}
+
+.calendar {
+  @apply flex-1 min-w-[280px];
+}
+
+.week-days {
+  @apply grid grid-cols-7 mt-2 mb-1;
+}
+
+.day-name {
+  @apply text-center text-xs font-semibold text-gray-500 uppercase;
+}
+
+.month-days {
+  @apply grid grid-cols-7 gap-0.5;
+}
+
+.day-cell {
+  @apply aspect-square flex items-center justify-center;
+}
+
+.day-cell.empty {
+  @apply invisible;
+}
+
+.day-button {
+  @apply w-10 h-10 rounded-full border-0 bg-transparent text-sm font-medium text-gray-800 cursor-pointer flex items-center justify-center transition-colors relative;
+}
+
+.day-button:disabled {
+  @apply text-gray-300 cursor-default;
+}
+
+.day-button:not(:disabled):hover {
+  @apply bg-gray-100;
+}
+
+.day-button.today:not(.start-date):not(.end-date):not(.in-range) {
+  @apply underline font-semibold;
+}
+
+.day-button.start-date, .day-button.end-date {
+  @apply bg-red-500 text-white;
+}
+
+.day-button.start-date:hover, .day-button.end-date:hover {
+  @apply bg-red-600;
+}
+
+.day-button.in-range {
+  @apply bg-gray-100 rounded-none w-full;
+}
+
+.day-button.in-range:hover {
+  @apply bg-gray-200;
+}
+
+/* First day in range */
+.day-button.start-date {
+  @apply rounded-l-full rounded-r-none mr-0;
+}
+
+.day-button.start-date:after {
+  content: '';
+  @apply absolute right-0 w-1/2 h-full bg-gray-100 -z-10;
+}
+
+/* Last day in range */
+.day-button.end-date {
+  @apply rounded-r-full rounded-l-none ml-0;
+}
+
+.day-button.end-date:before {
+  content: '';
+  @apply absolute left-0 w-1/2 h-full bg-gray-100 -z-10;
+}
+
+.dropdown-footer {
+  @apply flex justify-between items-center p-3 border-t border-gray-200;
+}
+
+.nights-info {
+  @apply text-sm font-medium;
+}
+
+.close-btn {
+  @apply bg-red-500 text-white border-0 rounded-full py-2 px-4 text-sm font-medium cursor-pointer transition-colors;
+}
+
+.close-btn:hover {
+  @apply bg-red-600;
+}

@@ -22,7 +22,7 @@ interface GuestCount {
 })
 export class GuestSelectorComponent implements OnInit {
   @Input() maxOccupancy = 16;
-  @Input() allowPets = true;
+  @Input() initialValues: GuestCount = { adults: 1, children: 0, babies: 0 };
   @Output() guestCountChange = new EventEmitter<GuestCount>();
 
   isDropdownOpen = false;

@@ -1,12 +1,12 @@
 import {
+  Ripple
+} from "./chunk-XTGU7KIS.js";
+import {
   Tooltip,
   TooltipModule
 } from "./chunk-YBF4CL3J.js";
 import "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
-import {
-  Ripple
-} from "./chunk-XTGU7KIS.js";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -101,8 +101,8 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-FUF4CDAW.js";
-import "./chunk-WPM5VTLQ.js";
 import "./chunk-PEBH6BBU.js";
+import "./chunk-WPM5VTLQ.js";
 import "./chunk-4S3KYZTJ.js";
 import "./chunk-WDMUDEB6.js";
 

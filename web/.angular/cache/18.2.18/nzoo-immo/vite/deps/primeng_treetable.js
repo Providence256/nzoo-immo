@@ -1,11 +1,10 @@
 import {
   Paginator,
   PaginatorModule
-} from "./chunk-UKWBQQHW.js";
+} from "./chunk-ZAKI6PEN.js";
 import "./chunk-MAK6REP6.js";
 import "./chunk-PCDCVLSL.js";
 import "./chunk-PDKHRV2C.js";
-import "./chunk-YBF4CL3J.js";
 import {
   Checkbox
 } from "./chunk-FVOWZKKT.js";
@@ -16,12 +15,13 @@ import "./chunk-T36NQEOC.js";
 import "./chunk-6LCUWHMZ.js";
 import "./chunk-3MBEO5MG.js";
 import {
+  Ripple
+} from "./chunk-XTGU7KIS.js";
+import "./chunk-YBF4CL3J.js";
+import {
   DomHandler
 } from "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
-import {
-  Ripple
-} from "./chunk-XTGU7KIS.js";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -149,8 +149,8 @@ import {
   ɵɵtemplateRefExtractor,
   ɵɵviewQuery
 } from "./chunk-FUF4CDAW.js";
-import "./chunk-WPM5VTLQ.js";
 import "./chunk-PEBH6BBU.js";
+import "./chunk-WPM5VTLQ.js";
 import {
   Subject
 } from "./chunk-4S3KYZTJ.js";

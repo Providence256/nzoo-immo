@@ -1,0 +1,92 @@
+<!-- modify-guest.component.html -->
+<div class="guest-selector-container">
+  <!-- Dropdown panel - always shown -->
+  <div class="dropdown-panel">
+    <form [formGroup]="guestForm">
+      <!-- Adults Row -->
+      <div class="guest-row">
+        <div class="guest-type">
+          <div class="guest-label">Adultes</div>
+          <div class="guest-description">13 ans +</div>
+        </div>
+        <div class="counter-controls">
+          <button 
+            type="button" 
+            class="counter-btn" 
+            (click)="decreaseCount('adults')" 
+            [disabled]="isDecrementDisabled('adults')"
+          >
+            -
+          </button>
+          <span class="counter-value">{{guestForm.get('adults')?.value}}</span>
+          <button 
+            type="button" 
+            class="counter-btn" 
+            (click)="increaseCount('adults')" 
+            [disabled]="isIncrementDisabled('adults')"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- Children Row -->
+      <div class="guest-row">
+        <div class="guest-type">
+          <div class="guest-label">Enfants</div>
+          <div class="guest-description">2-12 ans</div>
+        </div>
+        <div class="counter-controls">
+          <button 
+            type="button" 
+            class="counter-btn" 
+            (click)="decreaseCount('children')" 
+            [disabled]="isDecrementDisabled('children')"
+          >
+            -
+          </button>
+          <span class="counter-value">{{guestForm.get('children')?.value}}</span>
+          <button 
+            type="button" 
+            class="counter-btn" 
+            (click)="increaseCount('children')" 
+            [disabled]="isIncrementDisabled('children')"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- Babies Row -->
+      <div class="guest-row">
+        <div class="guest-type">
+          <div class="guest-label">Bébés</div>
+          <div class="guest-description">- de 2 ans</div>
+        </div>
+        <div class="counter-controls">
+          <button 
+            type="button" 
+            class="counter-btn" 
+            (click)="decreaseCount('babies')" 
+            [disabled]="isDecrementDisabled('babies')"
+          >
+            -
+          </button>
+          <span class="counter-value">{{guestForm.get('babies')?.value}}</span>
+          <button 
+            type="button" 
+            class="counter-btn" 
+            (click)="increaseCount('babies')" 
+            [disabled]="isIncrementDisabled('babies')"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="info-text">
+      La capacité d'accueil de ce logement est limitée à {{maxOccupancy}} voyageurs, sans compter les bébés.
+    </div>
+  </div>
+</div>

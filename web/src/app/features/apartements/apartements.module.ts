@@ -17,24 +17,24 @@ import { DateRangePickerComponent } from '../../shared/components/date-range-pic
 import { GuestSelectorComponent } from '../../shared/components/guest-selector/guest-selector.component';
 
 const routes: Routes = [
-  { 
-    path: '', 
-    component: ApartmentListComponent 
+  {
+    path: '',
+    component: ApartmentListComponent,
   },
-  { 
-    path: 'create', 
-    component: ApartmentCreateComponent, 
-    canActivate: [AuthGuard] 
+  {
+    path: 'create',
+    component: ApartmentCreateComponent,
+    canActivate: [AuthGuard],
   },
-  { 
-    path: ':id', 
-    component: ApartmentDetailComponent 
+  {
+    path: ':id',
+    component: ApartmentDetailComponent,
   },
-  { 
-    path: ':id/edit', 
-    component: ApartmentEditComponent, 
-    canActivate: [AuthGuard] 
-  }
+  {
+    path: ':id/edit',
+    component: ApartmentEditComponent,
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
@@ -45,14 +45,12 @@ const routes: Routes = [
     ApartmentEditComponent,
     ApartmentCardComponent,
     ApartmentGalleryComponent,
-    DateRangePickerComponent,
-    GuestSelectorComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
-  ]
+  ],
 })
-export class ApartmentsModule { }
+export class ApartmentsModule {}
