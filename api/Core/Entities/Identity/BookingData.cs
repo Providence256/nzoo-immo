@@ -8,5 +8,4 @@ public class BookingData
     public DateTime CheckIn { get; set; }
     public DateTime CheckOut { get; set; }
     public int Guests { get; set; }
-    public decimal Price { get; set; }
 }

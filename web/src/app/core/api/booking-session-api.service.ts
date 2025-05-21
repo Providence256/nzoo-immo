@@ -15,7 +15,7 @@ export class BookingSessionApiService extends BaseApiService {
     }
 
     
-    getSession(id: number): Observable<any> {
+    getSession(id: string): Observable<any> {
         return this.get<any>(`${this.endpoint}/${id}`);
     }
     
@@ -23,11 +23,11 @@ export class BookingSessionApiService extends BaseApiService {
         return this.post<any>(this.endpoint, bookingsession);
     }
     
-    editSession(id: number, bookingsession: any): Observable<any> {
+    editSession(id: string, bookingsession: any): Observable<any> {
         return this.put<any>(`${this.endpoint}/${id}`, bookingsession);
     }
     
-    deleteSession(id: number): Observable<any> {
+    deleteSession(id: string): Observable<any> {
         return this.delete<any>(`${this.endpoint}/${id}`);
     }
 }

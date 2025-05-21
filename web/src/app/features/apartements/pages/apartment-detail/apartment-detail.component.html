@@ -378,7 +378,7 @@
                   <label for="guests" class="block text-sm font-medium text-gray-700">Nombre des visiteurs</label>
                   <app-guest-selector
                   [maxOccupancy]="annonce.nbreVisiteurs || 16"
-        
+                  (guestCountChange)="onGuestCountChange($event)"
                 ></app-guest-selector>
                 <div *ngIf="bookingSubmitted && bookingForm.get('guests')?.invalid" class="text-red-600 text-sm mt-1">
                   Please select a valid number of guests (1-{{ annonce.nbreVisiteurs }})

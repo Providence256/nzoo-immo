@@ -89,6 +89,7 @@
               type="button" 
               class="counter-btn" 
               (click)="increaseCount('babies')"
+              [disabled]="getTotalBabies() >= maxOccupancy / 2"
             >
               +
             </button>
@@ -96,6 +97,7 @@
         </div>
         
         <!-- Pets -->
+      <!--
         <div class="guest-row" *ngIf="allowPets">
           <div class="guest-type">
             <div class="guest-label">Animaux de compagnie</div>
@@ -120,6 +122,8 @@
             </button>
           </div>
         </div>
+      -->
+        
         
         <div class="info-text" *ngIf="maxOccupancy">
           la capacité d'accueil de ce logement est limitée a {{maxOccupancy}} Voyageurs. sans compter les bébés.

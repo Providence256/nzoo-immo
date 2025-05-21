@@ -33,37 +33,6 @@
         </div>
       </ng-container>
   
-      <!-- Not Logged In Message -->
-      <ng-container *ngIf="isLoggedIn && !loading">
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <svg class="w-16 h-16 text-indigo-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H9m3-3a3 3 0 100-6 3 3 0 000 6z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          
-          <h2 class="text-2xl font-bold text-gray-900 mt-4">Login Required</h2>
-          <p class="text-gray-600 mt-2">Please sign in to complete your booking</p>
-          
-          <div class="mt-6 space-y-4">
-            <button (click)="router.navigate(['/login'], { queryParams: { returnUrl: router.url } })" class="w-full md:w-64 bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-              Log In
-            </button>
-            
-            <button (click)="router.navigate(['/login'], { queryParams: { returnUrl: router.url, provider: 'google' } })" class="w-full md:w-64 flex items-center justify-center bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-              <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
-                  <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
-                  <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/>
-                  <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/>
-                  <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
-                </g>
-              </svg>
-              Continue with Google
-            </button>
-          </div>
-        </div>
-      </ng-container>
-  
       <!-- Booking Content (when logged in) -->
       <div *ngIf="!loading && !error && !isLoggedIn" class="space-y-8">
         <!-- Back Button and Progress -->
@@ -76,7 +45,7 @@
           </button>
           
           <div class="flex items-center">
-            <span class="text-sm text-gray-500">Confirm and pay</span>
+            <span class="text-sm text-gray-500">Confirmer et payer</span>
           </div>
         </div>
   
@@ -98,31 +67,31 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <!-- Left Column - Payment Form -->
           <div class="lg:col-span-2 space-y-6">
-            <h1 class="text-2xl font-bold text-gray-900">Confirm and pay</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Confirmer et payer</h1>
             
             <!-- Trip Details -->
             <section class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-              <h2 class="text-xl font-semibold text-gray-900 mb-4">Your trip</h2>
+              <h2 class="text-xl font-semibold text-gray-900 mb-4">Votre Voyage</h2>
               
               <div class="space-y-4">
                 <div class="flex justify-between items-start">
                   <div>
-                    <h3 class="font-medium">Dates</h3>
-                    <p class="text-gray-600">{{ bookingDetails.checkIn | date }} - {{ bookingDetails.checkOut | date }}</p>
+                    <h4 class="font-medium text-gray-600 ">Dates</h4>
+                    <p class="text-gray-600 font-Jost">{{ formatDate(bookingDetails.checkIn ) | uppercase }} - {{ formatDate(bookingDetails.checkOut) | uppercase  }}</p>
                   </div>
-                  <button class="text-indigo-600 text-sm font-medium hover:text-indigo-800" (click)="router.navigate(['/apartments', apartmentId])">Edit</button>
+                  <button class="text-indigo-600 text-sm font-Jost font-medium hover:text-indigo-800" (click)="router.navigate(['/apartments', apartmentId])">Modifier</button>
                 </div>
                 
                 <div class="flex justify-between items-start">
                   <div>
-                    <h3 class="font-medium">Guests</h3>
-                    <p class="text-gray-600">
+                    <h4 class="font-medium text-gray-600">Voyageur<span *ngIf="bookingDetails.guests > 1">s</span> </h4>
+                    <p class="text-gray-600 font-Jost">
                       {{ bookingDetails.guests }} adult<span *ngIf="bookingDetails.guests > 1">s</span>
-                      <span *ngIf="bookingDetails.children > 0">, {{ bookingDetails.children }} child<span *ngIf="bookingDetails.children > 1">ren</span></span>
-                      <span *ngIf="bookingDetails.infants > 0">, {{ bookingDetails.infants }} infant<span *ngIf="bookingDetails.infants > 1">s</span></span>
+                      <span *ngIf="bookingDetails.children > 0">, {{ bookingDetails.children }} enfant<span *ngIf="bookingDetails.children > 1">s</span></span>
+                      <span *ngIf="bookingDetails.infants > 0">, {{ bookingDetails.infants }} bébé<span *ngIf="bookingDetails.infants > 1">s</span></span>
                     </p>
                   </div>
-                  <button class="text-indigo-600 text-sm font-medium hover:text-indigo-800" (click)="router.navigate(['/apartments', apartmentId])">Edit</button>
+                  <button class="text-indigo-600 text-sm font-medium font-Jost hover:text-indigo-800" (click)="router.navigate(['/apartments', apartmentId])">Modifier</button>
                 </div>
               </div>
             </section>
@@ -244,23 +213,20 @@
               
               <!-- Price Breakdown -->
               <div class="border-t border-gray-200 pt-4">
-                <h4 class="text-lg font-medium text-gray-900 mb-4">Price details</h4>
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Details Prix</h4>
                 
                 <div class="space-y-3">
-                  <div class="flex justify-between">
-                    <p>{{ apartment.price.prixBase | currency:apartment?.price?.codeDevise }} x {{ totalNights }} nights</p>
+                  <div class="flex text-red-500 font-Jost justify-between">
+                    <p>{{ apartment.price.prixBase | currency:apartment.price.codeDevise }} x {{ totalNights }} nuits</p>
                     <p>{{ subtotal | currency:apartment?.price?.currency }}</p>
                   </div>
                   
-                  <div class="flex justify-between">
-                    <p>Cleaning fee</p>
+                  <div class="flex font-Jost text-gray-500 justify-between">
+                    <p>Frais de Menage</p>
                     <p>{{ cleaningFee | currency:apartment?.price?.currency }}</p>
                   </div>
                   
-                  <div class="flex justify-between">
-                    <p>Service fee</p>
-                    <p>{{ serviceFee | currency:apartment?.price?.codeDevise }}</p>
-                  </div>
+                 
                   
                   <div class="border-t border-gray-200 pt-3 mt-3 flex justify-between items-center">
                     <p class="font-bold text-gray-900">Total</p>
