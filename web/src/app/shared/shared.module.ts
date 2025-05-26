@@ -20,6 +20,7 @@ import { BreadcrumbService } from '../core/services/breadcrumb.service';
 import { AdminMenuService } from '../core/services/admin-menu.service';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { GuestSelectorComponent } from './components/guest-selector/guest-selector.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 // Shared components that will be used throughout the app
 

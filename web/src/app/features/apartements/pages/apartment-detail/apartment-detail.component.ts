@@ -171,18 +171,6 @@ export class ApartmentDetailComponent implements OnInit {
     );
   }
 
-  private populateFormWithData(data: any): void {
-    if (data) {
-      this.bookingForm.patchValue({
-        checkIn: data.checkIn,
-        checkOut: data.checkOut,
-        guests: data.guests,
-      });
-
-      this.bookingSessionService.updateBookingData(data);
-    }
-  }
-
   goToConfirmBooking(): void {
     this.bookingSubmitted = true;
 

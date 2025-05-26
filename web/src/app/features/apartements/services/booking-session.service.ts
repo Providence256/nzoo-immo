@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { BookingSessionApiService } from '../../../core/api/booking-session-api.service';
 import { Router } from '@angular/router';
+import { format } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +56,7 @@ export class BookingSessionService {
     }
     this.router.navigate([route], {
       queryParams: queryParams,
-      queryParamsHandling: 'merge',
+      queryParamsHandling: 'replace',
     });
   }
 
@@ -74,6 +75,6 @@ export class BookingSessionService {
     if (isNaN(d.getTime())) {
       return '';
     }
-    return d.toISOString().split('T')[0];
+    return format(d, 'yyyy-MM-dd');
   }
 }

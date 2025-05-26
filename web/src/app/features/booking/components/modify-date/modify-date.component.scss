@@ -92,6 +92,8 @@
   @apply flex items-center justify-between p-3 border-b border-gray-200;
 }
 
+
+
 .nav-btn {
   @apply border border-gray-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors text-gray-800;
 }
@@ -108,6 +110,7 @@
   .month-labels span {
     @apply w-full text-center;
   }
+  
 }
 
 .calendars-container {
@@ -205,9 +208,30 @@
 }
 
 .close-btn {
-  @apply bg-red-500 text-white border-0 rounded-full py-2 px-4 text-sm font-medium cursor-pointer transition-colors;
+  @apply bg-blue-500 text-white border-0 rounded-full py-2 px-4 text-sm font-medium cursor-pointer transition-colors;
 }
 
 .close-btn:hover {
-  @apply bg-red-600;
+  @apply bg-blue-600;
 }
+
+.dropdown-footer {
+  @apply flex justify-between items-center px-4 py-3 border-t border-gray-200;
+}
+
+.nights-info {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.action-buttons {
+  @apply flex gap-2;
+}
+
+.btn-cancel {
+  @apply border border-gray-300 text-gray-700 bg-white rounded-full px-4 py-2 text-sm hover:bg-gray-100 transition-colors;
+}
+
+.btn-save {
+  @apply bg-blue-500 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+}
+

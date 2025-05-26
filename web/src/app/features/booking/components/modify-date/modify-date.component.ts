@@ -21,20 +21,21 @@ import {
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
-import { fr, se } from 'date-fns/locale';
+import { da, fr, se } from 'date-fns/locale';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-modify-date',
   templateUrl: './modify-date.component.html',
   styleUrls: ['./modify-date.component.scss'],
 })
-export class ModifyDateComponent implements OnInit, AfterViewInit {
+export class ModifyDateComponent implements OnInit {
   @Output() dateRangeSelected = new EventEmitter<{
     startDate: Date;
     endDate: Date;
   }>();
-  @Input() unavailableDates: Date[] = [];
-  @Input() minDate: Date = new Date();
+  @Input() intialStartDate: Date | null = null;
+  @Input() initialEndDate: Date | null = null;
 
   today: Date = new Date();
   selectedStartDate!: Date | null;
@@ -49,7 +50,16 @@ export class ModifyDateComponent implements OnInit, AfterViewInit {
 
   isCompactView = false;
 
-  constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {}
+  get isInDialog(): boolean {
+    return !!this.ref;
+  }
+
+  constructor(
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef,
+    public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig
+  ) {}
 
   ngOnInit() {
     this.selectedStartDate = null;
@@ -66,7 +76,10 @@ export class ModifyDateComponent implements OnInit, AfterViewInit {
     ];
     this.checkViewportSize();
 
-    console.log('modify date init:');
+    if (this.config && this.config.data) {
+      this.selectedStartDate = this.config.data.checkIn;
+      this.selectedEndDate = this.config.data.checkOut;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -151,6 +164,8 @@ export class ModifyDateComponent implements OnInit, AfterViewInit {
         startDate: this.selectedStartDate,
         endDate: this.selectedEndDate,
       });
+    } else {
+      console.log('emitSelectedRange: No date selected');
     }
   }
 
@@ -159,104 +174,61 @@ export class ModifyDateComponent implements OnInit, AfterViewInit {
   }
 
   isStartDate(date: Date): boolean {
+    if (!this.selectedStartDate) return false;
     return (
-      !!date &&
-      !!this.selectedStartDate &&
-      isSameDay(date, this.selectedStartDate)
+      date.getDate() === this.selectedStartDate.getDate() &&
+      date.getMonth() === this.selectedStartDate.getMonth() &&
+      date.getFullYear() === this.selectedStartDate.getFullYear()
     );
   }
 
-  isEndDate(date: Date): boolean {
+  isEndDate(day: Date): boolean {
+    if (!this.selectedEndDate) return false;
     return (
-      !!date && !!this.selectedEndDate && isSameDay(date, this.selectedEndDate)
+      day.getDate() === this.selectedEndDate.getDate() &&
+      day.getMonth() === this.selectedEndDate.getMonth() &&
+      day.getFullYear() === this.selectedEndDate.getFullYear()
     );
   }
 
-  isInRange(date: Date): boolean {
-    if (!date || !this.selectedStartDate) return false;
-
-    // For completed selection (both start and end dates are selected)
-    if (this.selectedEndDate) {
-      const start = isBefore(this.selectedStartDate, this.selectedEndDate)
-        ? this.selectedStartDate
-        : this.selectedEndDate;
-
-      const end = isBefore(this.selectedStartDate, this.selectedEndDate)
-        ? this.selectedEndDate
-        : this.selectedStartDate;
-
-      return (
-        isWithinInterval(date, { start, end }) &&
-        !isSameDay(date, start) &&
-        !isSameDay(date, end)
-      );
-    }
-
-    // For hover effect when only start date is selected
-    if (this.hoverDate && this.selectedStartDate) {
-      const start = isBefore(this.selectedStartDate, this.hoverDate)
-        ? this.selectedStartDate
-        : this.hoverDate;
-
-      const end = isBefore(this.selectedStartDate, this.hoverDate)
-        ? this.hoverDate
-        : this.selectedStartDate;
-
-      return (
-        isWithinInterval(date, { start, end }) &&
-        !isSameDay(date, start) &&
-        !isSameDay(date, end)
-      );
-    }
-
-    return false;
-  }
-
-  isDisabled(date: Date): boolean {
-    return isBefore(date, startOfDay(this.today));
-  }
-
-  isDateUnavailable(date: Date): boolean {
-    return this.unavailableDates.some((unavailableDate) =>
-      this.isSameDay(date, unavailableDate)
-    );
+  isInRange(day: Date): boolean {
+    if (!this.selectedStartDate || !this.selectedEndDate) return false;
+    return day > this.selectedStartDate && day < this.selectedEndDate;
   }
 
   // Check if a range contain any unavailable dates
-  isRangeAvailable(start: Date, end: Date): boolean {
-    const currentDate = new Date(start);
-    currentDate.setHours(0, 0, 0, 0);
-
-    const endDate = new Date(end);
-    end.setHours(0, 0, 0, 0);
-
-    while (currentDate <= endDate) {
-      if (this.isDateUnavailable(currentDate)) {
-        return false;
-      }
-
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    return true;
-  }
 
   isToday(date: Date): boolean {
-    return isSameDay(date, this.today);
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
 
   previousMonth() {
-    this.displayedMonths = this.displayedMonths.map((month) =>
-      startOfMonth(addMonths(month, -1))
-    );
+    const first = this.displayedMonths[0];
+    const newStart = addMonths(first, -1);
+
+    this.displayedMonths = [
+      startOfMonth(newStart),
+      startOfMonth(addMonths(newStart, 1)),
+    ];
   }
 
   nextMonth() {
-    const next = this.displayedMonths.map((month) =>
-      startOfMonth(addMonths(month, 1))
-    );
-    if (!isBefore(this.maxDate, next[1] || next[0])) {
-      this.displayedMonths = next;
+    const last = this.displayedMonths[this.displayedMonths.length - 1];
+    const nextStart = addMonths(last, 1);
+
+    if (
+      isBefore(nextStart, this.maxDate) ||
+      isSameDay(startOfMonth(nextStart), startOfMonth(this.maxDate))
+    ) {
+      this.displayedMonths = [
+        startOfMonth(addMonths(last, 1)),
+        startOfMonth(addMonths(last, 2)),
+      ];
     }
   }
 
@@ -273,15 +245,12 @@ export class ModifyDateComponent implements OnInit, AfterViewInit {
     return format(date, 'd MMM yyyy', { locale: fr });
   }
 
-  getDatesCount(): number | null {
-    if (this.selectedStartDate && this.selectedEndDate) {
-      const diffTime = Math.abs(
-        this.selectedEndDate.getTime() - this.selectedStartDate.getTime()
-      );
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      return diffDays;
-    }
-    return null;
+  getDatesCount(): number {
+    if (!this.selectedStartDate || !this.selectedEndDate) return 0;
+    const diffTime = Math.abs(
+      this.selectedEndDate.getTime() - this.selectedStartDate.getTime()
+    );
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
   daysInMonth(month: Date): (Date | null)[] {
@@ -313,13 +282,34 @@ export class ModifyDateComponent implements OnInit, AfterViewInit {
     return format(date, 'EEEE', { locale: fr });
   }
 
-  isSameDay(date1: Date, date2: Date): boolean {
-    return isSameDay(date1, date2);
+  isDisabled(day: Date): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return day < today;
   }
 
   clearSelection() {
     this.selectedStartDate = null;
     this.selectedEndDate = null;
     this.activeSelector = 'check-in';
+  }
+
+  save(): void {
+    if (this.selectedStartDate && this.selectedEndDate) {
+      const result = {
+        startDate: this.selectedStartDate,
+        endDate: this.selectedEndDate,
+      };
+
+      if (this.isInDialog) {
+        this.ref!.close(result);
+      } else {
+        this.dateRangeSelected.emit(result);
+      }
+    }
+  }
+
+  cancel(): void {
+    this.ref.close();
   }
 }

@@ -9,6 +9,8 @@ import { DateRangePickerComponent } from '../../shared/components/date-range-pic
 import { BookingSummaryComponent } from './components/booking-summary/booking-summary.component';
 import { ModifyDateComponent } from './components/modify-date/modify-date.component';
 import { ModifyGuestComponent } from './components/modify-guest/modify-guest.component';
+import { DialogService } from 'primeng/dynamicdialog';
+import { PrimengModule } from '../../shared/_primeng/primeng.module';
 
 const routes: Routes = [
   {
@@ -29,12 +31,13 @@ const routes: Routes = [
     ModifyDateComponent,
     ModifyGuestComponent,
   ],
+  providers: [DialogService],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],
-  exports: [BookingSummaryComponent],
+  exports: [BookingSummaryComponent, ModifyDateComponent],
 })
 export class BookingModule {}
