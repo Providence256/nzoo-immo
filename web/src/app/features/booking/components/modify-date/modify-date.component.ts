@@ -101,19 +101,31 @@ export class ModifyDateComponent implements OnInit {
   }
 
   checkViewportSize() {
-    const containerWidth = this.elementRef.nativeElement.offsetWidth;
+    if (typeof window === 'undefined') return;
+
+    const containerWidth = this.elementRef.nativeElement?.offsetWidth || 0;
+    const wasCompactView = this.isCompactView;
+
     this.isCompactView = containerWidth < 600;
-    if (this.isCompactView) {
-      this.displayedMonths = [startOfMonth(this.today)];
-    } else {
-      this.displayedMonths = [
-        startOfMonth(this.today),
-        startOfMonth(addMonths(this.today, 1)),
-      ];
+
+    // Ne recalculer les mois affichés que si le mode a changé
+    if (wasCompactView !== this.isCompactView) {
+      if (this.isCompactView) {
+        this.displayedMonths = [
+          startOfMonth(this.displayedMonths[0] || this.today),
+        ];
+      } else {
+        const baseMonth = this.displayedMonths[0] || this.today;
+        this.displayedMonths = [
+          startOfMonth(baseMonth),
+          startOfMonth(addMonths(baseMonth, 1)),
+        ];
+      }
     }
+
+    this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
-
   onDateClick(date: Date) {
     if (this.selectedStartDate && this.selectedEndDate) {
       this.selectedStartDate = date;
@@ -211,10 +223,18 @@ export class ModifyDateComponent implements OnInit {
     const first = this.displayedMonths[0];
     const newStart = addMonths(first, -1);
 
-    this.displayedMonths = [
-      startOfMonth(newStart),
-      startOfMonth(addMonths(newStart, 1)),
-    ];
+    if (this.isCompactView) {
+      this.displayedMonths = [startOfMonth(newStart)];
+    } else {
+      this.displayedMonths = [
+        startOfMonth(newStart),
+        startOfMonth(addMonths(newStart, 1)),
+      ];
+    }
+
+    // Forcer la détection de changements de manière synchrone
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   nextMonth() {
@@ -225,10 +245,18 @@ export class ModifyDateComponent implements OnInit {
       isBefore(nextStart, this.maxDate) ||
       isSameDay(startOfMonth(nextStart), startOfMonth(this.maxDate))
     ) {
-      this.displayedMonths = [
-        startOfMonth(addMonths(last, 1)),
-        startOfMonth(addMonths(last, 2)),
-      ];
+      if (this.isCompactView) {
+        this.displayedMonths = [startOfMonth(nextStart)];
+      } else {
+        this.displayedMonths = [
+          startOfMonth(addMonths(last, 1)),
+          startOfMonth(addMonths(last, 2)),
+        ];
+      }
+
+      // Forcer la détection de changements de manière synchrone
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     }
   }
 
