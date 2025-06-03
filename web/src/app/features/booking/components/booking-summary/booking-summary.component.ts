@@ -127,6 +127,7 @@ export class BookingSummaryComponent implements OnInit, OnDestroy {
       header: 'Modifier les date',
       contentStyle: {
         'overflow-y': 'visible',
+        'min-height': '400px',
       },
       width: this.getDialogWidth(),
       height: this.getDialogHeight(),

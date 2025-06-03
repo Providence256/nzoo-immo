@@ -1,18 +1,18 @@
 import {
   Paginator,
   PaginatorModule
-} from "./chunk-ZAKI6PEN.js";
+} from "./chunk-VOTW67I6.js";
 import "./chunk-MAK6REP6.js";
-import "./chunk-PCDCVLSL.js";
 import "./chunk-PDKHRV2C.js";
+import "./chunk-PCDCVLSL.js";
+import "./chunk-YBF4CL3J.js";
 import "./chunk-BU5AR7FD.js";
 import "./chunk-T36NQEOC.js";
 import "./chunk-6LCUWHMZ.js";
 import "./chunk-3MBEO5MG.js";
-import "./chunk-XTGU7KIS.js";
-import "./chunk-YBF4CL3J.js";
 import "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
+import "./chunk-XTGU7KIS.js";
 import {
   SpinnerIcon
 } from "./chunk-SJU3SHUH.js";
@@ -31,8 +31,8 @@ import {
   TranslationKeys,
   resolveFieldData
 } from "./chunk-3NELQC5U.js";
-import "./chunk-BMBTPMFB.js";
 import "./chunk-3D5YJ6TY.js";
+import "./chunk-BMBTPMFB.js";
 import {
   CommonModule,
   NgClass,

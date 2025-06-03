@@ -49,6 +49,13 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
                     .HasForeignKey(l => l.VilleId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Booking>().OwnsOne(b => b.Guests, a =>
+        {
+            a.Property(g => g.Adults).HasColumnName("Adults");
+            a.Property(g => g.Children).HasColumnName("Children");
+            a.Property(g => g.Babies).HasColumnName("Babies");
+        });
+
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NzooContext).Assembly);
     }

@@ -1,4 +1,7 @@
 import {
+  Chip
+} from "./chunk-KIAJFON7.js";
+import {
   Scroller
 } from "./chunk-BU5AR7FD.js";
 import {
@@ -10,14 +13,11 @@ import {
 import {
   AutoFocus
 } from "./chunk-3MBEO5MG.js";
-import {
-  Chip
-} from "./chunk-KIAJFON7.js";
+import "./chunk-5G7WYC4N.js";
+import "./chunk-2ZXM7VXU.js";
 import {
   Ripple
 } from "./chunk-XTGU7KIS.js";
-import "./chunk-5G7WYC4N.js";
-import "./chunk-2ZXM7VXU.js";
 import {
   ChevronDownIcon,
   SpinnerIcon,
@@ -47,10 +47,10 @@ import {
   resolveFieldData,
   uuid
 } from "./chunk-3NELQC5U.js";
+import "./chunk-3D5YJ6TY.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-BMBTPMFB.js";
-import "./chunk-3D5YJ6TY.js";
 import {
   CommonModule,
   NgClass,

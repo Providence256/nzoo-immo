@@ -44,3 +44,13 @@ Thumbs.db
 #Angular
 /web/node_modules/
 /web/dist/
+
+# Configuration files with sensitive data
+/api/API/appsettings.json
+/api/API/appsettings.Development.json
+/api/API/appsettings.*.json
+/api/API/bin/
+/api/API/obj/bin
+bin/
+bin/
+obj/

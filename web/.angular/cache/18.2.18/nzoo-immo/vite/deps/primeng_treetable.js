@@ -1,13 +1,14 @@
 import {
-  Paginator,
-  PaginatorModule
-} from "./chunk-ZAKI6PEN.js";
-import "./chunk-MAK6REP6.js";
-import "./chunk-PCDCVLSL.js";
-import "./chunk-PDKHRV2C.js";
-import {
   Checkbox
 } from "./chunk-FVOWZKKT.js";
+import {
+  Paginator,
+  PaginatorModule
+} from "./chunk-VOTW67I6.js";
+import "./chunk-MAK6REP6.js";
+import "./chunk-PDKHRV2C.js";
+import "./chunk-PCDCVLSL.js";
+import "./chunk-YBF4CL3J.js";
 import {
   Scroller
 } from "./chunk-BU5AR7FD.js";
@@ -15,13 +16,12 @@ import "./chunk-T36NQEOC.js";
 import "./chunk-6LCUWHMZ.js";
 import "./chunk-3MBEO5MG.js";
 import {
-  Ripple
-} from "./chunk-XTGU7KIS.js";
-import "./chunk-YBF4CL3J.js";
-import {
   DomHandler
 } from "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
+import {
+  Ripple
+} from "./chunk-XTGU7KIS.js";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -66,12 +66,12 @@ import {
   reorderArray,
   resolveFieldData
 } from "./chunk-3NELQC5U.js";
+import "./chunk-3D5YJ6TY.js";
 import {
   FormsModule,
   NgControlStatus,
   NgModel
 } from "./chunk-BMBTPMFB.js";
-import "./chunk-3D5YJ6TY.js";
 import {
   CommonModule,
   DOCUMENT,

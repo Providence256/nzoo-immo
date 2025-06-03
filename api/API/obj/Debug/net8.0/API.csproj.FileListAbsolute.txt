@@ -39,7 +39,6 @@
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.OpenApi.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.SqlServer.Server.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.Win32.SystemEvents.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Mono.TextTemplating.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Newtonsoft.Json.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll
@@ -53,13 +52,10 @@
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Composition.Runtime.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Composition.TypedParts.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Configuration.ConfigurationManager.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Drawing.Common.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Memory.Data.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Runtime.Caching.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Security.Cryptography.ProtectedData.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Security.Permissions.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/System.Windows.Extensions.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.resources.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.resources.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.resources.dll
@@ -118,12 +114,7 @@
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
-/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Core.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Infrastructure.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Infrastructure.pdb
@@ -160,3 +151,4 @@
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.Google.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Pipelines.Sockets.Unofficial.dll
 /Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/StackExchange.Redis.dll
+/Users/macbookpro/Projects/ASP.NET/nzoo-immo/api/API/bin/Debug/net8.0/Stripe.net.dll

@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { MessageService } from "primeng/api";
-import { BreadcrumbService } from "../../../../../core/services/breadcrumb.service";
-import { VilleService } from "../../services/ville.service";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { BreadcrumbService } from '../../../../../core/services/breadcrumb.service';
+import { VilleService } from '../../services/ville.service';
 
 @Component({
   selector: 'app-villes',
@@ -23,7 +23,7 @@ export class VillesComponent implements OnInit {
   constructor(
     private breadcrumbService: BreadcrumbService,
     private villeService: VilleService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {
     this.breadcrumbService.setItems([
       { label: 'Élément de base' },
@@ -38,9 +38,18 @@ export class VillesComponent implements OnInit {
 
   initForm(): void {
     this.formGroup = new FormGroup({
-      code: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      designation: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-      description: new FormControl('', [Validators.required, Validators.maxLength(2000)]),
+      code: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50),
+      ]),
+      designation: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(100),
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(2000),
+      ]),
     });
   }
 
@@ -57,7 +66,7 @@ export class VillesComponent implements OnInit {
           severity: 'error',
           summary: 'Erreur',
           detail: 'Impossible de charger les villes',
-          life: 3000
+          life: 3000,
         });
         this.loading = false;
       },
@@ -76,7 +85,7 @@ export class VillesComponent implements OnInit {
 
   addVille(): void {
     this.submitted = true;
-    
+
     if (this.formGroup.invalid) {
       this.validateAllFields(this.formGroup);
       this.messageService.add({
@@ -86,13 +95,13 @@ export class VillesComponent implements OnInit {
       });
       return;
     }
-    
+
     // Create FormData for file upload
     const formData = new FormData();
     formData.append('code', this.formGroup.get('code')!.value);
     formData.append('designation', this.formGroup.get('designation')!.value);
     formData.append('description', this.formGroup.get('description')!.value);
-    
+
     // If updating and image not changed, add a flag to backend
     if (this.ville.id && !this.imageChanged) {
       formData.append('keepExistingImage', 'true');
@@ -101,7 +110,7 @@ export class VillesComponent implements OnInit {
     }
 
     this.loading = true;
-    
+
     if (this.ville.id) {
       // Update existing ville
       this.villeService.updateVille(this.ville.id, formData).subscribe({
@@ -110,7 +119,7 @@ export class VillesComponent implements OnInit {
         },
         error: (error) => {
           this.handleError(error, 'Échec lors de la modification');
-        }
+        },
       });
     } else {
       // Create new ville
@@ -119,8 +128,8 @@ export class VillesComponent implements OnInit {
           this.handleSuccess('Ville ajoutée avec succès');
         },
         error: (error) => {
-          this.handleError(error, 'Échec lors de l\'ajout');
-        }
+          this.handleError(error, "Échec lors de l'ajout");
+        },
       });
     }
   }
@@ -130,7 +139,7 @@ export class VillesComponent implements OnInit {
       severity: 'success',
       summary: 'Succès',
       detail: message,
-      life: 3000
+      life: 3000,
     });
     this.dialog = false;
     this.loading = false;
@@ -141,7 +150,7 @@ export class VillesComponent implements OnInit {
   handleError(error: any, message: string): void {
     console.error('API error details:', error);
     let errorDetail = message;
-    
+
     // Try to extract more specific error information if available
     if (error.error && typeof error.error === 'object') {
       if (error.error.message) {
@@ -150,7 +159,7 @@ export class VillesComponent implements OnInit {
         errorDetail = `${message}: ${error.error.title}`;
       }
     }
-    
+
     this.messageService.add({
       severity: 'error',
       summary: 'Erreur',
@@ -186,27 +195,33 @@ export class VillesComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+      ];
       if (!allowedTypes.includes(file.type)) {
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'Format d\'image non supporté. Veuillez utiliser JPG, PNG, GIF ou WEBP.',
+          detail:
+            "Format d'image non supporté. Veuillez utiliser JPG, PNG, GIF ou WEBP.",
         });
         return;
       }
-      
+
       // Validate file size (max 5MB)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'L\'image est trop volumineuse. Taille maximale: 5MB.',
+          detail: "L'image est trop volumineuse. Taille maximale: 5MB.",
         });
         return;
       }
-      
+
       this.imageFile = file;
       this.imageChanged = true; // Mark that image was changed
       const reader = new FileReader();
@@ -239,7 +254,7 @@ export class VillesComponent implements OnInit {
       });
       return;
     }
-    
+
     this.loading = true;
     this.villeService.deleteVille(id).subscribe({
       next: () => {
@@ -247,7 +262,7 @@ export class VillesComponent implements OnInit {
           severity: 'info',
           summary: 'Suppression',
           detail: 'Ville supprimée avec succès',
-          life: 3000
+          life: 3000,
         });
         this.deleteDialog = false;
         this.ville = {};
@@ -268,7 +283,11 @@ export class VillesComponent implements OnInit {
   // Form validation helpers
   isInvalid(field: string): boolean {
     const control = this.formGroup.get(field);
-    return !!(control && control.invalid && (control.dirty || control.touched || this.submitted));
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || control.touched || this.submitted)
+    );
   }
 
   getErrorMessage(field: string): string {
@@ -284,9 +303,9 @@ export class VillesComponent implements OnInit {
   }
 
   private validateAllFields(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(field => {
+    Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
-      
+
       if (control instanceof FormControl) {
         control.markAsTouched({ onlySelf: true });
       } else if (control instanceof FormGroup) {

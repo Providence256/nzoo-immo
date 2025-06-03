@@ -1,12 +1,12 @@
 import {
-  Ripple
-} from "./chunk-XTGU7KIS.js";
-import {
   Tooltip,
   TooltipModule
 } from "./chunk-YBF4CL3J.js";
 import "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
+import {
+  Ripple
+} from "./chunk-XTGU7KIS.js";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,

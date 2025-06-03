@@ -1,5 +1,12 @@
 // booking.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  signal,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -7,23 +14,37 @@ import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/authentication/auth.service';
 import { AnnoncesService } from '../../../admin/saisies/services/annonces.service';
 import { BookingSessionService } from '../../../apartements/services/booking-session.service';
-import { fr, th } from 'date-fns/locale';
+import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
+import {
+  ConfirmationToken,
+  StripePaymentElement,
+  StripePaymentElementChangeEvent,
+} from '@stripe/stripe-js';
+import { StripeService } from '../../../../core/services/stripe.service';
+import { MessageService } from 'primeng/api';
+import { BookingData } from '../../../../core/models/booking-data.model';
+import { ConfirmationData } from '../../../../core/models/confirmation-data.model';
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
 })
 export class BookingComponent implements OnInit, OnDestroy {
-  apartmentId: number;
+  @ViewChild('paymentElement', { static: false })
+  paymentElementRef!: ElementRef;
+
+  bookingData: BookingData | null = null;
   apartment: any = {};
+  user: any = null;
+
   loading = true;
   error: string | null = null;
+  isSubmitting = false;
   bookingDetails: any = {};
   paymentForm!: FormGroup;
   isLoggedIn = false;
-  user: any = null;
-  isSubmitting = false;
+
   bookingSuccess = false;
   paymentMethods: any[] = [];
 
@@ -37,8 +58,20 @@ export class BookingComponent implements OnInit, OnDestroy {
   isDatePickerOpen = false;
   isGuestSelectorOpen = false;
 
+  paymentElement?: StripePaymentElement;
+  clientSecret = '';
+  elements?: any;
+
+  paymentElementReady = false;
+  paymentError: string | null = null;
+
+  completionStatus = signal<{ payment: boolean }>({ payment: false });
+
+  confirmationToken?: ConfirmationToken;
+
   // Subscriptions
   private subscriptions: Subscription[] = [];
+  private paymentInitialized = false;
 
   constructor(
     public router: Router,
@@ -46,9 +79,10 @@ export class BookingComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private annonceService: AnnoncesService,
     private authService: AuthService,
-    private bookingSessionService: BookingSessionService
+    private bookingSessionService: BookingSessionService,
+    private messageService: MessageService,
+    private stripeService: StripeService // Assuming you have a Stripe service to handle payments
   ) {
-    this.apartmentId = 0;
     this.paymentForm = this.fb.group({
       paymentMethodId: ['', Validators.required],
       nameOnCard: ['', Validators.required],
@@ -56,58 +90,69 @@ export class BookingComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.initializeBookingData();
+    this.getCurrentUser();
+  }
+
+  private initializeBookingData(): void {
     this.route.queryParams.subscribe((params) => {
-      const bookingData =
+      const urlBookingData =
         this.bookingSessionService.parseBookingDataFromUrl(params);
-      if (bookingData) {
-        this.bookingSessionService.updateBookingData(bookingData);
-        this.processBookingData(bookingData);
+      if (
+        urlBookingData &&
+        this.bookingSessionService.isBookingDataValid(urlBookingData)
+      ) {
+        this.bookingData = urlBookingData;
+        this.bookingSessionService.updateBookingData(urlBookingData);
+        this.loadApartmentDetails();
       } else {
         const serviceData = this.bookingSessionService.getCurrentBookingData();
-        if (serviceData) {
+
+        if (
+          serviceData &&
+          this.bookingSessionService.isBookingDataValid(serviceData)
+        ) {
+          this.bookingData = serviceData;
           this.bookingSessionService.navigateWithBookingData(
             serviceData,
             '/booking/confirm'
           );
-          this.processBookingData(serviceData);
+          this.loadApartmentDetails();
+        } else {
+          this.handleNoBookingData();
         }
       }
     });
   }
 
-  private processBookingData(bookingData: any): void {
-    this.apartmentId = bookingData.listingId;
-    this.bookingDetails = {
-      checkIn: bookingData.checkIn,
-      checkOut: bookingData.checkOut,
-      guests: bookingData.guests.adults,
-      children: bookingData.guests.children,
-      infants: bookingData.guests.babies,
-    };
-
-    this.loadApartmentDetails();
+  private handleNoBookingData(): void {
+    this.error = 'Aucune donnée de réservation trouvée. Veuillez recommencer.';
+    this.loading = false;
+    setTimeout(() => this.router.navigate(['/']), 3000);
   }
 
-  ngOnDestroy(): void {
-    // Clean up subscriptions to prevent memory leaks
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  private getCurrentUser() {
+    this.user = this.authService.getCurrentUser();
   }
 
   loadApartmentDetails(): void {
-    if (!this.apartmentId) {
-      this.error = 'No apartment ID provided';
+    if (!this.bookingData?.listingId) {
+      this.error = "ID d'appartement manquant";
       this.loading = false;
       return;
     }
     this.loading = true;
     const apartmentSub = this.annonceService
-      .find(this.apartmentId)
+      .find(this.bookingData.listingId)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         (data) => {
           this.apartment = data;
           this.calculateBookingDetails();
+          if (!this.paymentInitialized) {
+            this.initilizeBookingAndPayment();
+          }
         },
         (error) => {
           this.error = 'Failed to load apartment details. Please try again.';
@@ -117,25 +162,96 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.subscriptions.push(apartmentSub);
   }
 
+  private buildBookingPayload(): any {
+    return {
+      listingId: this.bookingData?.listingId,
+      checkInDate: new Date(this.bookingData!.checkIn),
+      checkOutDate: new Date(this.bookingData!.checkOut),
+      adults: this.bookingData!.guests.adults,
+      children: this.bookingData!.guests.children ?? 0,
+      babies: this.bookingData!.guests.babies ?? 0,
+      customerEmail: this.user?.email,
+    };
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscriptions to prevent memory leaks
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  async initilizeBookingAndPayment() {
+    try {
+      console.log(this.buildBookingPayload());
+      const bookingData = this.buildBookingPayload();
+
+      const result = await this.stripeService.createBookingAndProcessPayment(
+        bookingData
+      );
+
+      this.paymentElement = result.paymentElement;
+      this.clientSecret = result.clientSecret;
+      this.elements = result.elements;
+
+      this.paymentElement.on('change', this.handlePaymentChange);
+
+      setTimeout(() => {
+        if (this.paymentElementRef) {
+          result.paymentElement.mount(this.paymentElementRef.nativeElement);
+        }
+      }, 100);
+    } catch (error) {
+      console.log('error initializing payment intent ', error);
+      this.error =
+        'Failed to initialize payment. Please refresh and try again.';
+    }
+  }
+
+  handlePaymentChange = (event: StripePaymentElementChangeEvent) => {
+    this.completionStatus.update((state) => {
+      state.payment = event.complete;
+      return state;
+    });
+  };
+
+  async getConfirmationToken() {
+    try {
+      if (
+        Object.values(this.completionStatus()).every(
+          (status) => status === true
+        )
+      ) {
+        const result = await this.stripeService.createConfirmationToken(
+          this.clientSecret
+        );
+        if (result.error) throw new Error(result.error.message);
+        this.confirmationToken = result.confirmationToken;
+        console.log(this.confirmationToken);
+      }
+    } catch (error: any) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: error.message,
+        life: 3000,
+      });
+    }
+  }
+
   calculateBookingDetails(): void {
-    if (
-      !this.apartment ||
-      !this.bookingDetails.checkIn ||
-      !this.bookingDetails.checkOut
-    ) {
+    if (!this.apartment || !this.bookingData) {
       return;
     }
 
     try {
-      const checkIn = new Date(this.bookingDetails.checkIn);
-      const checkOut = new Date(this.bookingDetails.checkOut);
+      const checkIn = new Date(this.bookingData.checkIn);
+      const checkOut = new Date(this.bookingData.checkOut);
 
       // Calculate number of nights
       const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
       this.totalNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       if (this.totalNights <= 0 || isNaN(this.totalNights)) {
-        throw new Error('Invalid date range');
+        throw new Error('Plage de dates invalide');
       }
 
       // Calculate subtotal (handle both price structures)
@@ -166,95 +282,30 @@ export class BookingComponent implements OnInit, OnDestroy {
     }
   }
 
-  addNewPaymentMethod(): void {
-    // Save current booking state before navigating
-
-    // Navigate to payment method add page with return URL
-    this.router.navigate(['/account/payment-methods/add'], {
-      queryParams: {
-        returnUrl: this.router.url,
-      },
-    });
-  }
-
-  validateBookingData(): boolean {
-    if (!this.apartment) {
-      this.error = 'Apartment details not loaded';
-      return false;
-    }
-
-    if (!this.bookingDetails.checkIn || !this.bookingDetails.checkOut) {
-      this.error = 'Please select check-in and check-out dates';
-      return false;
-    }
-
-    if (this.totalNights <= 0) {
-      this.error = 'Invalid booking duration';
-      return false;
-    }
-
-    if (this.paymentForm.invalid) {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.paymentForm.controls).forEach((key) => {
-        this.paymentForm.get(key)?.markAsTouched();
-      });
-      return false;
-    }
-
-    return true;
-  }
-
-  submitBooking(): void {
-    if (!this.validateBookingData()) {
-      return;
-    }
-
+  async completeBooking() {
     this.isSubmitting = true;
     this.error = null;
 
-    const bookingData = {
-      apartmentId: this.apartmentId,
-      checkIn: this.bookingDetails.checkIn,
-      checkOut: this.bookingDetails.checkOut,
-      guests: this.bookingDetails.guests,
-      children: this.bookingDetails.children,
-      infants: this.bookingDetails.infants,
-      paymentMethodId: this.paymentForm.get('paymentMethodId')?.value,
-      nameOnCard: this.paymentForm.get('nameOnCard')?.value,
-      totalAmount: this.totalPrice,
-      currency: this.getCurrency(),
-    };
+    try {
+      const confirmationToken = await this.getConfirmationToken();
 
-    // Simulate a successful booking request
-    setTimeout(() => {
+      const confirmationData: ConfirmationData = {
+        bookingData: this.bookingData!,
+        confirmationToken,
+        user: this.user,
+      };
+
+      this.bookingSessionService.setConfirmationData(confirmationData);
+      this.bookingSessionService.navigateWithBookingData(
+        this.bookingData!,
+        '/booking/confirm'
+      );
+    } catch (error) {
+      console.error('Erreur lors de la finalisation:', error);
+      this.error = 'Erreur lors de la finalisation de la réservation';
+    } finally {
       this.isSubmitting = false;
-      this.bookingSuccess = true;
-
-      // Clear booking intent from session storage
-      sessionStorage.removeItem('bookingIntent');
-
-      // Navigate to confirmation page after a brief delay
-      setTimeout(() => {
-        this.router.navigate(['/bookings/confirmation', 'mock-booking-id']);
-      }, 1500);
-    }, 2000);
-
-    // In a real app, you would call a service to create the booking
-    // this.bookingService.createBooking(bookingData).pipe(
-    //   finalize(() => this.isSubmitting = false)
-    // ).subscribe(
-    //   (response) => {
-    //     this.bookingSuccess = true;
-    //     sessionStorage.removeItem('bookingIntent');
-    //
-    //     setTimeout(() => {
-    //       this.router.navigate(['/bookings/confirmation', response.bookingId]);
-    //     }, 1500);
-    //   },
-    //   (error) => {
-    //     this.error = error.message || 'Failed to process your booking. Please try again.';
-    //   }
-    // );
+    }
   }
 
   getCurrency(): string {
@@ -279,5 +330,10 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date): string {
     return format(date, 'dd MMMM yyyy', { locale: fr });
+  }
+
+  private formateDateApi(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
   }
 }

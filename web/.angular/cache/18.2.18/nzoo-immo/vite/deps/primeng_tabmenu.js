@@ -1,20 +1,27 @@
 import {
-  Ripple
-} from "./chunk-XTGU7KIS.js";
+  Tooltip,
+  TooltipModule
+} from "./chunk-YBF4CL3J.js";
 import {
   Badge,
   BadgeModule
 } from "./chunk-XT3IKCBQ.js";
-import {
-  Tooltip,
-  TooltipModule
-} from "./chunk-YBF4CL3J.js";
 import "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
+import {
+  Ripple
+} from "./chunk-XTGU7KIS.js";
 import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from "./chunk-SJU3SHUH.js";
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
@@ -32,13 +39,6 @@ import {
   getWidth,
   resolve
 } from "./chunk-3NELQC5U.js";
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
 import "./chunk-TZYIWKO4.js";
 import "./chunk-XODCXPAZ.js";
 import {

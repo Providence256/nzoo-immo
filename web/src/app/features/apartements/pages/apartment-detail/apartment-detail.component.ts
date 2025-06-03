@@ -202,7 +202,7 @@ export class ApartmentDetailComponent implements OnInit {
 
     this.bookingSessionService.navigateWithBookingData(
       bookingData,
-      '/booking/confirm'
+      '/booking/payment'
     );
   }
 

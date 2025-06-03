@@ -1,20 +1,25 @@
 import {
-  Ripple
-} from "./chunk-XTGU7KIS.js";
+  Tooltip,
+  TooltipModule
+} from "./chunk-YBF4CL3J.js";
 import {
   Badge,
   BadgeModule
 } from "./chunk-XT3IKCBQ.js";
-import {
-  Tooltip,
-  TooltipModule
-} from "./chunk-YBF4CL3J.js";
 import {
   ConnectedOverlayScrollHandler
 } from "./chunk-5G7WYC4N.js";
 import {
   zindexutils
 } from "./chunk-2ZXM7VXU.js";
+import {
+  Ripple
+} from "./chunk-XTGU7KIS.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
@@ -41,11 +46,6 @@ import {
   transition,
   trigger
 } from "./chunk-3D5YJ6TY.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
 import {
   DomSanitizer
 } from "./chunk-TZYIWKO4.js";

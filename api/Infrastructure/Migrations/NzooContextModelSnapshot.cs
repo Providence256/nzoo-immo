@@ -22,6 +22,108 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Core.Entities.Booking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("BasePrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("CancellationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CancellationReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CheckInDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientSecret")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Devise")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ListingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Nights")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaymentCompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ListingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Core.Entities.BookingAvailability", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BlockedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ListingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ListingId");
+
+                    b.ToTable("BookingAvailabilities");
+                });
+
             modelBuilder.Entity("Core.Entities.Commune", b =>
                 {
                     b.Property<int>("Id")
@@ -702,6 +804,64 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Entities.Booking", b =>
+                {
+                    b.HasOne("Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Identity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Core.Entities.GuestDetails", "Guests", b1 =>
+                        {
+                            b1.Property<int>("BookingId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Adults")
+                                .HasColumnType("int")
+                                .HasColumnName("Adults");
+
+                            b1.Property<int>("Babies")
+                                .HasColumnType("int")
+                                .HasColumnName("Babies");
+
+                            b1.Property<int>("Children")
+                                .HasColumnType("int")
+                                .HasColumnName("Children");
+
+                            b1.HasKey("BookingId");
+
+                            b1.ToTable("Bookings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BookingId");
+                        });
+
+                    b.Navigation("Guests")
+                        .IsRequired();
+
+                    b.Navigation("Listing");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entities.BookingAvailability", b =>
+                {
+                    b.HasOne("Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Listing");
                 });
 
             modelBuilder.Entity("Core.Entities.Commune", b =>

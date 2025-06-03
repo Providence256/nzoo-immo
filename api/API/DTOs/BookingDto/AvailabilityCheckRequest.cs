@@ -16,7 +16,9 @@ public class AvailabilityCheckRequest
 
     [Required]
     [Range(1, 20)]
-    public int GuestCount { get; set; }
+    public int Adults { get; set; }
+    public int Children { get; set; }
+    public int Babies { get; set; }
 }
 
 public class AvailabilityCheckResponse

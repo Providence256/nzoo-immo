@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -28,9 +27,9 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      rememberMe: [false],
     });
-    
+
     // Redirect to home if already logged in
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
@@ -40,10 +39,23 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // Get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+    // Décoder l'URL si elle est encore encodée
+    try {
+      // Vérifier si l'URL contient des caractères encodés
+      if (this.returnUrl.includes('%')) {
+        this.returnUrl = decodeURIComponent(this.returnUrl);
+      }
+    } catch (error) {
+      console.warn('Erreur lors du décodage de returnUrl:', error);
+      this.returnUrl = '/';
+    }
   }
 
   // Convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  get f() {
+    return this.loginForm.controls;
+  }
 
   onSubmit(): void {
     this.submitted = true;
@@ -54,64 +66,71 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authService.login(this.f['email'].value, this.f['password'].value)
-      .pipe(finalize(() => {
-        this.loading = false;
-      }))
+    this.authService
+      .login(this.f['email'].value, this.f['password'].value)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
       .subscribe({
         next: () => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: 'Login successful' 
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Login successful',
           });
           // Navigate to return url
           setTimeout(() => {
-            this.router.navigate([this.returnUrl]);
+            // Utiliser navigateByUrl au lieu de navigate pour les URLs complexes
+            this.router.navigateByUrl(this.returnUrl);
           }, 1000);
         },
-        error: error => {
-          this.errorMessage = error.error?.message || 'Invalid email or password';
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: this.errorMessage 
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Invalid email or password';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: this.errorMessage,
           });
-        }
+        },
       });
   }
 
   loginWithGoogle(): void {
-
-    sessionStorage.setItem('returnUrl', this.returnUrl)
+    sessionStorage.setItem('returnUrl', this.returnUrl);
     this.loading = true;
-    this.authService.loginWithGoogle()
-     
+    this.authService.loginWithGoogle();
   }
 
   loginWithFacebook(): void {
     this.loading = true;
-    this.authService.loginWithFacebook()
-      .pipe(finalize(() => {
-        this.loading = false;
-      }))
+    this.authService
+      .loginWithFacebook()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
       .subscribe({
         next: () => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: 'Facebook login successful' 
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Facebook login successful',
           });
-          this.router.navigate([this.returnUrl]);
+          // Utiliser navigateByUrl ici aussi
+          this.router.navigateByUrl(this.returnUrl);
         },
-        error: error => {
+        error: (error) => {
           this.errorMessage = error.error?.message || 'Facebook login failed';
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: this.errorMessage 
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: this.errorMessage,
           });
-        }
+        },
       });
   }
 }

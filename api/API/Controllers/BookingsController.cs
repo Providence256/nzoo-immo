@@ -33,7 +33,7 @@ namespace API.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<BookingResponse>> CreateBooking([FromBody] BookingRequest request)
+        public async Task<ActionResult<BookingResponse>> CreateBooking([FromBody] BookingWithPaymentRequest request)
         {
 
 

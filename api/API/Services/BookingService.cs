@@ -99,13 +99,13 @@ public class BookingService : IBookingService
             throw new ArgumentException($"Listing with ID {request.ListingId} not found");
         }
 
-        var listingPrice = await priceRepo.GetByIdAsync(listing.PriceId);
+        var listingPrice = await priceRepo.GetByIdAsync(listing.Id);
         if (listingPrice == null)
         {
             throw new ArgumentException($"Pricing information not found for listing {request.ListingId}");
         }
 
-        if (request.GuestCount > listing.NbreVisiteurs)
+        if (GetGuestCount(request.Adults, request.Children) > listing.NbreVisiteurs)
         {
             throw new ArgumentException($"This listing can only accomodate {listing.NbreVisiteurs} guests");
         }
@@ -154,9 +154,9 @@ public class BookingService : IBookingService
         double cleaningFee = listingPrice.FraisMenage;
         double guestFee = 0;
 
-        if (request.GuestCount > 1)
+        if (GetGuestCount(request.Adults, request.Children) > 1)
         {
-            guestFee = listingPrice.PersoSuppl * (request.GuestCount - 1);
+            guestFee = listingPrice.PersoSuppl * (GetGuestCount(request.Adults, request.Children) - 1);
         }
 
         double discount = 0;
@@ -173,7 +173,7 @@ public class BookingService : IBookingService
             discount = basePrice * (listingPrice.Reduction / 100);
         }
 
-        double totalPrice = basePrice + cleaningFee + guestFee - discount;
+        double totalPrice = basePrice + cleaningFee - discount;
 
         var response = new AvailabilityCheckResponse
         {
@@ -191,14 +191,16 @@ public class BookingService : IBookingService
         return response;
     }
 
-    public async Task<Booking> CreateBooking(BookingRequest request, int userId)
+    public async Task<Booking> CreateBooking(BookingWithPaymentRequest request, int userId)
     {
         var availabilityCheck = await CheckAvailabilityAsync(new AvailabilityCheckRequest
         {
             ListingId = request.ListingId,
             CheckInDate = request.CheckInDate,
             CheckOutDate = request.CheckOutDate,
-            GuestCount = request.GuestCount
+            Adults = request.Adults,
+            Children = request.Children,
+            Babies = request.Babies,
         });
 
         if (!availabilityCheck.IsAvailable)
@@ -212,7 +214,14 @@ public class BookingService : IBookingService
             UserId = userId,
             CheckInDate = request.CheckInDate,
             CheckOutDate = request.CheckOutDate,
-            GuestCount = request.GuestCount,
+            Guests = new GuestDetails
+            {
+                Adults = request.Adults,
+                Children = request.Children,
+                Babies = request.Babies,
+            },
+            Nights = availabilityCheck.Nights,
+            BasePrice = availabilityCheck.BasePrice,
             TotalPrice = availabilityCheck.TotalPrice,
             Status = BookingStatus.Pending
         };
@@ -280,4 +289,11 @@ public class BookingService : IBookingService
 
         return true;
     }
+
+    private static int GetGuestCount(int adults, int children)
+    {
+        return adults + children;
+    }
+
+
 }
