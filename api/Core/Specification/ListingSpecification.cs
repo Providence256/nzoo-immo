@@ -37,4 +37,19 @@ public class ListingSpecification : BaseSpecification<Listing>
         AddInclude("Rules.Rule");
     }
 
+    public ListingSpecification(int villeId, bool ville) : base(x => x.Location!.VilleId == villeId)
+    {
+        AddInclude(x => x.TypeHebergement!);
+        AddInclude(x => x.Price!);
+        AddInclude("Price.Devise");
+
+        AddInclude(x => x.Location!);
+        AddInclude("Location.Ville");
+        AddInclude("Location.Commune");
+
+        AddInclude(x => x.Photos);
+        AddInclude("Equipements.Equipement");
+        AddInclude("Rules.Rule");
+    }
+
 }

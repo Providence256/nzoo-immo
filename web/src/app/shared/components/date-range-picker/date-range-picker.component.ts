@@ -34,6 +34,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
     startDate: Date;
     endDate: Date;
   }>();
+  @Output() loadingStateChanged = new EventEmitter<boolean>();
   @Input() unavailableDates: Date[] = [];
   @Input() minDate: Date = new Date();
   @Input() listingId: number = 0;
@@ -77,7 +78,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
     this.checkViewportSize();
 
     if (this.listingId) {
-      this.loadingBookingDates;
+      this.loadingBookingDates();
     }
   }
 

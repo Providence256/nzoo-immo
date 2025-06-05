@@ -3,8 +3,8 @@
   <div class="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
     <!-- Card Header -->
     <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-8 text-center">
-      <h1 class="text-white text-3xl font-bold mb-2">Welcome Back</h1>
-      <p class="text-indigo-100">Sign in to continue to your account</p>
+      <h1 class="text-white text-3xl font-bold mb-2">Content de vous revoir</h1>
+      <p class="text-indigo-100">Connectez-vous pour continuer sur votre compte</p>
     </div>
 
     <!-- Card Body -->
@@ -30,7 +30,7 @@
             >
           </p-inputGroup>
           <small *ngIf="submitted && f['email'].errors" class="text-red-500">
-            <div *ngIf="f['email'].errors['required']">Email is required</div>
+            <div *ngIf="f['email'].errors['required']">L'e-mail est obligatoire</div>
             <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
           </small>
         </div>
@@ -49,16 +49,16 @@
             ></p-password>
      
           <small *ngIf="submitted && f['password'].errors" class="text-red-500">
-            <div *ngIf="f['password'].errors['required']">Password is required</div>
+            <div *ngIf="f['password'].errors['required']">Le mot de passe est obligatoire</div>
             <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
           </small>
           <div class="flex justify-between items-center">
             <div class="flex items-center">
               <p-checkbox id="rememberMe" [binary]="true" formControlName="rememberMe" styleClass="mr-2"></p-checkbox>
-              <label for="rememberMe" class="text-sm font-Jost text-gray-600">Remember me</label>
+              <label for="rememberMe" class="text-sm font-Jost text-gray-600">Se souvenir de moi</label>
             </div>
             <a routerLink="/auth/forgot-password" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
-              Forgot password?
+              Mot de passe oublié ?
             </a>
           </div>
         </div>
@@ -68,7 +68,7 @@
           pButton 
           pRipple 
           type="submit" 
-          label="Sign In" 
+          label="Se Connecter" 
           [loading]="loading" 
           class="w-full p-button-primary p-button-rounded p-button-raised font-semibold py-3"
         ></button>
@@ -79,7 +79,7 @@
             <div class="w-full border-t border-gray-200"></div>
           </div>
           <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-white px-4 text-gray-500 font-semibold">or continue with</span>
+            <span class="bg-white px-4 text-gray-500 font-semibold">ou continue avec</span>
           </div>
         </div>
 
@@ -111,9 +111,9 @@
 
       <!-- Sign Up Link -->
       <div class="text-center mt-8">
-        <span class="text-gray-600 text-sm">Don't have an account? </span>
+        <span class="text-gray-600 text-sm">Vous n'avez pas de compte ? </span>
         <a routerLink="/auth/register" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition">
-          Create one now
+          Créez-en un maintenant
         </a>
       </div>
     </div>

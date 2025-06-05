@@ -35,21 +35,24 @@
       <ul class="hidden lg:flex items-center gap-1">
         <li *ngFor="let link of navLinks" class="relative group">
           <a [routerLink]="link.url"
-             class="px-4 py-2.5 text-white/90 hover:text-white font-Jost text-sm font-medium tracking-wide transition-all duration-300 relative overflow-hidden">
+             [ngClass]="{
+               'text-primary-400 bg-primary-400/10': isLinkActive(link),
+               'text-white/90 hover:text-white': !isLinkActive(link)
+             }"
+             class="px-4 py-2.5 font-Jost text-sm font-medium tracking-wide transition-all duration-300 relative overflow-hidden rounded-lg">
             <span class="relative z-10">{{ link.title }}</span>
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-400 transition-all duration-500 group-hover:w-full"></span>
+            <span 
+              class="absolute bottom-0 left-0 h-0.5 bg-primary-400 transition-all duration-500"
+              [ngClass]="{
+                'w-full': isLinkActive(link),
+                'w-0 group-hover:w-full': !isLinkActive(link)
+              }"></span>
           </a>
         </li>
       </ul>
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-2 sm:gap-4">
-        <!-- Become Host Button - Hidden on mobile & tablet -->
-        <button class="hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:border-primary-400/50 hover:text-primary-300">
-          <span class="material-icons text-base">add_home</span>
-          <span>Devenez hôte</span>
-        </button>
-        
         <!-- User Menu - Different style for mobile/tablet vs desktop -->
         <div class="relative">
           <!-- Mobile/Tablet User Icon -->
@@ -60,11 +63,10 @@
             </div>
           </button>
           
-          
           <!-- Desktop User Menu -->
           <button (click)="toggleDropdown()"
-                 class=" hidden lg:flex items-center gap-2 px-3 py-2 rounded-full hover:bg-white/10 transition-all duration-300 border border-transparent hover:border-white/10">
-            <div class=" w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white">
+                 class="hidden lg:flex items-center gap-2 px-3 py-2 rounded-full hover:bg-white/10 transition-all duration-300 border border-transparent hover:border-white/10">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white">
               <span class="material-icons text-lg">person</span>
             </div>
             <span class="material-icons text-lg text-white/80">expand_more</span>
@@ -73,7 +75,7 @@
           <!-- Dropdown Menu -->
           <div *ngIf="isDropdownOpen"
                 [@dropdownAnim]
-               class=" dropdown-menu absolute right-0 mt-2 w-64 bg-secondary-900/95 backdrop-blur-md border border-white/10 rounded-xl shadow-xl shadow-secondary-950/50 overflow-hidden transition-all duration-300 transform origin-top-right">
+               class="dropdown-menu absolute right-0 mt-2 w-64 bg-secondary-900/95 backdrop-blur-md border border-white/10 rounded-xl shadow-xl shadow-secondary-950/50 overflow-hidden transition-all duration-300 transform origin-top-right">
             <div class="p-4 border-b border-white/10">
               <div class="text-white font-medium">Bonjour !</div>
               <div class="text-sm text-white/60">Connectez-vous pour vos réservations</div>
@@ -88,9 +90,20 @@
               </li>
             </ul>
             <div class="p-3 border-t border-white/10">
-              <button class="w-full py-2 px-4 bg-primary-500 hover:bg-primary-600 text-white rounded-lg text-sm font-medium transition-all duration-300">
-                Se connecter
+              <button
+                 *ngIf="!user; else logoutBtn"
+                 (click)="login()"
+                class="w-full py-2 px-4 bg-primary-500 hover:bg-primary-600 text-white rounded-lg text-sm font-medium transition-all duration-300">
+                 Se connecter
               </button>
+
+              <ng-template #logoutBtn>
+                <button 
+                  (click)="logout()"
+                  class="w-full py-2 px-4 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-medium transition-all duration-300">
+                  Se déconnecter
+                </button>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -113,8 +126,13 @@
     <!-- Main Menu Links -->
     <ul class="flex flex-col gap-1 flex-grow">
       <li *ngFor="let link of navLinks" class="w-full">
-        <a (click)="toggleMenu()" [routerLink]="link.url"
-           class="block px-4 py-3 font-Jost text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 text-lg font-medium">
+        <a (click)="toggleMenu()" 
+           [routerLink]="link.url"
+           [ngClass]="{
+             'text-primary-400 bg-primary-400/20': isLinkActive(link),
+             'text-white/90 hover:text-white hover:bg-white/5': !isLinkActive(link)
+           }"
+           class="block px-4 py-3 font-Jost rounded-lg transition-all duration-300 text-lg font-medium">
           {{ link.title }}
         </a>
       </li>

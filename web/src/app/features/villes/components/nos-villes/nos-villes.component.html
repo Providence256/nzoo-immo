@@ -1,0 +1,173 @@
+<!-- src/app/features/villes/components/nos-villes/nos-villes.component.html -->
+<div class="min-h-screen bg-gradient-to-br from-neutral-50 to-primary-50">
+  <!-- Header Section -->
+  <div class="relative bg-gradient-primary text-white py-20">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-5xl font-bold font-Jost mb-4 animate-fade-in">
+        Nos Villes
+      </h1>
+      <p class="text-xl opacity-90 max-w-3xl mx-auto leading-relaxed">
+        Découvrez nos destinations d'exception où investir dans l'immobilier. 
+        Chaque ville a été sélectionnée pour son potentiel et sa qualité de vie.
+      </p>
+    </div>
+  </div>
+
+  <!-- Cities Grid -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div 
+        *ngFor="let ville of villes; let i = index"
+        class="ville-card group cursor-pointer transform transition-all duration-500 hover:scale-105 opacity-0"
+        (click)="ouvrirModal(ville)"
+      >
+        <!-- Card Container -->
+        <div class="bg-white rounded-2xl shadow-card group-hover:shadow-card-hover overflow-hidden h-full">
+          <!-- Image Container -->
+          <div class="relative h-64 overflow-hidden">
+            <img 
+              [src]="ville.imageUrl" 
+              [alt]="ville.designation"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            
+            <!-- City Name Overlay -->
+            <div class="absolute bottom-4 left-4">
+              <h3 class="text-2xl font-bold text-white font-Jost">{{ ville.designation }}</h3>
+            </div>
+
+            <!-- Stats Badge -->
+            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+              <span class="text-sm font-semibold text-primary-600">{{getModalAppartementsText(ville.announcesCount) || 0}}</span>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="p-6">
+            <!-- Description -->
+            <p class="text-neutral-600 font-Jost mb-4 line-clamp-3 leading-relaxed">
+              {{ ville.description }}
+            </p>
+
+            <!-- Price Info -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-primary-600 font-Jost">
+                  {{ formatPrice(ville.average) }}
+                </div>
+                <div class="text-xs font-Jost text-neutral-500">Prix moyen/Nuit</div>
+              </div>
+              
+              <div class="flex items-center text-primary-600">
+                <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-sm font-Jost font-medium">Découvrir</span>
+              </div>
+            </div>
+
+            <!-- Highlights Preview -->
+       <!--     <div class="flex flex-wrap gap-2">
+              <span 
+                *ngFor="let highlight of ville.highlights.slice(0, 2)"
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+              >
+                {{ highlight }}
+              </span>
+              <span 
+                *ngIf="ville.highlights.length > 2"
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-600"
+              >
+                +{{ ville.highlights.length - 2 }}
+              </span>
+            </div>
+
+          -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for City Details -->
+  <div 
+    *ngIf="isModalVisible && villeSelectionnee" 
+    class="fixed inset-0 z-50 overflow-y-auto"
+    (click)="fermerModal()"
+  >
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
+    
+    <!-- Modal Content -->
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div 
+        class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scale-in"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Close Button -->
+        <button 
+          (click)="fermerModal()"
+          class="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full w-10 h-10 flex items-center justify-center transition-colors shadow-lg"
+        >
+          <svg class="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+
+        <!-- Modal Header -->
+        <div class="relative h-80 overflow-hidden rounded-t-2xl">
+          <img 
+            [src]="villeSelectionnee.imageUrl" 
+            [alt]="villeSelectionnee.designation"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+          
+          <div class="absolute bottom-6 left-6">
+            <h2 class="text-4xl font-bold text-white font-Jost mb-2">{{ villeSelectionnee.designation }}</h2>
+            <div class="flex items-center space-x-4 text-white/90">
+              <span class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm">
+                {{ getModalAppartementsText(annonces.length) }} 
+              </span>
+              <span class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm">
+                {{ formatPrice( villeSelectionnee.average) }}/Nuit
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-8">
+          <!-- Description -->
+          <div class="mb-8">
+            <h3 class="text-2xl font-bold text-neutral-800 mb-4 font-Jost">À propos de {{ villeSelectionnee.designation }}</h3>
+            <p class="text-neutral-600 font-Jost leading-relaxed text-lg">{{ villeSelectionnee.description }}</p>
+          </div>
+          <!-- Neighborhoods -->
+          <div class="mb-8">
+            <h4 class="text-xl font-semibold text-neutral-800 mb-4">Communes</h4>
+            <div class="flex flex-wrap gap-3">
+              <span 
+                *ngFor="let commune of communes"
+                class="inline-flex font-Jost items-center px-4 py-2 rounded-full bg-secondary-100 text-secondary-800 font-medium"
+              >
+                {{ commune.designation }}
+              </span>
+            </div>
+          </div>
+
+          <!-- CTA Section -->
+          <div class="bg-gradient-primary rounded-xl p-6 text-center text-white">
+            <h4 class="text-xl font-bold mb-2">Intéressé par {{ villeSelectionnee.designation }} ?</h4>
+            <p class="mb-4 opacity-90">{{getCTAText(annonces.length, villeSelectionnee.designation)}}</p>
+            <button class="bg-white text-primary-600 hover:bg-neutral-50 px-6 py-3 rounded-full font-semibold transition-colors shadow-lg">
+              {{getCTAButtonText(annonces.length)}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,6 +12,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { AuthGuard } from '../../core/authentication/auth.guard';
 import { PaymentPipe } from '../../shared/pipes/payment.pipe';
 import { BookingSuccessComponent } from './pages/booking-success/booking-success.component';
+import { BookingListComponent } from './pages/booking-list/booking-list.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
     path: 'success',
     component: BookingSuccessComponent,
   },
+  {
+    path: 'list',
+    component: BookingListComponent,
+  },
 ];
 
 @NgModule({
@@ -38,6 +43,7 @@ const routes: Routes = [
     ModifyDateComponent,
     ModifyGuestComponent,
     BookingSuccessComponent,
+    BookingListComponent,
   ],
   providers: [DialogService],
   imports: [

@@ -9,25 +9,27 @@ import { environment } from '../../../environments/environment';
 export interface User {
   id: string;
   email: string;
-  displayName: string,
-  roles: string[];
+  displayName: string;
+  role: string;
   token?: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
-  
+
   private apiUrl = `${environment.apiUrl}accounts`;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
+    this.currentUserSubject = new BehaviorSubject<User | null>(
+      this.getUserFromStorage()
+    );
     this.currentUser$ = this.currentUserSubject.asObservable();
 
-    this.handleAuthCallBack()
+    this.handleAuthCallBack();
   }
 
   private getUserFromStorage(): User | null {
@@ -45,13 +47,14 @@ export class AuthService {
 
   public isAdmin(): boolean {
     const user = this.currentUserSubject.value;
-    return user?.roles.includes('admin') || false;
+    return user?.role === 'admin' || user?.role === 'Root';
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/login`, { email, password })
+    return this.http
+      .post<User>(`${this.apiUrl}/login`, { email, password })
       .pipe(
-        tap(user => {
+        tap((user) => {
           // Store user details and token in local storage
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
@@ -83,7 +86,7 @@ export class AuthService {
 
   // Social authentication methods
   loginWithGoogle(): void {
-   window.location.href = `${this.apiUrl}/google-login`
+    window.location.href = `${this.apiUrl}/google-login`;
   }
 
   loginWithFacebook(): Observable<User> {
@@ -98,37 +101,42 @@ export class AuthService {
   }
 
   resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      token,
+      newPassword,
+    });
   }
 
-
-
-  private handleAuthCallBack() : void{
-    if(window.location.pathname.includes('auth-calback') || 
-    window.location.search.includes('token=')){
-
-      const urlParams = new URLSearchParams(window.location.search)
+  private handleAuthCallBack(): void {
+    if (
+      window.location.pathname.includes('auth-calback') ||
+      window.location.search.includes('token=')
+    ) {
+      const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
-      const email = urlParams.get('email')
+      const email = urlParams.get('email');
       const displayName = urlParams.get('displayName');
-      const role = urlParams.get('role') || 'client'
+      const role = urlParams.get('role') || 'client';
 
-      if(token && email){
-
-        const user : User =  {
+      if (token && email) {
+        const user: User = {
           id: '',
           email: email,
           displayName: displayName || email,
           token: token,
-          roles: [role]
-        }
+          role: role,
+        };
 
-        localStorage.setItem('currentUser', JSON.stringify(user))
-        this.currentUserSubject.next(user)
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
 
-        this.router.navigate(['/'])
+        this.router.navigate(['/']);
 
-        window.history.replaceState({},document.title, window.location.pathname)
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
       }
     }
   }

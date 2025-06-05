@@ -1,0 +1,156 @@
+/* src/app/features/villes/components/nos-villes/nos-villes.component.scss */
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Animation classes
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.ville-card {
+  &.animate-in {
+    opacity: 1;
+    animation: slideInUp 0.6s ease-out;
+  }
+  
+  // Hover effects
+  &:hover {
+    .ville-image {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Line clamps for text truncation
+.line-clamp-3 {
+  display: -webkit-box;
+  -line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Custom scrollbar for modal
+.modal-content {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #2dd4bf;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #14b8a6;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .ville-card {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+// Enhanced focus states for accessibility
+button:focus,
+.ville-card:focus {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+}
+
+// Backdrop blur effect
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+}
+
+// Glassmorphism effect
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Gradient text effect
+.gradient-text {
+  background: linear-gradient(135deg, #2dd4bf, #4f46e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Loading states
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Smooth transitions
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Custom button styles
+.btn-primary {
+  @apply bg-gradient-primary text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+}
+
+.btn-secondary {
+  @apply bg-white text-primary-600 border-2 border-primary-600 font-semibold py-3 px-6 rounded-full hover:bg-primary-600 hover:text-white;
+}

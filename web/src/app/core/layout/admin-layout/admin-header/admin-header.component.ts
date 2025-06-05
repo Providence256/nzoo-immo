@@ -1,11 +1,18 @@
-import { Component, HostListener, OnInit, ElementRef, Renderer2 } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  ElementRef,
+  Renderer2,
+} from '@angular/core';
 import { AdminLayoutComponent } from '../admin-layout.component';
 import { AdminSidebarService } from '../../../services/admin-sidebar.service';
+import { AuthService } from '../../../authentication/auth.service';
 
 @Component({
   selector: 'app-admin-header',
   templateUrl: './admin-header.component.html',
-  styleUrls: ['./admin-header.component.scss']
+  styleUrls: ['./admin-header.component.scss'],
 })
 export class AdminHeaderComponent implements OnInit {
   dropdownOpen = false;
@@ -15,7 +22,8 @@ export class AdminHeaderComponent implements OnInit {
     private sidebarService: AdminSidebarService,
     public appMain: AdminLayoutComponent,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private authService: AuthService
   ) {
     // Add event listener to close dropdown when clicking outside
     this.renderer.listen('window', 'click', (e: Event) => {
@@ -27,6 +35,10 @@ export class AdminHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.updateView();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   @HostListener('window:resize')
@@ -43,7 +55,7 @@ export class AdminHeaderComponent implements OnInit {
 
   private updateView() {
     this.isMobileView = window.innerWidth <= 991;
-    
+
     // Close mobile menu when viewport becomes desktop
     if (!this.isMobileView && this.appMain.menuMobileActive) {
       this.appMain.menuMobileActive = false;

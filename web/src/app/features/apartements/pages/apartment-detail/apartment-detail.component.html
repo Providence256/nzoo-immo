@@ -336,13 +336,7 @@
                   [listingId]="annonce.id"
                   (dateRangeSelected)="onDateRangeSelect($event)"
                 ></app-date-range-picker>
-                <div *ngIf="bookingForm.get('checkIn')?.value || bookingForm.get('checkOut')?.value" 
-                  class="text-sm text-gray-600 mt-2">
-                Selected: 
-                {{ bookingForm.get('checkIn')?.value | date:'mediumDate' }} - 
-                {{ bookingForm.get('checkOut')?.value | date:'mediumDate' }}
-              </div>
-
+               
               <div *ngIf="checkingAvailability" class="ml-2 flex items-center">
                 <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

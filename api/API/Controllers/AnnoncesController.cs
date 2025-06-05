@@ -18,6 +18,7 @@ namespace API.Controllers
         IGenericRepository<ListingPrice> listingPriceRepo,
         IGenericRepository<ListingPhoto> listingPhotoRepo,
         IGenericRepository<ListingLocation> listingLocRepo,
+        IGenericRepository<Ville> villeRepo,
         IPhotoService photoService,
         IMapper mapper) : ControllerBase
     {
@@ -41,7 +42,40 @@ namespace API.Controllers
                             .FirstOrDefaultAsync(x => x.Id == id);
             return Ok(listing);
         }
+        [HttpGet("listing-by-ville/{villeId:int}")]
+        public async Task<ActionResult<ListingResponse>> GetAllListingByVille(int villeId)
+        {
+            var ville = await villeRepo.GetByIdAsync(villeId);
 
+            if (ville == null) return NotFound($"la ville avec l'ID {villeId} n'existe pas.");
+
+            var spec = new ListingSpecification(villeId, true);
+
+            var listings = await listingRepo.ApplySpecification(spec)
+                                        .ProjectTo<ListingResponse>(mapper.ConfigurationProvider)
+                                        .ToListAsync();
+
+            return Ok(listings);
+        }
+
+        [HttpGet("average-price/{villeId:int}")]
+        public async Task<ActionResult<decimal>> GetAveragePriceByVille(int villeId)
+        {
+            var ville = await villeRepo.GetByIdAsync(villeId);
+
+            if (ville == null) return NotFound("Ville inexistante");
+
+            var spec = new ListingSpecification(villeId, true);
+            var listings = await listingRepo.ApplySpecification(spec).ToListAsync();
+
+            if (!listings.Any()) return Ok(0);
+
+            var prices = await listingPriceRepo.GetAllAsync();
+            var averagePrice = listings.Join(prices, l => l.Id, p => p.ListingId, (l, p) => p.PrixBase)
+                                       .DefaultIfEmpty(0).Average();
+
+            return Ok(Math.Round(averagePrice, 2));
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateListing(ListingRequest request)
@@ -115,18 +149,29 @@ namespace API.Controllers
 
             if (request.Photos != null && request.Photos.Any())
             {
-                foreach (var photo in request.Photos)
+                var uploadTasks = request.Photos.Select(async photo =>
                 {
-                    var photoUrl = await photoService.AddPhotoAsync(photo);
-                    if (photoUrl.Error != null)
-                        return BadRequest("Photo upload failed");
+                    var uploadResult = await photoService.AddPhotoAsync(photo);
+                    if (uploadResult.Error != null) throw new Exception("Photo upload failed");
 
                     var listingPhoto = new ListingPhoto
                     {
-                        PhotoUrl = photoUrl.SecureUrl.AbsoluteUri,
+                        PhotoUrl = uploadResult.SecureUrl.AbsoluteUri,
                         ListingId = listing.Id
                     };
+
                     await listingPhotoRepo.AddAsync(listingPhoto);
+
+                });
+
+                try
+                {
+                    await Task.WhenAll(uploadTasks);
+                }
+                catch (Exception ex)
+                {
+
+                    return BadRequest($"Photo upload failed: {ex.Message}");
                 }
             }
 

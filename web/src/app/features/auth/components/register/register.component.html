@@ -3,8 +3,8 @@
   <div class="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden">
     <!-- Card Header -->
     <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-8 text-center">
-      <h1 class="text-white text-3xl font-bold mb-2">Create Account</h1>
-      <p class="text-indigo-100">Join our community today</p>
+      <h1 class="text-white text-3xl font-bold mb-2">Créer un compte</h1>
+      <p class="text-indigo-100">Rejoignez notre communauté aujourd'hui</p>
     </div>
 
     <!-- Card Body -->
@@ -15,7 +15,7 @@
         <!-- Name Fields -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="space-y-2">
-            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+            <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom</label>
             <span class="p-input-icon-left w-full">
               <i class="pi pi-user text-gray-500"></i>
               <input 
@@ -29,12 +29,12 @@
               >
             </span>
             <small *ngIf="submitted && f['firstName'].errors" class="text-red-500">
-              <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
+              <div *ngIf="f['firstName'].errors['required']">Prénom est obligatoire</div>
             </small>
           </div>
 
           <div class="space-y-2">
-            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Nom de famille</label>
             <span class="p-input-icon-left w-full">
               <i class="pi pi-user text-gray-500"></i>
               <input 
@@ -48,14 +48,14 @@
               >
             </span>
             <small *ngIf="submitted && f['lastName'].errors" class="text-red-500">
-              <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
+              <div *ngIf="f['lastName'].errors['required']">Nom de famille est obligatoire</div>
             </small>
           </div>
         </div>
 
         <!-- Email Field -->
         <div class="space-y-2">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
           <p-inputGroup>
             <p-inputGroupAddon>
               <i class="pi pi-envelope text-gray-500"></i>
@@ -71,31 +71,31 @@
             >
           </p-inputGroup>
           <small *ngIf="submitted && f['email'].errors" class="text-red-500">
-            <div *ngIf="f['email'].errors['required']">Email is required</div>
-            <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
+            <div *ngIf="f['email'].errors['required']">Email est obligatoire</div>
+            <div *ngIf="f['email'].errors['email']">S'il vous plaît, mettez une adresse email valide</div>
           </small>
         </div>
 
         <!-- Password Field -->
         <div class="space-y-2">
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
           <p-password 
             id="password" 
             formControlName="password"
             [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['password'].errors }" 
             [toggleMask]="true"
             styleClass="w-full" 
-            placeholder="Create a strong password"
+            placeholder="Créez un mot de passe fort"
           ></p-password>
           <small *ngIf="submitted && f['password'].errors" class="text-red-500">
-            <div *ngIf="f['password'].errors['required']">Password is required</div>
-            <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
+            <div *ngIf="f['password'].errors['required']">Mot de passe est obligatoire</div>
+            <div *ngIf="f['password'].errors['minlength']">Le mot de passe doit comporter au moins 6 caractères</div>
           </small>
         </div>
 
         <!-- Confirm Password Field -->
         <div class="space-y-2">
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmer Mot de passe</label>
           <p-password 
             id="confirmPassword" 
             formControlName="confirmPassword"
@@ -103,11 +103,11 @@
             [feedback]="false" 
             [toggleMask]="true"
             styleClass="w-full" 
-            placeholder="Confirm your password"
+            placeholder="Confirmer Mot de passe"
           ></p-password>
           <small *ngIf="submitted && f['confirmPassword'].errors" class="text-red-500">
-            <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
-            <div *ngIf="f['confirmPassword'].errors['passwordMismatch']">Passwords do not match</div>
+            <div *ngIf="f['confirmPassword'].errors['required']">Confirmer Mot de passe est obligatoire</div>
+            <div *ngIf="f['confirmPassword'].errors['passwordMismatch']">Les mots de passe ne correspondent pas</div>
           </small>
         </div>
 
@@ -123,10 +123,10 @@
           </div>
           <div class="ml-2">
             <label for="acceptTerms" class="text-sm text-gray-600">
-              I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Terms of Service</a> and <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Privacy Policy</a>
+              J'accepte le <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Conditions d'utilisation</a> et <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">politique de confidentialité</a>
             </label>
             <div *ngIf="submitted && f['acceptTerms'].errors" class="text-red-500 text-xs mt-1">
-              <div *ngIf="f['acceptTerms'].errors['required']">You must accept the terms and conditions</div>
+              <div *ngIf="f['acceptTerms'].errors['required']">Vous devez accepter les termes et conditions</div>
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@
           pButton 
           pRipple 
           type="submit" 
-          label="Create Account" 
+          label="Créer un compte" 
           [loading]="loading" 
           class="w-full p-button-primary p-button-rounded p-button-raised font-semibold py-3 mt-2"
         ></button>
@@ -147,7 +147,7 @@
             <div class="w-full border-t border-gray-200"></div>
           </div>
           <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-white px-4 text-gray-500 font-semibold">or sign up with</span>
+            <span class="bg-white px-4 text-gray-500 font-semibold">ou inscrivez-vous avec</span>
           </div>
         </div>
 
@@ -179,9 +179,9 @@
 
       <!-- Sign In Link -->
       <div class="text-center mt-8">
-        <span class="text-gray-600 text-sm">Already have an account? </span>
+        <span class="text-gray-600 text-sm">Vous avez déjà un compte ? </span>
         <a routerLink="/auth/login" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition">
-          Sign in instead
+          Connectez-vous
         </a>
       </div>
     </div>

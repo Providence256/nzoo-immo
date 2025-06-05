@@ -15,4 +15,10 @@ public class CommuneSpecification : BaseSpecification<Commune>
     {
         AddInclude(x => x.Ville);
     }
+
+    public CommuneSpecification(int villeId, bool ville) : base(c => c.VilleId == villeId)
+    {
+        AddInclude(c => c.Ville);
+    }
+
 }
