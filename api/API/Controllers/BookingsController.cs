@@ -2,6 +2,7 @@ using API.DTOs.BookingDto;
 using API.Helpers;
 using API.Services;
 using AutoMapper;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace API.Controllers
     [ApiController]
     public class BookingsController(
        IBookingService bookingService,
+       IBookingRepository bookingRepo,
        IMapper mapper
         ) : ControllerBase
     {
@@ -33,7 +35,7 @@ namespace API.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<BookingResponse>> CreateBooking([FromBody] BookingWithPaymentRequest request)
+        public async Task<ActionResult<BookingWithPaymentResponse>> CreateBooking([FromBody] BookingWithPaymentRequest request, string paymentIntentId)
         {
 
 
@@ -42,10 +44,9 @@ namespace API.Controllers
                 var userId = User.GetUserId();
                 var booking = await bookingService.CreateBooking(request, userId);
 
-                // Map to response DTO
-                var response = mapper.Map<BookingResponse>(booking);
 
-                return CreatedAtAction(nameof(GetBookingById), new { id = booking.Id }, response);
+
+                return CreatedAtAction(nameof(GetBookingById), new { id = booking.Id }, booking);
             }
             catch (ArgumentException ex)
             {
@@ -60,6 +61,7 @@ namespace API.Controllers
                 return StatusCode(500, "An error occurred while creating booking");
             }
         }
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<BookingResponse>> GetBookingById(int id)
         {
@@ -79,9 +81,9 @@ namespace API.Controllers
             {
                 return Forbid();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while retrieving the booking");
+                return StatusCode(500, $"An error occurred while retrieving the booking: {ex.Message}");
             }
         }
 
@@ -199,6 +201,45 @@ namespace API.Controllers
                 return StatusCode(500, "An error occurred while unblocking the date");
             }
         }
+
+        [HttpGet("listing/{listingId}")]
+        public async Task<ActionResult<List<BookingResponse>>> GetBookingByListingIdAsync(int listingId)
+        {
+            try
+            {
+                var bookings = await bookingRepo.GetBookingByListingIdAsync(listingId);
+
+                var response = mapper.Map<List<BookingResponse>>(bookings);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { Success = false, Message = ex.Message, });
+            }
+        }
+
+        [HttpGet("unavailable-dates/{listingId}")]
+        public async Task<IActionResult> GetUnavailableDates(int listingId)
+        {
+            try
+            {
+                var unavailableDates = await bookingService.GetUnavailableDatesAsync(listingId);
+
+                return Ok(new
+                {
+                    Success = true,
+                    UnavailableDates = unavailableDates
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { Success = false, Message = ex.Message });
+            }
+        }
+
 
     }
 }

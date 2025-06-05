@@ -12,6 +12,7 @@ public interface IBookingService
     Task<bool> UpdateBookingStatusAsync(int bookingId, BookingStatus status, string? reason = null);
     Task<bool> BlockDateAsync(BlockDateRequest request, int hostId);
     Task<bool> UnblockDateAsync(int listingId, DateTime date, int hostId);
+    Task<List<DateTime>> GetUnavailableDatesAsync(int listingId);
 
 
     Task<Booking?> GetBookingByIdAsync(int id, int userId);

@@ -20,7 +20,6 @@ public class Booking : BaseEntity
 
 
     public string? PaymentIntentId { get; set; }
-    public string? ClientSecret { get; set; }
     public DateTime? PaymentCompletedAt { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
 
@@ -36,6 +35,8 @@ public enum BookingStatus
     Cancelled = 2,
     Completed = 3,
     Rejected = 4,
+    PaymentMissmatch = 5,
+    PaymentReceived = 6,
 }
 
 public enum PaymentStatus

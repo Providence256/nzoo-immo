@@ -65,6 +65,7 @@
                 [class.end-date]="isEndDate(day)"
                 [class.in-range]="isInRange(day)"
                 [class.selected]="isSelected(day)"
+                [class.unavailable]="isDateUnavailable(day)"
                 [disabled]="isDisabled(day)"
                 (click)="onDateClick(day)"
 

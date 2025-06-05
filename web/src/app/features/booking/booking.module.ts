@@ -10,6 +10,8 @@ import { ModifyDateComponent } from './components/modify-date/modify-date.compon
 import { ModifyGuestComponent } from './components/modify-guest/modify-guest.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AuthGuard } from '../../core/authentication/auth.guard';
+import { PaymentPipe } from '../../shared/pipes/payment.pipe';
+import { BookingSuccessComponent } from './pages/booking-success/booking-success.component';
 
 const routes: Routes = [
   {
@@ -19,7 +21,12 @@ const routes: Routes = [
   },
   {
     path: 'confirm',
+    canActivate: [AuthGuard],
     component: BookingConfirmationComponent,
+  },
+  {
+    path: 'success',
+    component: BookingSuccessComponent,
   },
 ];
 
@@ -30,6 +37,7 @@ const routes: Routes = [
     BookingSummaryComponent,
     ModifyDateComponent,
     ModifyGuestComponent,
+    BookingSuccessComponent,
   ],
   providers: [DialogService],
   imports: [
@@ -38,6 +46,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     JsonPipe,
+    PaymentPipe,
   ],
   exports: [BookingSummaryComponent, ModifyDateComponent],
 })

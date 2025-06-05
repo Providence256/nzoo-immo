@@ -10,9 +10,6 @@ public class BookingWithPaymentRequest
     public int Adults { get; set; }
     public int Children { get; set; }
     public int Babies { get; set; }
-
-    // Informations de paiement
-    public string? PaymentMethodId { get; set; } = string.Empty;
-    public bool? SavePaymentMethod { get; set; } = false;
     public string? CustomerEmail { get; set; }
+    public string? paymentIntentId { get; set; }
 }

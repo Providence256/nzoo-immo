@@ -60,4 +60,16 @@ public class BookingSpecification : BaseSpecification<Booking>
                     (excludeBookingId == null || x.Id != excludeBookingId))
     {
     }
+
+
+    public BookingSpecification(string paymentIntentId, bool isPaymentIntent) : base(x => x.PaymentIntentId == paymentIntentId)
+    {
+        AddInclude(x => x.Listing!);
+        AddInclude("Listing.Photos");
+        AddInclude("Listing.Location");
+        AddInclude("Listing.Location.Ville");
+        AddInclude("Listing.Location.Commune");
+        AddInclude("Listing.Price");
+        AddInclude("Listing.Price.Devise");
+    }
 }

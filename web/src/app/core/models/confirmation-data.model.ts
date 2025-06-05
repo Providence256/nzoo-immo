@@ -4,4 +4,5 @@ export interface ConfirmationData {
   bookingData: BookingData;
   confirmationToken?: any;
   user?: any;
+  clientSecret: string;
 }

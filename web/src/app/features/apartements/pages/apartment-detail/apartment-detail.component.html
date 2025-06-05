@@ -332,7 +332,8 @@
               <form [formGroup]="bookingForm" (ngSubmit)="goToConfirmBooking()" class="space-y-4">
                 <div class="mb-4" >
                   <label for="checkIn" class="block text-sm font-medium text-gray-700 mb-1">Selectionner Dates</label>
-                  <app-date-range-picker 
+                  <app-date-range-picker
+                  [listingId]="annonce.id"
                   (dateRangeSelected)="onDateRangeSelect($event)"
                 ></app-date-range-picker>
                 <div *ngIf="bookingForm.get('checkIn')?.value || bookingForm.get('checkOut')?.value" 

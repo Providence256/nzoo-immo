@@ -57,10 +57,7 @@ public class PaymentService(IBookingRepository bookingRepo,
                 ReceiptEmail = request.CustomerEmail,
 
             };
-            if (!string.IsNullOrEmpty(request.PaymentMethodId))
-            {
-                paymentIntentOptions.PaymentMethod = request.PaymentMethodId;
-            }
+
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = await paymentIntentService.CreateAsync(paymentIntentOptions);
 
@@ -87,22 +84,23 @@ public class PaymentService(IBookingRepository bookingRepo,
 
     }
 
-    public async Task<BookingWithPaymentResponse> SaveBookingAndConfirmPaymentAsync(BookingWithPaymentRequest request, string paymentIntentId, int userId)
+    public async Task<BookingWithPaymentResponse> SaveBookingAndConfirmPaymentAsync(BookingWithPaymentRequest request, int userId)
     {
         StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
 
         try
         {
             var paymentIntentService = new PaymentIntentService();
-            var paymentIntent = await paymentIntentService.GetAsync(paymentIntentId);
+            var paymentIntent = await paymentIntentService.GetAsync(request.paymentIntentId);
 
 
             var booking = await bookingService.CreateBooking(request, userId);
 
             if (paymentIntent.Status == "requires_confirmation")
             {
-                var confirmedPaymentIntent = await paymentIntentService.ConfirmAsync(paymentIntentId);
+                var confirmedPaymentIntent = await paymentIntentService.ConfirmAsync(request.paymentIntentId);
                 booking.PaymentStatus = MapStripeStatusToPaymentStatus(confirmedPaymentIntent.Status);
+                booking.PaymentIntentId = paymentIntent.Id;
                 await bookingRepo.UpdateAsync(booking);
             }
 
@@ -119,7 +117,6 @@ public class PaymentService(IBookingRepository bookingRepo,
                 Children = booking.Guests.Children,
                 Babies = booking.Guests.Babies,
                 PaymentIntentId = paymentIntent.Id,
-                ClientSecret = paymentIntent.ClientSecret,
                 PaymentStatus = booking.PaymentStatus,
                 Status = booking.Status,
                 RequiresAction = paymentIntent.Status == "requires_action",

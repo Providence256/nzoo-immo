@@ -5,6 +5,7 @@ namespace API.DTOs.BookingDto;
 
 public class PaymentIntentResponse
 {
+    public int BookingId { get; set; }
     public string PaymentIntentId { get; set; }
     public string ClientSecret { get; set; }
     public PaymentStatus Status { get; set; }

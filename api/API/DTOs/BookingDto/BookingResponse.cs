@@ -12,7 +12,9 @@ public class BookingResponse
     public string Location { get; set; } = null!;
     public DateTime CheckInDate { get; set; }
     public DateTime CheckOutDate { get; set; }
-    public int GuestCount { get; set; }
+    public int Adults { get; set; }
+    public int Children { get; set; }
+    public int Babies { get; set; }
     public double TotalPrice { get; set; }
     public string Currency { get; set; } = null!;
     public BookingStatus Status { get; set; }

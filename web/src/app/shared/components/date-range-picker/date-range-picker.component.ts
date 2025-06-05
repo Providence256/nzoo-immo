@@ -22,6 +22,7 @@ import {
   startOfWeek,
 } from 'date-fns';
 import { fr, se } from 'date-fns/locale';
+import { BookingService } from '../../../features/booking/services/booking.service';
 
 @Component({
   selector: 'app-date-range-picker',
@@ -35,6 +36,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
   }>();
   @Input() unavailableDates: Date[] = [];
   @Input() minDate: Date = new Date();
+  @Input() listingId: number = 0;
 
   today: Date = new Date();
   selectedStartDate!: Date | null;
@@ -50,7 +52,14 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
 
   isCompactView = false;
 
-  constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {}
+  bookingDates: Date[] = [];
+  isLoadingBookings: boolean = false;
+
+  constructor(
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef,
+    private bookingService: BookingService
+  ) {}
 
   ngOnInit() {
     this.selectedStartDate = null;
@@ -66,6 +75,28 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       startOfMonth(addMonths(this.today, 1)),
     ];
     this.checkViewportSize();
+
+    if (this.listingId) {
+      this.loadingBookingDates;
+    }
+  }
+
+  loadingBookingDates(): void {
+    if (!this.listingId) return;
+
+    this.isLoadingBookings = true;
+
+    this.bookingService.getBookingDates(this.listingId).subscribe({
+      next: (response) => {
+        this.bookingDates = response.unavailableDates.map(
+          (dateStr: string) => new Date(dateStr)
+        );
+      },
+      error: (error) => {
+        console.log('Cannnot load booking dates', error);
+        this.isLoadingBookings = false;
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -123,6 +154,11 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
   }
 
   onDateClick(date: Date) {
+    // Ne pas permettre de cliquer sur une date désactivée
+    if (this.isDisabled(date)) {
+      return;
+    }
+
     if (this.selectedStartDate && this.selectedEndDate) {
       this.selectedStartDate = date;
       this.selectedEndDate = null;
@@ -131,7 +167,6 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // If no start date or selecting check-in
     if (!this.selectedStartDate || this.activeSelector === 'check-in') {
       this.selectedStartDate = date;
       this.selectedEndDate = null;
@@ -140,16 +175,28 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // If there's a start date but no end date (or selecting check-out)
     if (this.selectedStartDate && !this.selectedEndDate) {
-      // If clicked date is before start date, swap them
+      let startDate = this.selectedStartDate;
+      let endDate = date;
+
+      // Si la date cliquée est avant la date de début, les inverser
       if (isBefore(date, this.selectedStartDate)) {
-        this.selectedEndDate = this.selectedStartDate;
-        this.selectedStartDate = date;
-      } else {
-        this.selectedEndDate = date;
+        startDate = date;
+        endDate = this.selectedStartDate;
       }
 
+      // NOUVELLE VÉRIFICATION: S'assurer que la plage est disponible
+      if (!this.isRangeAvailable(startDate, endDate)) {
+        // Si la plage n'est pas disponible, réinitialiser et commencer une nouvelle sélection
+        this.selectedStartDate = date;
+        this.selectedEndDate = null;
+        this.activeSelector = 'check-out';
+        this.cdr.detectChanges();
+        return;
+      }
+
+      this.selectedStartDate = startDate;
+      this.selectedEndDate = endDate;
       this.activeSelector = null;
       this.isDropdownOpen = false;
       this.emitSelectedRange();
@@ -159,7 +206,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
       this.isDropdownOpen = false;
       this.activeSelector = null;
       this.cdr.detectChanges();
-    }, 300); // Allow time for the view to update
+    }, 300);
     this.cdr.detectChanges();
   }
 
@@ -236,7 +283,19 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
   }
 
   isDisabled(date: Date): boolean {
-    return isBefore(date, startOfDay(this.today));
+    if (isBefore(date, startOfDay(this.today))) {
+      return true;
+    }
+
+    if (this.isDateUnavailable(date)) {
+      return true;
+    }
+
+    if (this.bookingDates.some((bookinDate) => isSameDay(date, bookinDate))) {
+      return true;
+    }
+
+    return false;
   }
 
   isDateUnavailable(date: Date): boolean {
@@ -255,6 +314,14 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit {
 
     while (currentDate <= endDate) {
       if (this.isDateUnavailable(currentDate)) {
+        return false;
+      }
+
+      if (
+        this.bookingDates.some((bookingDate) =>
+          isSameDay(currentDate, bookingDate)
+        )
+      ) {
         return false;
       }
 

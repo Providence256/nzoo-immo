@@ -181,7 +181,7 @@ public class BookingService : IBookingService
             TotalPrice = totalPrice,
             Currency = listingPrice.Devise?.Code ?? "USD",
             Nights = nights,
-            BasePrice = basePrice,
+            BasePrice = listingPrice.PrixBase,
             CleaningFee = cleaningFee,
             GuestFee = guestFee,
             Discount = discount,
@@ -295,5 +295,24 @@ public class BookingService : IBookingService
         return adults + children;
     }
 
+    public async Task<List<DateTime>> GetUnavailableDatesAsync(int listingId)
+    {
+        var bookings = await bookingRepository.GetBookingByListingIdAsync(listingId);
 
+        var unavailableDates = new List<DateTime>();
+
+        foreach (var booking in bookings.Where(b => b.Status != BookingStatus.Cancelled
+            && b.Status != BookingStatus.Cancelled))
+        {
+            var currentDate = booking.CheckInDate.Date;
+
+            while (currentDate <= booking.CheckOutDate.Date)
+            {
+                unavailableDates.Add(currentDate);
+                currentDate = currentDate.AddDays(1);
+            }
+        }
+
+        return unavailableDates.Distinct().ToList();
+    }
 }

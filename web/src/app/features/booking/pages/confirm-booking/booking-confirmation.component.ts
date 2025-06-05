@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, firstValueFrom, Subscription } from 'rxjs';
 import { BookingService } from '../../services/booking.service';
 import { StripeService } from '../../../../core/services/stripe.service';
 import { MessageService } from 'primeng/api';
@@ -9,8 +9,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { BookingSessionService } from '../../../apartements/services/booking-session.service';
 import { AnnoncesService } from '../../../admin/saisies/services/annonces.service';
-import { ConfirmationData } from '../../../../core/models/confirmation-data.model';
-import { BookingData } from '../../../../core/models/booking-data.model';
+import { AuthService } from '../../../../core/authentication/auth.service';
 
 @Component({
   selector: 'app-booking-confirmation',
@@ -18,15 +17,23 @@ import { BookingData } from '../../../../core/models/booking-data.model';
   styleUrls: ['./booking-confirmation.component.scss'],
 })
 export class BookingConfirmationComponent implements OnInit, OnDestroy {
-  confirmationData: ConfirmationData | null = null;
+  @Input() confirmationToken?: ConfirmationToken;
+
   booking: any | null = null;
   apartmentId: number;
-  bookingData: BookingData | null = null;
+  bookingDetails: any = {};
   apartment: any = {};
+  pricing: any | null = null;
   isLoading = true;
   error: string | null = null;
   isProcessingPayment = false;
-  confirmationToken?: ConfirmationToken;
+
+  // Calculated fields
+  totalNights = 0;
+  subtotal = 0;
+  cleaningFee = 0;
+  serviceFee = 0;
+  totalPrice = 0;
   user: any = null;
 
   private subscriptions: Subscription[] = [];
@@ -35,6 +42,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private bookingService: BookingService,
+    private authService: AuthService,
     private bookingSessionService: BookingSessionService,
     private stripeService: StripeService,
     private messageService: MessageService,
@@ -44,75 +52,47 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.initiliazeConfirmationData();
+    this.getCurrentUser();
+    this.loadConfirmationData();
+    this.route.queryParams.subscribe((params) => {
+      const bookingData =
+        this.bookingSessionService.parseBookingDataFromUrl(params);
+      if (bookingData) {
+        this.bookingSessionService.updateBookingData(bookingData);
+        this.processBookingData(bookingData);
+      } else {
+        const serviceData = this.bookingSessionService.getCurrentBookingData();
+
+        if (serviceData) {
+          this.bookingSessionService.navigateWithBookingData(
+            serviceData,
+            '/booking/confirm'
+          );
+          this.processBookingData(serviceData);
+        }
+      }
+    });
+  }
+
+  private getCurrentUser() {
+    this.user = this.authService.getCurrentUser();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  private initiliazeConfirmationData(): void {
-    this.confirmationData = this.bookingSessionService.getConfirmationData();
+  private processBookingData(bookingData: any): void {
+    this.apartmentId = bookingData.listingId;
+    this.bookingDetails = {
+      checkIn: bookingData.checkIn,
+      checkOut: bookingData.checkOut,
+      guests: bookingData.guests.adults,
+      children: bookingData.guests.children,
+      infants: bookingData.guests.babies,
+    };
 
-    if (!this.confirmationData) {
-      this.tryLoadFromUrl();
-      return;
-    }
-
-    this.extractConfirmationData();
-    this.isLoading = false;
-  }
-
-  private tryLoadFromUrl(): void {
-    const urlSub = this.route.queryParams.subscribe((params) => {
-      const urlBookingData =
-        this.bookingSessionService.parseBookingDataFromUrl(params);
-
-      if (
-        urlBookingData &&
-        this.bookingSessionService.isBookingDataValid(urlBookingData)
-      ) {
-        this.bookingSessionService.navigateWithBookingData(
-          urlBookingData,
-          '/booking'
-        );
-      } else {
-        this.handleNoConfirmationData();
-      }
-    });
-
-    this.subscriptions.push(urlSub);
-    console.log(urlSub);
-  }
-
-  private extractConfirmationData(): void {
-    if (!this.confirmationData) return;
-
-    try {
-      this.bookingData = this.confirmationData.bookingData;
-      this.confirmationToken = this.confirmationData.confirmationToken;
-      this.user = this.confirmationData.user;
-    } catch (error) {
-      console.error("Erreur lors de l'extraction des données:", error);
-      this.error = 'Erreur lors du chargement des données de réservation.';
-    }
-  }
-
-  private handleNoConfirmationData(): void {
-    this.error =
-      'Aucune donnée de réservation trouvée. Veuillez recommencer le processus.';
-    this.isLoading = false;
-
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Données manquantes',
-      detail: "Redirection vers la page d'accueil...",
-      life: 3000,
-    });
-
-    setTimeout(() => {
-      this.router.navigate(['/']);
-    }, 3000);
+    this.loadApartmentDetails();
   }
 
   loadApartmentDetails(): void {
@@ -121,6 +101,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       return;
     }
+
     this.isLoading = true;
     const apartmentSub = this.annonceService
       .find(this.apartmentId)
@@ -128,6 +109,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.apartment = data;
+          this.calculateBookingDetails();
         },
         (error) => {
           this.error = 'Failed to load apartment details. Please try again.';
@@ -135,6 +117,38 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
         }
       );
     this.subscriptions.push(apartmentSub);
+  }
+
+  private loadConfirmationData(): void {
+    const confirmationData = this.bookingSessionService.getConfirmationData();
+
+    if (!confirmationData) {
+      this.error =
+        'Aucune donnée de réservation trouvée. Veuillez recommencer le processus de réservation.';
+      this.isLoading = false;
+      setTimeout(() => {
+        this.router.navigate(['/']);
+      }, 5000);
+      return;
+    }
+
+    try {
+      this.booking = confirmationData.bookingData;
+      this.confirmationToken = confirmationData.confirmationToken;
+
+      console.log('Confirmation data loaded:', {
+        booking: this.booking,
+        apartment: this.apartment,
+        pricing: this.pricing,
+        token: this.confirmationToken,
+      });
+
+      this.isLoading = false;
+    } catch (error) {
+      console.error('Error loading confirmation data:', error);
+      this.error = 'Erreur lors du chargement des données de réservation.';
+      this.isLoading = false;
+    }
   }
 
   async confirmPayment(): Promise<void> {
@@ -161,6 +175,51 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     this.isProcessingPayment = true;
 
     try {
+      const confirmationData = this.bookingSessionService.getConfirmationData();
+
+      if (!confirmationData?.clientSecret) {
+        throw new Error('Client secret manquant pour le paiement');
+      }
+
+      const paymentResult = await this.stripeService.confirmPayment(
+        this.confirmationToken,
+        confirmationData.clientSecret
+      );
+
+      if (paymentResult.paymentIntent?.status === 'succeeded') {
+        const booking = await this.createBooking();
+
+        const bookingData = {
+          listingId: this.booking.listingId,
+          checkInDate: this.booking.checkIn,
+          checkOutDate: this.booking.checkOut,
+          adults: this.booking.guests.adults,
+          children: this.booking.guests.children,
+          babies: this.booking.guests.babies,
+          customerEmail: this.user.email,
+          paymentIntentId: paymentResult.paymentIntent.id,
+        };
+
+        const bookingResult = await this.stripeService.createBookingAndPay(
+          bookingData
+        );
+
+        if (bookingResult) {
+          console.log('booking Id is', bookingResult);
+          this.router.navigate(['booking/success'], {
+            queryParams: {
+              bookingId: bookingResult.bookingId,
+            },
+          });
+        } else {
+          throw new Error('Booking creation failed');
+        }
+      } else if (paymentResult.error) {
+        throw new Error(paymentResult.error.message);
+      } else {
+        throw new Error('Something went wrong');
+      }
+
       // Finaliser le paiement avec Stripe
       // const paymentResult = await this.stripeService.confirmPayment(
       //   this.confirmationToken
@@ -192,11 +251,6 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
       });
 
       // Rediriger vers la page de succès avec l'ID de réservation
-      setTimeout(() => {
-        this.router.navigate(['/booking/success'], {
-          queryParams: { bookingId: 1 },
-        });
-      }, 2000);
     } catch (error: any) {
       console.error('Error confirming payment:', error);
 
@@ -213,6 +267,18 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async createBooking() {
+    return {
+      listingId: this.booking.listingId,
+      checkInDate: this.booking.checkIn,
+      checkOutDate: this.booking.checkOut,
+      adults: this.booking.guests.adults,
+      children: this.booking.guests.children,
+      babies: this.booking.guests.babies,
+      customerEmail: this.user.email,
+    };
+  }
+
   goBack(): void {
     // Retourner à la page de réservation avec les données
     const currentBookingData =
@@ -220,7 +286,7 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     if (currentBookingData) {
       this.bookingSessionService.navigateWithBookingData(
         currentBookingData,
-        '/booking/confirm'
+        '/booking/payment'
       );
     } else {
       this.router.navigate(['/']);
@@ -269,6 +335,51 @@ export class BookingConfirmationComponent implements OnInit, OnDestroy {
     }
 
     return summary;
+  }
+
+  calculateBookingDetails(): void {
+    if (!this.apartment || !this.booking) {
+      return;
+    }
+
+    try {
+      const checkIn = new Date(this.booking.checkIn);
+      const checkOut = new Date(this.booking.checkOut);
+
+      // Calculate number of nights
+      const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
+      this.totalNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (this.totalNights <= 0 || isNaN(this.totalNights)) {
+        throw new Error('Plage de dates invalide');
+      }
+
+      // Calculate subtotal (handle both price structures)
+      if (this.apartment.price && typeof this.apartment.price === 'object') {
+        // Handle if price is an object with amount property
+
+        // Handle if price has prixBase property (from annonce object)
+        if (this.apartment.price.prixBase) {
+          this.subtotal = this.apartment.price.prixBase * this.totalNights;
+        }
+      } else if (typeof this.apartment.price === 'number') {
+        // If price is just a number
+        this.subtotal = this.apartment.price * this.totalNights;
+      }
+
+      // Add cleaning fee (10% of one night)
+      this.cleaningFee = this.apartment.price.fraisMenage;
+
+      // Add service fee (12% of subtotal)
+      this.serviceFee = this.subtotal * 0.12;
+
+      // Calculate total
+      this.totalPrice = this.subtotal + this.cleaningFee;
+    } catch (error) {
+      console.error('Error calculating booking details:', error);
+      this.error =
+        'There was an error calculating your booking. Please try again.';
+    }
   }
 
   getCurrency(): string {

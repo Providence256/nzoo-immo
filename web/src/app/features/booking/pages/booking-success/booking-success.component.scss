@@ -1,0 +1,459 @@
+// booking-success.component.scss
+
+// Variables
+:root {
+  --animation-duration: 0.6s;
+  --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --glow-color: rgba(59, 130, 246, 0.15);
+}
+
+// Animations principales
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes success-bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-10deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) rotate(5deg);
+  }
+  70% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--glow-color);
+  }
+  50% {
+    box-shadow: 0 0 0 20px transparent;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Classes d'animation
+.animate-fade-in {
+  animation: fade-in var(--animation-duration) var(--animation-timing);
+}
+
+.animate-slide-up {
+  animation: slide-up var(--animation-duration) var(--animation-timing);
+  animation-fill-mode: both;
+}
+
+.animate-success-bounce {
+  animation: success-bounce 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-gentle-float {
+  animation: gentle-float 3s ease-in-out infinite;
+}
+
+// Composant principal
+.booking-success {
+  position: relative;
+  
+  // Effet de parallaxe subtil pour les éléments de fond
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.02) 0%, 
+      rgba(99, 102, 241, 0.02) 50%, 
+      rgba(168, 85, 247, 0.02) 100%);
+    pointer-events: none;
+  }
+
+  // Cartes avec effets avancés
+  &__card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      transition: left 0.5s;
+    }
+    
+    &:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(255, 255, 255, 0.5);
+      
+      &::before {
+        left: 100%;
+      }
+    }
+
+    // Effet de brillance sur les cartes importantes
+    &--premium {
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.85)
+      );
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(59, 130, 246, 0.5),
+          transparent
+        );
+      }
+    }
+  }
+
+  // Boutons avec effets modernes
+  &__button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 12px 20px -5px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      
+      &::before {
+        width: 300px;
+        height: 300px;
+      }
+    }
+    
+    &:active {
+      transform: translateY(-1px);
+    }
+
+    // Bouton principal avec gradient animé
+    &--primary {
+      background: linear-gradient(
+        135deg,
+        #3b82f6,
+        #1d4ed8,
+        #1e40af
+      );
+      background-size: 200% 200%;
+      animation: shimmer 3s ease-in-out infinite;
+      
+      &:hover {
+        background-position: 100% 100%;
+      }
+    }
+
+    // Bouton secondaire avec effet glassmorphism
+    &--secondary {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+
+  // Icônes avec animations
+  &__icon {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    &--bounce {
+      animation: gentle-float 2s ease-in-out infinite;
+    }
+    
+    &--pulse {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+  }
+
+  // Textes avec effets
+  &__text {
+    &--gradient {
+      background: linear-gradient(
+        135deg,
+        #1f2937,
+        #374151,
+        #4b5563
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    &--shimmer {
+      background: linear-gradient(
+        90deg,
+        #1f2937 25%,
+        #3b82f6 50%,
+        #1f2937 75%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 2s ease-in-out infinite;
+    }
+  }
+
+  // Éléments avec effet de parallaxe
+  &__floating-element {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.1;
+    
+    &--1 {
+      top: 10%;
+      left: 5%;
+      animation: gentle-float 4s ease-in-out infinite;
+    }
+    
+    &--2 {
+      top: 60%;
+      right: 10%;
+      animation: gentle-float 3s ease-in-out infinite reverse;
+    }
+    
+    &--3 {
+      bottom: 20%;
+      left: 15%;
+      animation: gentle-float 5s ease-in-out infinite;
+    }
+  }
+}
+
+// États de loading améliorés
+.loading-state {
+  &__spinner {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 2px solid transparent;
+      border-top-color: rgba(59, 130, 246, 0.3);
+      border-radius: 50%;
+      animation: spin 2s linear infinite reverse;
+    }
+  }
+  
+  &__dots {
+    display: flex;
+    gap: 4px;
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #3b82f6;
+      border-radius: 50%;
+      animation: bounce 1.4s ease-in-out infinite both;
+      
+      &:nth-child(1) { animation-delay: -0.32s; }
+      &:nth-child(2) { animation-delay: -0.16s; }
+      &:nth-child(3) { animation-delay: 0s; }
+    }
+  }
+}
+
+// Responsive amélioré
+@media (max-width: 1024px) {
+  .booking-success {
+    &__card {
+      &:hover {
+        transform: translateY(-4px) scale(1.01);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-success {
+    padding: 1rem;
+    
+    &__card {
+      margin-bottom: 1rem;
+      
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+    
+    .sticky {
+      position: static !important;
+    }
+    
+    .grid-cols-1.lg\\:grid-cols-3 {
+      gap: 1rem;
+    }
+  }
+  
+  // Désactiver certaines animations sur mobile pour les performances
+  .animate-gentle-float {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-success {
+    &__button {
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+}
+
+// Styles pour l'impression
+@media print {
+  .booking-success {
+    background: white !important;
+    
+    &__card {
+      box-shadow: none !important;
+      border: 1px solid #e5e7eb !important;
+      break-inside: avoid;
+    }
+    
+    &__button,
+    .animate-slide-up,
+    .animate-fade-in,
+    .animate-success-bounce {
+      animation: none !important;
+      transform: none !important;
+    }
+    
+    // Masquer les boutons d'action en impression
+    .space-y-4:has(button) {
+      display: none !important;
+    }
+  }
+  
+  body {
+    background: white !important;
+  }
+}
+
+// Mode sombre (si supporté)
+@media (prefers-color-scheme: dark) {
+  .booking-success {
+    &__card {
+      background: rgba(17, 24, 39, 0.9);
+      border-color: rgba(75, 85, 99, 0.3);
+      
+      &:hover {
+        box-shadow: 
+          0 20px 25px -5px rgba(0, 0, 0, 0.3),
+          0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+
+// Réduction des animations pour les utilisateurs sensibles
+@media (prefers-reduced-motion: reduce) {
+  .booking-success {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+// Focus visible amélioré pour l'accessibilité
+.booking-success {
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+}

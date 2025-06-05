@@ -19,6 +19,6 @@ export class PaymentApiService extends BaseApiService {
   }
 
   createBookingAndPay(data: any): Observable<any> {
-    return this.post<any>(`${this.endpoint}/confirm-and-pay`, data);
+    return this.post<any>(`${this.endpoint}/save-booking`, data);
   }
 }

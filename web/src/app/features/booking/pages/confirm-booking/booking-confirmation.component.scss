@@ -1,69 +1,316 @@
-/* Optional: Add any custom styles here that go beyond Tailwind's utilities */
+// booking-confirmation.component.scss
+.booking-confirmation-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
 
-/* For example, if you want to add some custom animations */
-@keyframes pulse {
-    0%, 100% {
-      opacity: 1;
+  .loading-container, .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    
+    p {
+      margin-top: 1rem;
+      color: #6c757d;
+      font-size: 1.1rem;
     }
-    50% {
-      opacity: 0.5;
+  }
+
+  .confirmation-content {
+    .confirmation-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      
+      h1 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      
+      .subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin: 0;
+      }
+    }
+
+    .confirmation-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      
+      @media (max-width: 968px) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+
+  h2 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  h3 {
+    color: #495057;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Apartment Information
+.apartment-info {
+  .apartment-preview {
+    display: flex;
+    gap: 1rem;
+    
+    .apartment-image {
+      width: 120px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    
+    .apartment-details {
+      flex: 1;
+      
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+      
+      .apartment-type {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0 0 0.5rem 0;
+      }
+      
+      .apartment-location {
+        color: #495057;
+        font-size: 0.9rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        
+        i {
+          color: #e74c3c;
+        }
+      }
+    }
+  }
+}
+
+// Detail Rows
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  .label {
+    font-weight: 500;
+    color: #495057;
+    flex-shrink: 0;
+    margin-right: 1rem;
+  }
+  
+  .value {
+    color: #2c3e50;
+    text-align: right;
+    flex: 1;
+  }
+}
+
+// Price Breakdown
+.price-breakdown {
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    
+    .price-label {
+      color: #495057;
+      font-size: 0.95rem;
+    }
+    
+    .price-value {
+      color: #2c3e50;
+      font-weight: 500;
+    }
+    
+    &.total-row {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid #e9ecef;
+      
+      .total-label {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #2c3e50;
+      }
+      
+      .total-value {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #e74c3c;
+      }
     }
   }
   
-  .animate-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .price-divider {
+    border: none;
+    border-top: 1px solid #dee2e6;
+    margin: 1rem 0;
+  }
+}
+
+// Payment Details
+.payment-details {
+  .payment-method {
+    margin-bottom: 1.5rem;
+    
+    .card-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      
+      .card-icon {
+        font-size: 1.5rem;
+        color: #495057;
+      }
+      
+      .card-details {
+        .card-brand {
+          font-weight: 600;
+          color: #2c3e50;
+          font-size: 0.95rem;
+        }
+        
+        .card-number {
+          color: #495057;
+          font-size: 0.9rem;
+          margin: 0.25rem 0;
+        }
+        
+        .card-expiry {
+          color: #6c757d;
+          font-size: 0.85rem;
+        }
+      }
+    }
   }
   
-  /* Custom scrollbar for better UX */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  .billing-details {
+    h3 {
+      color: #495057;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .billing-info {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #495057;
+    }
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  
+  button {
+    flex: 1;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
   }
   
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+  .confirm-button {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    border: none;
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #c0392b, #a93226);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .booking-confirmation-container {
+    padding: 1rem;
+    
+    .confirmation-header h1 {
+      font-size: 2rem;
+    }
+    
+    .apartment-preview {
+      flex-direction: column;
+      
+      .apartment-image {
+        width: 100%;
+        height: 200px;
+      }
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
   }
   
-  ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
-  }
-  
-  /* Responsive print styles for booking confirmation */
-  @media print {
-    .container {
-      max-width: 100% !important;
-      padding: 0 !important;
-    }
+  .detail-row {
+    flex-direction: column;
+    gap: 0.25rem;
     
-    button, a {
-      display: none !important;
-    }
-    
-    .shadow-sm {
-      box-shadow: none !important;
-    }
-    
-    .bg-gray-50 {
-      background-color: white !important;
-    }
-    
-    .rounded-lg, .rounded-t-lg, .rounded-b-lg, .rounded-xl {
-      border-radius: 0 !important;
-    }
-    
-    .py-8 {
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-    }
-    
-    /* Add page break before price details */
-    .border-t {
-      page-break-before: always;
+    .value {
+      text-align: left;
     }
   }
+}

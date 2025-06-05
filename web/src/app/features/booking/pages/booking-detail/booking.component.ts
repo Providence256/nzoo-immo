@@ -213,7 +213,7 @@ export class BookingComponent implements OnInit, OnDestroy {
     });
   };
 
-  async getConfirmationToken() {
+  async getConfirmationToken(): Promise<ConfirmationToken | undefined> {
     try {
       if (
         Object.values(this.completionStatus()).every(
@@ -225,7 +225,8 @@ export class BookingComponent implements OnInit, OnDestroy {
         );
         if (result.error) throw new Error(result.error.message);
         this.confirmationToken = result.confirmationToken;
-        console.log(this.confirmationToken);
+
+        return this.confirmationToken;
       }
     } catch (error: any) {
       this.messageService.add({
@@ -235,6 +236,7 @@ export class BookingComponent implements OnInit, OnDestroy {
         life: 3000,
       });
     }
+    return undefined;
   }
 
   calculateBookingDetails(): void {
@@ -289,10 +291,13 @@ export class BookingComponent implements OnInit, OnDestroy {
     try {
       const confirmationToken = await this.getConfirmationToken();
 
+      if (!confirmationToken) throw new Error('Token non généré');
+
       const confirmationData: ConfirmationData = {
         bookingData: this.bookingData!,
-        confirmationToken,
+        confirmationToken: confirmationToken,
         user: this.user,
+        clientSecret: this.clientSecret,
       };
 
       this.bookingSessionService.setConfirmationData(confirmationData);

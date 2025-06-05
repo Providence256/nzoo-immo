@@ -1,4 +1,5 @@
 using System;
+using API.DTOs.BookingDto;
 using API.DTOs.CommuneDto;
 using API.DTOs.DeviseDto;
 using API.DTOs.EquipementDto;
@@ -50,5 +51,16 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
         CreateMap<ListingRule, RuleResponse>()
             .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Rule!.libelle));
+
+        CreateMap<Booking, BookingResponse>()
+            .ForMember(dest => dest.ListingTitle, opt => opt.MapFrom(src => src.Listing!.Title))
+            .ForMember(dest => dest.Currency, opt => opt.MapFrom(s => s.Devise))
+            .ForMember(dest => dest.ListingPhotoUrl, opt => opt.MapFrom(src => src.Listing!.Photos.FirstOrDefault()!.PhotoUrl))
+            .ForMember(dest => dest.Adults, opt => opt.MapFrom(src => src.Guests.Adults))
+            .ForMember(dest => dest.Children, opt => opt.MapFrom(src => src.Guests.Children))
+            .ForMember(dest => dest.Babies, opt => opt.MapFrom(src => src.Guests.Babies))
+            .ReverseMap();
+
+
     }
 }
