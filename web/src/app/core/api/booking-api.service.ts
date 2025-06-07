@@ -35,4 +35,8 @@ export class BookingApiService extends BaseApiService {
       `${this.endpoint}/${'unavailable-dates'}/${listingId}`
     );
   }
+
+  getUserBookings(): Observable<any> {
+    return this.get<any>(`${this.endpoint}/user/bookings`);
+  }
 }

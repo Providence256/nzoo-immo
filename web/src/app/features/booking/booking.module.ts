@@ -27,10 +27,12 @@ const routes: Routes = [
   },
   {
     path: 'success',
+    canActivate: [AuthGuard],
     component: BookingSuccessComponent,
   },
   {
     path: 'list',
+    canActivate: [AuthGuard],
     component: BookingListComponent,
   },
 ];

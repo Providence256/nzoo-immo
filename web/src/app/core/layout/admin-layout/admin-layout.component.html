@@ -1,39 +1,25 @@
-<div
-  (click)="onLayoutClick()"
-  class="flex min-h-screen bg-slate-50"
-  [ngClass]="{
-    'layout-sidebar-mobile-active': menuMobileActive
-  }"
->
-  <!-- Sidebar -->
-  <app-admin-sidebar></app-admin-sidebar>
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <app-admin-header></app-admin-header>
   
-  <!-- Overlay for mobile -->
-  <div 
-    *ngIf="menuMobileActive" 
-    class="fixed inset-0 z-30 bg-indigo-950/70 backdrop-blur-sm md:hidden transition-opacity"
-    (click)="menuMobileActive = false"
-  ></div>
-
   <!-- Main Content -->
-  <div class="flex-1 flex flex-col min-h-screen xl:ml-64 transition-all duration-300">
-    <!-- Header -->
-    <app-admin-header></app-admin-header>
-    
-    <!-- Main Content Area -->
-    <main class="p-6 flex-1 mt-16">
+  <div class="pt-16">
+    <!-- Content Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <app-breadcrumb></app-breadcrumb>
       
       <!-- Page Content -->
-      <div class="bg-white rounded-xl shadow-card p-6 transition-all hover:shadow-card-hover">
+      <div class="bg-white rounded-lg shadow-sm p-6">
         <router-outlet></router-outlet>
       </div>
-    </main>
+    </div>
     
     <!-- Footer -->
-    <footer class="p-4 text-center text-slate-500/70 text-sm border-t border-slate-200">
-      <p class="font-Jost">nzoo.immo © 2025 - All Rights Reserved</p>
+    <footer class="mt-12 py-8 text-center text-gray-500 text-sm border-t border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="font-Jost">nzoo.immo © 2025 - All Rights Reserved</p>
+      </div>
     </footer>
   </div>
 </div>

@@ -235,3 +235,191 @@
   @apply bg-blue-500 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
 }
 
+// Variables
+$primary-color: #FF385C;
+$dark-grey: #222222;
+$light-grey: #717171;
+$lighter-grey: #DDDDDD;
+$very-light-grey: #F7F7F7;
+$white: #FFFFFF;
+$hover-bg: #F7F7F7;
+$range-bg: #F7F7F7;
+$border-radius: 32px;
+$shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+$transition: all 0.2s ease;
+
+
+.day-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: $dark-grey;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: $transition;
+  
+  // États de base
+  &:not(:disabled):hover {
+    background-color: $hover-bg;
+  }
+
+  &.today {
+    &:not(.start-date):not(.end-date):not(.in-range) {
+      text-decoration: underline;
+      font-weight: 600;
+    }
+  }
+  
+  &.start-date, &.end-date {
+    background-color: $primary-color;
+    color: $white;
+    
+    &:hover {
+      background-color: darken($primary-color, 5%);
+    }
+  }
+  
+  &.in-range {
+    background-color: $range-bg;
+    border-radius: 0;
+    width: 100%;
+    
+    &:hover {
+      background-color: darken($range-bg, 5%);
+    }
+  }
+  
+  // Styles pour les dates indisponibles (unavailable)
+  &.unavailable {
+    background-color: #f8f8f8;
+    color: #d32f2f;
+    cursor: not-allowed;
+    position: relative;
+    font-weight: 600;
+    
+    // Ligne diagonale barrée
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 1.5px;
+      background-color: #d32f2f;
+      transform: translate(-50%, -50%) rotate(45deg);
+      z-index: 1;
+    }
+    
+    // Effet de survol désactivé
+    &:hover {
+      background-color: #f8f8f8;
+      color: #d32f2f;
+      transform: none;
+    }
+  }
+  
+  // Styles pour les dates désactivées générales (disabled)
+  &:disabled {
+    cursor: not-allowed;
+    color: #bdbdbd;
+    background-color: #fafafa;
+    position: relative;
+    
+    // Ligne diagonale barrée pour les dates désactivées
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 22px;
+      height: 1px;
+      background-color: #bdbdbd;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      z-index: 1;
+    }
+    
+    // Pattern hachuré en arrière-plan (optionnel)
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        #f0f0f0 2px,
+        #f0f0f0 4px
+      );
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+  }
+  
+  // Cas spécial : dates à la fois unavailable ET disabled
+  &.unavailable:disabled {
+    background-color: #ffebee;
+    color: #c62828;
+    
+    &::before {
+      background-color: #c62828;
+      width: 26px;
+      height: 2px;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 26px;
+      height: 2px;
+      background-color: #c62828;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      z-index: 2;
+    }
+  }
+  
+  // First day in range
+  &.start-date {
+    border-radius: 50% 0 0 50%;
+    margin-right: 0;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      background-color: $range-bg;
+      z-index: -1;
+    }
+  }
+  
+  // Last day in range
+  &.end-date {
+    border-radius: 0 50% 50% 0;
+    margin-left: 0;
+    
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background-color: $range-bg;
+      z-index: -1;
+    }
+  }
+}
+

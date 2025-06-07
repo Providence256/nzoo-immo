@@ -151,6 +151,7 @@
                               filter="true" 
                               placeholder="Sélectionnez une ville"
                               [style]="{'width': '100%'}"
+                              (onChange)="loadCommuneByVille($event)"
                               styleClass="w-full font-Jost">
                           </p-dropdown>
                           <small *ngIf="currentFormGroup.get('ville')?.invalid && currentFormGroup.get('ville')?.touched" 
@@ -424,7 +425,7 @@
                                           'border-gray-300 text-gray-400 hover:border-green-300': stepForm.get('step6.rules.' + i + '.isSelected')?.value === false || 
                                                                                                  stepForm.get('step6.rules.' + i + '.isSelected')?.value === null
                                       }"
-                                      (click)="stepForm.get('step6.rules.' + i + '.isSelected')?.setValue(true)"
+                                      (click)="toggleRuleSelection(i)"
                                   >
                                       <i class="pi pi-check text-lg"></i>
                                   </div>

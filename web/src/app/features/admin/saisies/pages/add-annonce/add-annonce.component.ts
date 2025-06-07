@@ -97,11 +97,6 @@ export class AddAnnonceComponent implements OnInit {
       error: (err) => this.handleError(err),
     });
 
-    this.service.findAllCommunes().subscribe({
-      next: (response) => (this.communes = response),
-      error: (err) => this.handleError(err),
-    });
-
     this.service.findAllDevises().subscribe({
       next: (response) => (this.devises = response),
       error: (err) => this.handleError(err),
@@ -112,6 +107,13 @@ export class AddAnnonceComponent implements OnInit {
         this.rules = response;
         this.initRulesForm();
       },
+      error: (err) => this.handleError(err),
+    });
+  }
+
+  loadCommuneByVille(event: any) {
+    this.service.getAllCommunesByVille(event.value.id).subscribe({
+      next: (response) => (this.communes = response),
       error: (err) => this.handleError(err),
     });
   }
@@ -272,6 +274,16 @@ export class AddAnnonceComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  toggleRuleSelection(index: number): void {
+    const control = this.stepForm.get('step6.rules') as FormArray;
+
+    const ruleGroup = control.at(index) as FormGroup;
+
+    const currentValue = ruleGroup.get('isSelected')?.value;
+
+    ruleGroup.get('isSelected')?.setValue(!currentValue);
   }
 
   prepareFormData(): FormData {

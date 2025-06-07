@@ -115,7 +115,7 @@ namespace API.Controllers
             };
 
             var frontendUrl = "http://localhost:4200";
-            var redirectUrl = $"{frontendUrl}/auth-callback?token={userDto.Token}&email={userDto.Email}&displayName={userDto.DisplayName}&role={userDto.Role}";
+            var redirectUrl = $"{frontendUrl}/auth/auth-callback?token={Uri.EscapeDataString(userDto.Token)}&email={Uri.EscapeDataString(userDto.Email)}&displayName={Uri.EscapeDataString(userDto.DisplayName)}&role={Uri.EscapeDataString(userDto.Role)}";
 
 
             return Redirect(redirectUrl);

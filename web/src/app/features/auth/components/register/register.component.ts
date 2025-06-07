@@ -22,25 +22,27 @@ export class RegisterComponent implements OnInit {
     private messageService: MessageService
   ) {
     // Initialize form
-    this.registerForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
-      acceptTerms: [false, Validators.requiredTrue]
-    }, {
-      validator: this.passwordMatchValidator
-    });
-    
+    this.registerForm = this.formBuilder.group(
+      {
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+        acceptTerms: [false, Validators.requiredTrue],
+      },
+      {
+        validator: this.passwordMatchValidator,
+      }
+    );
+
     // Redirect to home if already logged in
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   // Custom validator to check if password and confirm password match
   passwordMatchValidator(formGroup: FormGroup) {
@@ -55,7 +57,9 @@ export class RegisterComponent implements OnInit {
   }
 
   // Convenience getter for easy access to form fields
-  get f() { return this.registerForm.controls; }
+  get f() {
+    return this.registerForm.controls;
+  }
 
   onSubmit(): void {
     this.submitted = true;
@@ -69,67 +73,74 @@ export class RegisterComponent implements OnInit {
     const registrationData = {
       firstName: this.f['firstName'].value,
       lastName: this.f['lastName'].value,
+      displayName: this.f['email'].value,
       email: this.f['email'].value,
-      password: this.f['password'].value
+      password: this.f['password'].value,
     };
 
-    this.authService.register(registrationData)
-      .pipe(finalize(() => {
-        this.loading = false;
-      }))
+    this.authService
+      .register(registrationData)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
       .subscribe({
         next: () => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Registration Successful', 
-            detail: 'You can now login with your credentials.' 
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Registration Successful',
+            detail: 'You can now login with your credentials.',
           });
-          
+
           // Navigate to login page after successful registration
           setTimeout(() => {
             this.router.navigate(['/auth/login']);
           }, 1500);
         },
-        error: error => {
-          const errorMessage = error.error?.message || 'Registration failed. Please try again.';
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Registration Failed', 
-            detail: errorMessage 
+        error: (error) => {
+          const errorMessage =
+            error.error?.message || 'Registration failed. Please try again.';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Registration Failed',
+            detail: errorMessage,
           });
-        }
+        },
       });
   }
 
   loginWithGoogle(): void {
     this.loading = true;
-    this.authService.loginWithGoogle()
-      
+    this.authService.loginWithGoogle();
   }
 
   loginWithFacebook(): void {
     this.loading = true;
-    this.authService.loginWithFacebook()
-      .pipe(finalize(() => {
-        this.loading = false;
-      }))
+    this.authService
+      .loginWithFacebook()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
       .subscribe({
         next: () => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: 'Facebook login successful' 
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Facebook login successful',
           });
           this.router.navigate(['/']);
         },
-        error: error => {
+        error: (error) => {
           const errorMessage = error.error?.message || 'Facebook login failed';
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: errorMessage 
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: errorMessage,
           });
-        }
+        },
       });
   }
 }

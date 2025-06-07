@@ -1,107 +1,6 @@
-/* booking-list.component.css */
+/* booking-list.component.scss */
 
-/* Animations personnalisées */
-.booking-card {
-  transition: all 0.3s ease;
-}
-
-.booking-card:hover {
-  transform: translateY(-2px);
-}
-
-/* Styles pour les badges de statut */
-.status-badge {
-  position: relative;
-  overflow: hidden;
-}
-
-.status-badge::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s;
-}
-
-.status-badge:hover::before {
-  left: 100%;
-}
-
-/* Animation de chargement personnalisée */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.loading-shimmer {
-  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Styles pour les boutons d'action */
-.action-button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.2s ease;
-}
-
-.action-button::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s ease, height 0.3s ease;
-}
-
-.action-button:active::before {
-  width: 200px;
-  height: 200px;
-}
-
-/* Styles responsive pour les cartes */
-@media (max-width: 640px) {
-  .booking-card {
-    margin-bottom: 1rem;
-  }
-  
-  .booking-card .grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
-
-/* Styles pour les icônes */
-.icon {
-  transition: transform 0.2s ease;
-}
-
-.icon:hover {
-  transform: scale(1.1);
-}
-
-/* Amélioration de l'accessibilité */
-.focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-/* Styles pour les états vides */
-.empty-state {
-  opacity: 0;
-  animation: fadeIn 0.5s ease forwards;
-}
-
+// Animations
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -111,58 +10,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Styles pour les filtres */
-.filter-section {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* Styles pour les statistiques */
-.stats-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.stats-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Indicateurs de statut colorés */
-.status-indicator::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  border-radius: 0 2px 2px 0;
-}
-
-.status-pending::before {
-  background-color: #f59e0b;
-}
-
-.status-confirmed::before {
-  background-color: #3b82f6;
-}
-
-.status-completed::before {
-  background-color: #10b981;
-}
-
-.status-cancelled::before {
-  background-color: #ef4444;
-}
-
-.status-no-show::before {
-  background-color: #6b7280;
-}
-
-/* Animations d'entrée pour les cartes */
-.booking-enter {
-  animation: slideInUp 0.5s ease;
 }
 
 @keyframes slideInUp {
@@ -176,29 +23,318 @@
   }
 }
 
-/* Styles pour les tooltips */
-.tooltip {
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+// Animation classes
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+// Booking card animations
+.booking-card {
+  &.animate-in {
+    opacity: 1;
+    animation: slideInUp 0.6s ease-out;
+  }
+  
+  // Enhanced hover effects
+  &:hover {
+    .status-badge {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Status indicator colors
+.status-indicator {
+  &.pending {
+    @apply bg-gradient-to-b from-yellow-400 to-yellow-600;
+  }
+  
+  &.confirmed {
+    @apply bg-gradient-to-b from-blue-400 to-blue-600;
+  }
+  
+  &.completed {
+    @apply bg-gradient-to-b from-green-400 to-green-600;
+  }
+  
+  &.cancelled {
+    @apply bg-gradient-to-b from-red-400 to-red-600;
+  }
+  
+  &.no-show {
+    @apply bg-gradient-to-b from-gray-400 to-gray-600;
+  }
+}
+
+// Enhanced status badges with animations
+.status-badge {
   position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+  
+  // Status-specific styles
+  &.pending {
+    @apply bg-yellow-100 text-yellow-800 border border-yellow-200;
+  }
+  
+  &.confirmed {
+    @apply bg-blue-100 text-blue-800 border border-blue-200;
+  }
+  
+  &.completed {
+    @apply bg-green-100 text-green-800 border border-green-200;
+  }
+  
+  &.cancelled {
+    @apply bg-red-100 text-red-800 border border-red-200;
+  }
+  
+  &.no-show {
+    @apply bg-gray-100 text-gray-800 border border-gray-200;
+  }
 }
 
-.tooltip::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  white-space: nowrap;
+// Enhanced action buttons
+.action-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  
+  &:active::before {
+    width: 200px;
+    height: 200px;
+  }
+  
+  &:focus {
+    outline: 2px solid #2dd4bf;
+    outline-offset: 2px;
+  }
+}
+
+// Stats cards with enhanced animations
+.stats-card {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    padding: 2px;
+    background: linear-gradient(135deg, #2dd4bf, #4f46e5);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+// Filter section enhancements
+.filter-section {
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.filter-group {
+  label {
+    transition: color 0.2s ease;
+  }
+  
+  select, input {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(45, 212, 191, 0.15);
+    }
+  }
+}
+
+// Loading state
+.loading-container {
+  .animate-spin {
+    animation-duration: 1s;
+  }
+}
+
+// Empty state
+.empty-state {
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 1000;
+  animation: fadeIn 0.8s ease forwards 0.3s;
+  
+  svg {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+  }
+  
+  button {
+    &:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(45, 212, 191, 0.3);
+    }
+  }
 }
 
-.tooltip:hover::after {
-  opacity: 1;
+// Enhanced responsive design
+@media (max-width: 1024px) {
+  .booking-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .stats-card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-section {
+    padding: 1.5rem;
+  }
+  
+  .booking-card {
+    .p-8 {
+      padding: 1.5rem;
+    }
+  }
+  
+  .stats-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .action-button {
+    @apply w-full justify-center;
+  }
+  
+  .booking-card {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+}
+
+// Advanced glassmorphism effects
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+// Gradient text effect
+.gradient-text {
+  background: linear-gradient(135deg, #2dd4bf, #4f46e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Focus visible for better accessibility
+.focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+}
+
+// Print styles
+@media print {
+  .booking-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .action-button {
+    display: none;
+  }
 }

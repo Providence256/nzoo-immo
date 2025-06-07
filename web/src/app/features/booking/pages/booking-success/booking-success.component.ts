@@ -187,7 +187,7 @@ export class BookingSuccessComponent implements OnInit, OnDestroy {
   }
 
   goToMyBookings(): void {
-    this.router.navigate(['/profile/bookings']);
+    this.router.navigate(['booking/list']);
   }
 
   goHome(): void {

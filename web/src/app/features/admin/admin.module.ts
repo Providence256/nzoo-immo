@@ -17,29 +17,32 @@ import { ReglesComponent } from './files/pages/regles/regles.component';
 import { TauxChangeComponent } from './saisies/pages/taux-changes/taux-change.component';
 import { AddAnnonceComponent } from './saisies/pages/add-annonce/add-annonce.component';
 import { ListAnnoncesComponent } from './saisies/pages/list-annonce/list-annonces.component';
+import { NewAnnonceComponent } from './saisies/pages/new annonce/new-annonce.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
 
 const routes: Routes = [
-  { 
-    path: '', 
-    redirectTo: 'dashboard', 
-    pathMatch: 'full' 
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
   },
-  { 
-    path: 'dashboard', 
-    component: DashboardComponent 
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
   },
   {
     path: 'files',
-    loadChildren: ()=> import('../admin/files/files.module').then((m)=> m.FilesModule)
+    loadChildren: () =>
+      import('../admin/files/files.module').then((m) => m.FilesModule),
   },
   {
     path: 'saisies',
-    loadChildren: () => import('../admin/saisies/saisies.module').then((m) => m.SaisiesModule)
-  }
-  
+    loadChildren: () =>
+      import('../admin/saisies/saisies.module').then((m) => m.SaisiesModule),
+  },
+
   // Add other admin routes here
 ];
 
@@ -55,7 +58,7 @@ const routes: Routes = [
     TauxChangeComponent,
     AddAnnonceComponent,
     ListAnnoncesComponent,
-    
+    NewAnnonceComponent,
   ],
   imports: [
     CommonModule,
@@ -63,7 +66,6 @@ const routes: Routes = [
     SharedModule,
     ReactiveFormsModule,
     PrimengModule,
-    
-  ]
+  ],
 })
-export class AdminModule { }
+export class AdminModule {}

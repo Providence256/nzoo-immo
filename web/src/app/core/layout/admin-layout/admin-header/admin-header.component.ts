@@ -5,8 +5,6 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-import { AdminLayoutComponent } from '../admin-layout.component';
-import { AdminSidebarService } from '../../../services/admin-sidebar.service';
 import { AuthService } from '../../../authentication/auth.service';
 
 @Component({
@@ -15,20 +13,24 @@ import { AuthService } from '../../../authentication/auth.service';
   styleUrls: ['./admin-header.component.scss'],
 })
 export class AdminHeaderComponent implements OnInit {
-  dropdownOpen = false;
+  // Dropdown states
+  activeDropdown: string | null = null;
+  userDropdownOpen = false;
+
+  // Mobile states
   isMobileView = false;
+  mobileMenuOpen = false;
+  activeMobileSection: string | null = null;
 
   constructor(
-    private sidebarService: AdminSidebarService,
-    public appMain: AdminLayoutComponent,
     private el: ElementRef,
     private renderer: Renderer2,
     private authService: AuthService
   ) {
-    // Add event listener to close dropdown when clicking outside
+    // Close dropdowns when clicking outside
     this.renderer.listen('window', 'click', (e: Event) => {
       if (!this.el.nativeElement.contains(e.target)) {
-        this.dropdownOpen = false;
+        this.closeAllDropdowns();
       }
     });
   }
@@ -37,28 +39,78 @@ export class AdminHeaderComponent implements OnInit {
     this.updateView();
   }
 
-  logout() {
-    this.authService.logout();
-  }
-
   @HostListener('window:resize')
   onResize() {
     this.updateView();
   }
 
-  toggleDropdown(event?: Event) {
+  private updateView() {
+    this.isMobileView = window.innerWidth < 1024; // lg breakpoint
+
+    // Close mobile menu when viewport becomes desktop
+    if (!this.isMobileView && this.mobileMenuOpen) {
+      this.mobileMenuOpen = false;
+      this.activeMobileSection = null;
+    }
+  }
+
+  // Desktop dropdown methods
+  toggleDropdown(dropdownName: string, event?: Event) {
     if (event) {
       event.stopPropagation();
     }
-    this.dropdownOpen = !this.dropdownOpen;
+
+    if (this.activeDropdown === dropdownName) {
+      this.activeDropdown = null;
+    } else {
+      this.activeDropdown = dropdownName;
+    }
+
+    // Close user dropdown if open
+    this.userDropdownOpen = false;
   }
 
-  private updateView() {
-    this.isMobileView = window.innerWidth <= 991;
-
-    // Close mobile menu when viewport becomes desktop
-    if (!this.isMobileView && this.appMain.menuMobileActive) {
-      this.appMain.menuMobileActive = false;
+  toggleUserDropdown(event?: Event) {
+    if (event) {
+      event.stopPropagation();
     }
+
+    this.userDropdownOpen = !this.userDropdownOpen;
+
+    // Close navigation dropdowns
+    this.activeDropdown = null;
+  }
+
+  closeAllDropdowns() {
+    this.activeDropdown = null;
+    this.userDropdownOpen = false;
+  }
+
+  // Mobile menu methods
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+
+    if (!this.mobileMenuOpen) {
+      this.activeMobileSection = null;
+    }
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
+    this.activeMobileSection = null;
+  }
+
+  toggleMobileSection(sectionName: string) {
+    if (this.activeMobileSection === sectionName) {
+      this.activeMobileSection = null;
+    } else {
+      this.activeMobileSection = sectionName;
+    }
+  }
+
+  // Auth method
+  logout() {
+    this.authService.logout();
+    this.closeAllDropdowns();
   }
 }

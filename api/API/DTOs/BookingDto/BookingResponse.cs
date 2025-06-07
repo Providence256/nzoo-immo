@@ -18,5 +18,6 @@ public class BookingResponse
     public double TotalPrice { get; set; }
     public string Currency { get; set; } = null!;
     public BookingStatus Status { get; set; }
+    public PaymentStatus PaymentStatus { get; set; }
     public DateTime CreatedAt { get; set; }
 }

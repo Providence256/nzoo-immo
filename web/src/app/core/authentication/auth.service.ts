@@ -28,8 +28,6 @@ export class AuthService {
       this.getUserFromStorage()
     );
     this.currentUser$ = this.currentUserSubject.asObservable();
-
-    this.handleAuthCallBack();
   }
 
   private getUserFromStorage(): User | null {
@@ -48,6 +46,11 @@ export class AuthService {
   public isAdmin(): boolean {
     const user = this.currentUserSubject.value;
     return user?.role === 'admin' || user?.role === 'Root';
+  }
+
+  public setCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
   login(email: string, password: string): Observable<User> {
@@ -86,12 +89,12 @@ export class AuthService {
 
   // Social authentication methods
   loginWithGoogle(): void {
+    const currentReturnUrl = sessionStorage.getItem('returnUrl') || '/';
+    sessionStorage.setItem('returnUrl', currentReturnUrl);
     window.location.href = `${this.apiUrl}/google-login`;
   }
 
   loginWithFacebook(): Observable<User> {
-    // This would typically redirect to Facebook OAuth
-    // For demo purposes, we'll simulate it
     return this.http.get<User>(`${this.apiUrl}/facebook-login`);
   }
 
@@ -105,39 +108,5 @@ export class AuthService {
       token,
       newPassword,
     });
-  }
-
-  private handleAuthCallBack(): void {
-    if (
-      window.location.pathname.includes('auth-calback') ||
-      window.location.search.includes('token=')
-    ) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get('token');
-      const email = urlParams.get('email');
-      const displayName = urlParams.get('displayName');
-      const role = urlParams.get('role') || 'client';
-
-      if (token && email) {
-        const user: User = {
-          id: '',
-          email: email,
-          displayName: displayName || email,
-          token: token,
-          role: role,
-        };
-
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-
-        this.router.navigate(['/']);
-
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-      }
-    }
   }
 }

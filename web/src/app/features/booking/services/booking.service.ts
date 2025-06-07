@@ -21,4 +21,8 @@ export class BookingService {
   getBookingDates(listingId: number): Observable<any> {
     return this.bookingApiService.getBookingDates(listingId);
   }
+
+  getUserBookings(): Observable<any> {
+    return this.bookingApiService.getUserBookings();
+  }
 }

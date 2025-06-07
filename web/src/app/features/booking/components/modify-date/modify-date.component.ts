@@ -23,6 +23,7 @@ import {
 } from 'date-fns';
 import { da, fr, se } from 'date-fns/locale';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-modify-date',
@@ -36,6 +37,8 @@ export class ModifyDateComponent implements OnInit {
   }>();
   @Input() intialStartDate: Date | null = null;
   @Input() initialEndDate: Date | null = null;
+  @Input() listingId: number = 0;
+  @Input() unavailableDates: Date[] = [];
 
   today: Date = new Date();
   selectedStartDate!: Date | null;
@@ -50,6 +53,8 @@ export class ModifyDateComponent implements OnInit {
 
   isCompactView = false;
 
+  bookingDates: Date[] = [];
+
   get isInDialog(): boolean {
     return !!this.ref;
   }
@@ -58,7 +63,8 @@ export class ModifyDateComponent implements OnInit {
     private elementRef: ElementRef,
     private cdr: ChangeDetectorRef,
     public ref: DynamicDialogRef,
-    public config: DynamicDialogConfig
+    public config: DynamicDialogConfig,
+    private bookingService: BookingService
   ) {}
 
   ngOnInit() {
@@ -79,7 +85,27 @@ export class ModifyDateComponent implements OnInit {
     if (this.config && this.config.data) {
       this.selectedStartDate = this.config.data.checkIn;
       this.selectedEndDate = this.config.data.checkOut;
+      this.listingId = this.config.data.listingId;
     }
+
+    if (this.listingId) {
+      this.loadingBookingDates();
+    }
+  }
+
+  loadingBookingDates(): void {
+    if (!this.listingId) return;
+
+    this.bookingService.getBookingDates(this.listingId).subscribe({
+      next: (response) => {
+        this.bookingDates = response.unavailableDates.map(
+          (dateStr: string) => new Date(dateStr)
+        );
+      },
+      error: (error) => {
+        console.log('Cannnot load booking dates', error);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -126,7 +152,12 @@ export class ModifyDateComponent implements OnInit {
     this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
+
   onDateClick(date: Date) {
+    if (this.isDisabled(date)) {
+      return;
+    }
+
     if (this.selectedStartDate && this.selectedEndDate) {
       this.selectedStartDate = date;
       this.selectedEndDate = null;
@@ -152,6 +183,16 @@ export class ModifyDateComponent implements OnInit {
         this.selectedStartDate = date;
       } else {
         this.selectedEndDate = date;
+      }
+
+      if (
+        !this.isRangeAvailable(this.selectedStartDate, this.selectedEndDate)
+      ) {
+        this.selectedStartDate = date;
+        this.selectedEndDate = null;
+        this.activeSelector = 'check-out';
+        this.cdr.detectChanges();
+        return;
       }
 
       this.activeSelector = null;
@@ -200,6 +241,38 @@ export class ModifyDateComponent implements OnInit {
       day.getDate() === this.selectedEndDate.getDate() &&
       day.getMonth() === this.selectedEndDate.getMonth() &&
       day.getFullYear() === this.selectedEndDate.getFullYear()
+    );
+  }
+
+  isRangeAvailable(start: Date, end: Date): boolean {
+    const currentDate = new Date(start);
+    currentDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(end);
+    end.setHours(0, 0, 0, 0);
+
+    while (currentDate <= endDate) {
+      if (this.isDateUnavailable(currentDate)) {
+        return false;
+      }
+
+      if (
+        this.bookingDates.some((bookingDate) =>
+          isSameDay(currentDate, bookingDate)
+        )
+      ) {
+        return false;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return true;
+  }
+
+  isDateUnavailable(date: Date): boolean {
+    return this.unavailableDates.some((unavailableDate) =>
+      isSameDay(date, unavailableDate)
     );
   }
 
@@ -310,10 +383,20 @@ export class ModifyDateComponent implements OnInit {
     return format(date, 'EEEE', { locale: fr });
   }
 
-  isDisabled(day: Date): boolean {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return day < today;
+  isDisabled(date: Date): boolean {
+    if (isBefore(date, startOfDay(this.today))) {
+      return true;
+    }
+
+    if (this.isDateUnavailable(date)) {
+      return true;
+    }
+
+    if (this.bookingDates.some((bookingDate) => isSameDay(date, bookingDate))) {
+      return true;
+    }
+
+    return false;
   }
 
   clearSelection() {

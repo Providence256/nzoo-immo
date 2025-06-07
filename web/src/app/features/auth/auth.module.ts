@@ -10,12 +10,14 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PrimengModule } from '../../shared/_primeng/primeng.module';
 import { ForgotPasswordComponent } from './components/forget-password/forgot-password.component';
+import { AuthCallbackComponent } from './components/auth-call-back/auth-callback.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
+    AuthCallbackComponent,
   ],
   imports: [
     CommonModule,
@@ -24,6 +26,6 @@ import { ForgotPasswordComponent } from './components/forget-password/forgot-pas
     SharedModule,
     AuthRoutingModule,
     PrimengModule,
-  ]
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}

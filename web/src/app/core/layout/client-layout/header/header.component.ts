@@ -87,7 +87,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private clientMenuItems = [
     { title: 'Mes Favoris', url: '/favorites', icon: 'favorite' },
-    { title: 'Profil', url: '/profile', icon: 'person' },
+    { title: 'Mes Réservations', url: '/booking/list', icon: 'hotel' },
+    { title: 'Profile', url: '/profile', icon: 'person' },
   ];
 
   private adminMenuItems = [
@@ -164,6 +165,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  onUserMenyItemClick() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
   logout() {
     this.authService.logout();
     this.user = null;
@@ -172,6 +177,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   login() {
     this.router.navigate(['/auth/login']);
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   @HostListener('document:click', ['$event'])

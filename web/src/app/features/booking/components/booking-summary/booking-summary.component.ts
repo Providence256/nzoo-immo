@@ -36,9 +36,11 @@ export class BookingSummaryComponent implements OnInit, OnDestroy {
   };
 
   tempDates: {
+    listingId: number | 0;
     checkIn: Date | null;
     checkOut: Date | null;
   } = {
+    listingId: 0,
     checkIn: null,
     checkOut: null,
   };
@@ -105,6 +107,7 @@ export class BookingSummaryComponent implements OnInit, OnDestroy {
     this.loadApartmentDetails();
 
     this.tempDates = {
+      listingId: this.bookingDetails.listingId,
       checkIn: this.bookingDetails.checkIn,
       checkOut: this.bookingDetails.checkOut,
     };
@@ -137,6 +140,7 @@ export class BookingSummaryComponent implements OnInit, OnDestroy {
 
       closable: true,
       data: {
+        listingId: +this.apartmentId,
         checkIn: this.tempDates.checkIn,
         checkOut: this.tempDates.checkOut,
       },
@@ -148,6 +152,8 @@ export class BookingSummaryComponent implements OnInit, OnDestroy {
 
         this.tempDates.checkIn = result.startDate;
         this.tempDates.checkOut = result.endDate;
+
+        console.log(this.bookingDetails);
 
         this.updateBookingSessionData();
         this.cdr.detectChanges();
@@ -258,6 +264,7 @@ export class BookingSummaryComponent implements OnInit, OnDestroy {
   cancelDateSelection(): void {
     // Reset temp dates and close the dialog without saving
     this.tempDates = {
+      listingId: +this.apartmentId,
       checkIn: this.bookingDetails.checkIn,
       checkOut: this.bookingDetails.checkOut,
     };

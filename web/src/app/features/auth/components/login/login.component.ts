@@ -50,6 +50,9 @@ export class LoginComponent implements OnInit {
       console.warn('Erreur lors du décodage de returnUrl:', error);
       this.returnUrl = '/';
     }
+
+    // Sauvegarder l'URL de retour pour Google OAuth
+    sessionStorage.setItem('returnUrl', this.returnUrl);
   }
 
   // Convenience getter for easy access to form fields

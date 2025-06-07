@@ -149,24 +149,29 @@ namespace API.Controllers
 
             if (request.Photos != null && request.Photos.Any())
             {
-                var uploadTasks = request.Photos.Select(async photo =>
-                {
-                    var uploadResult = await photoService.AddPhotoAsync(photo);
-                    if (uploadResult.Error != null) throw new Exception("Photo upload failed");
 
-                    var listingPhoto = new ListingPhoto
-                    {
-                        PhotoUrl = uploadResult.SecureUrl.AbsoluteUri,
-                        ListingId = listing.Id
-                    };
-
-                    await listingPhotoRepo.AddAsync(listingPhoto);
-
-                });
 
                 try
                 {
-                    await Task.WhenAll(uploadTasks);
+                    var uploadResults = await Task.WhenAll(
+                        request.Photos.Select(photo => photoService.AddPhotoAsync(photo))
+                    );
+
+                    foreach (var result in uploadResults)
+                    {
+                        if (result.Error != null)
+                            return BadRequest("Echec de l'upload d'une photo");
+
+                        var listingPhoto = new ListingPhoto
+                        {
+                            PhotoUrl = result.SecureUrl.AbsoluteUri,
+                            ListingId = listing.Id
+                        };
+
+                        await listingPhotoRepo.AddAsync(listingPhoto);
+                    }
+
+
                 }
                 catch (Exception ex)
                 {

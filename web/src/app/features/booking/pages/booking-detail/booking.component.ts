@@ -181,7 +181,6 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   async initilizeBookingAndPayment() {
     try {
-      console.log(this.buildBookingPayload());
       const bookingData = this.buildBookingPayload();
 
       const result = await this.stripeService.createBookingAndProcessPayment(

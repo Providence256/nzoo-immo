@@ -82,7 +82,8 @@
             </div>
             <ul class="py-1.5">
               <li *ngFor="let item of userMenuItems">
-                <a [routerLink]="item.url" 
+                <a [routerLink]="item.url"
+                  (click)="onUserMenyItemClick()" 
                    class="flex items-center gap-3 px-4 py-3 text-white/90 hover:text-white hover:bg-white/5 transition-all duration-200 text-sm">
                   <span class="material-icons text-primary-400">{{item.icon}}</span>
                   <span>{{item.title}}</span>

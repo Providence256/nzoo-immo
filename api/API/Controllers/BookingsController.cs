@@ -220,6 +220,27 @@ namespace API.Controllers
             }
         }
 
+
+        [HttpGet("user/bookings")]
+        public async Task<ActionResult<List<BookingResponse>>> GetUserBookings()
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                var bookings = await bookingService.GetUserBookingsAsync(userId);
+
+                var response = mapper.Map<List<BookingResponse>>(bookings);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { Success = false, Message = ex.Message });
+            }
+
+        }
+
         [HttpGet("unavailable-dates/{listingId}")]
         public async Task<IActionResult> GetUnavailableDates(int listingId)
         {

@@ -1,23 +1,78 @@
-// Admin Header Styles
-.dropdown-menu {
-    animation: fadeInDown 0.3s ease-out;
+/* Admin Header Styles - Style Airbnb */
+.dropdown-enter {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+button, a {
+  transition: all 0.2s ease;
+}
+
+/* Active state for navigation links */
+.router-link-active {
+  @apply bg-teal-50 text-teal-700;
+  border-left: 3px solid theme('colors.teal.500');
+}
+
+/* Hover effects for dropdown items */
+.dropdown-item {
+  @apply transition-colors duration-150;
   
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  &:hover {
+    @apply bg-gray-50;
   }
-  
-  // Responsive adjustments
-  @media (max-width: 768px) {
-    header {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
+}
+
+/* Mobile menu slide animation */
+.mobile-menu-enter {
+  animation: slideDownMobile 0.3s ease-out;
+}
+
+@keyframes slideDownMobile {
+  from {
+    opacity: 0;
+    max-height: 0;
   }
+  to {
+    opacity: 1;
+    max-height: 400px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .mobile-menu {
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+}
+
+/* Focus styles for accessibility */
+button:focus, a:focus {
+  @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+}
+
+/* Notification badge animation */
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
