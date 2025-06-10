@@ -89,22 +89,35 @@ export class SearchComponent implements OnInit {
   }
 
   setActiveField(field: string) {
-    console.log('setActiveField called with:', field); // Debug
+    console.log('setActiveField called with:', field);
+
+    // Fermer le dropdown si on clique sur le même field
+    if (this.activeField === field) {
+      this.activeField = null;
+      this.isDropdownOpen = false;
+      return;
+    }
 
     // Si on clique sur checkin ou checkout
     if (field === 'checkin' || field === 'checkout') {
       this.activeField = field;
       this.isDropdownOpen = true;
-      console.log('Calendar should open, activeField:', this.activeField); // Debug
+      console.log('Calendar should open, activeField:', this.activeField);
     } else {
       // Pour les autres fields (location, guests)
-      this.activeField = this.activeField === field ? null : field;
+      this.activeField = field;
       this.isDropdownOpen = false;
 
-      if (field === 'location' && this.activeField === 'location') {
-        setTimeout(() => this.locationInput.nativeElement.focus(), 0);
+      if (field === 'location') {
+        setTimeout(() => {
+          if (this.locationInput) {
+            this.locationInput.nativeElement.focus();
+          }
+        }, 0);
       }
     }
+
+    this.cdr.detectChanges();
   }
 
   onLocationInput() {
@@ -165,30 +178,6 @@ export class SearchComponent implements OnInit {
       adults: 1,
       children: 0,
     };
-  }
-
-  toggleDropdown(selector: 'check-in' | 'check-out') {
-    console.log('Toggle dropdown called with:', selector); // Debug log
-
-    if (this.isDropdownOpen && this.activeSelector === selector) {
-      // Close if clicking on the same selector
-      this.isDropdownOpen = false;
-      this.activeSelector = null;
-      this.activeField = null;
-    } else {
-      // Open dropdown
-      this.isDropdownOpen = true;
-      this.activeSelector = selector;
-      this.activeField = selector === 'check-in' ? 'checkin' : 'checkout';
-    }
-
-    console.log('Dropdown state:', {
-      isOpen: this.isDropdownOpen,
-      activeSelector: this.activeSelector,
-      activeField: this.activeField,
-    }); // Debug log
-
-    this.cdr.detectChanges();
   }
 
   isToday(date: Date): boolean {
@@ -316,6 +305,11 @@ export class SearchComponent implements OnInit {
     const timeDiff =
       this.selectedEndDate.getTime() - this.selectedStartDate.getTime();
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  }
+
+  formatDisplayDate(date: Date | null): string {
+    if (!date) return '';
+    return format(date, 'd MMM yyyy', { locale: fr });
   }
 
   @HostListener('document:click', ['$event'])
