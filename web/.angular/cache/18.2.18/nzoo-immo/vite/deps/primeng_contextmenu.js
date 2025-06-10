@@ -17,10 +17,6 @@ import {
   AngleRightIcon
 } from "./chunk-SJU3SHUH.js";
 import {
-  RouterLink,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
-import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
 import "./chunk-LWGOPU6J.js";
@@ -56,6 +52,10 @@ import {
   transition,
   trigger
 } from "./chunk-3D5YJ6TY.js";
+import {
+  RouterLink,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import "./chunk-TZYIWKO4.js";
 import "./chunk-XODCXPAZ.js";
 import {

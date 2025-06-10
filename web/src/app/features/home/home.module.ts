@@ -6,21 +6,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { BannerComponent } from './components/banner/banner.component';
 import { FeaturedPropertiesComponent } from './components/featured-property/featured-properties.component';
-import { SearchFiltersComponent } from './components/property-search/property-search.component';
+import { SearchComponent } from './components/property-search/search.component';
 
 @NgModule({
   declarations: [
     HomePageComponent,
     BannerComponent,
     FeaturedPropertiesComponent,
-    SearchFiltersComponent
-    
+    SearchComponent,
   ],
-  imports: [
-    CommonModule,
-    HomeRoutingModule,
-    SharedModule,
-    ReactiveFormsModule,
-  ]
+  imports: [CommonModule, HomeRoutingModule, SharedModule, ReactiveFormsModule],
 })
-export class HomeModule { }
+export class HomeModule {}

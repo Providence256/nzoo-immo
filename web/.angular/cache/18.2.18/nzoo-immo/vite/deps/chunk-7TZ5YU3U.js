@@ -15,11 +15,6 @@ import {
   AngleRightIcon
 } from "./chunk-SJU3SHUH.js";
 import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
-import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
 import {
@@ -49,6 +44,11 @@ import {
   transition,
   trigger
 } from "./chunk-3D5YJ6TY.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import {
   CommonModule,
   NgClass,
@@ -2261,4 +2261,4 @@ export {
   TieredMenu,
   TieredMenuModule
 };
-//# sourceMappingURL=chunk-IGTOWXVV.js.map
+//# sourceMappingURL=chunk-7TZ5YU3U.js.map

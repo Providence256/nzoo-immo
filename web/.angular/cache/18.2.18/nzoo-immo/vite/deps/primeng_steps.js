@@ -5,12 +5,6 @@ import {
 import "./chunk-5G7WYC4N.js";
 import "./chunk-2ZXM7VXU.js";
 import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
-import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
 import "./chunk-LWGOPU6J.js";
@@ -22,6 +16,12 @@ import {
   find,
   findSingle
 } from "./chunk-3NELQC5U.js";
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import "./chunk-TZYIWKO4.js";
 import "./chunk-XODCXPAZ.js";
 import {

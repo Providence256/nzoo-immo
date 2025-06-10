@@ -9,11 +9,6 @@ import {
   HomeIcon
 } from "./chunk-SJU3SHUH.js";
 import {
-  Router,
-  RouterLink,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
-import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
 import "./chunk-LWGOPU6J.js";
@@ -24,6 +19,11 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-3NELQC5U.js";
+import {
+  Router,
+  RouterLink,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import "./chunk-TZYIWKO4.js";
 import "./chunk-XODCXPAZ.js";
 import {

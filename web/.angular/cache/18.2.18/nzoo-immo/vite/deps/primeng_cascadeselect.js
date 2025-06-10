@@ -41,10 +41,10 @@ import {
   resolveFieldData,
   uuid
 } from "./chunk-3NELQC5U.js";
-import "./chunk-3D5YJ6TY.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-BMBTPMFB.js";
+import "./chunk-3D5YJ6TY.js";
 import {
   CommonModule,
   NgClass,

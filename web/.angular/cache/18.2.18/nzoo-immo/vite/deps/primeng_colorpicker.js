@@ -25,14 +25,14 @@ import {
   relativePosition
 } from "./chunk-3NELQC5U.js";
 import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-BMBTPMFB.js";
+import {
   animate,
   style,
   transition,
   trigger
 } from "./chunk-3D5YJ6TY.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-BMBTPMFB.js";
 import {
   CommonModule,
   NgClass,

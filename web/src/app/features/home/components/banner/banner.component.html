@@ -15,7 +15,7 @@
   
   <!-- Hero Content with Staggered Animations -->
   <div class="relative z-10 flex flex-col items-center justify-center text-center h-full px-4 sm:px-6 lg:px-8">
-    <div class="w-full max-w-7xl mx-auto space-y-8 sm:space-y-10">
+    <div class="w-full max-w-7xl mx-auto space-y-8 sm:space-y-12">
       <!-- Animated Headline -->
       <div class="overflow-hidden">
         <h1 @fadeInUp class="text-white font-Lobster text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold mb-4 leading-[0.9] tracking-tight drop-shadow-lg">
@@ -31,22 +31,10 @@
         </p>
       </div>
 
-      <!-- Animated Buttons -->
-      <div @fadeInUp class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#explore" 
-           class="relative px-10 py-5 bg-[#FFD166] text-gray-900 font-Jost font-semibold rounded-full hover:bg-[#FFDC83] transition-all duration-300 text-lg sm:text-xl shadow-lg hover:shadow-xl overflow-hidden group">
-          <span class="relative z-10">Explorer les propriétés</span>
-          <span class="absolute inset-0 bg-gradient-to-r from-[#FFD166] to-[#FFDC83] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-         
-        </a>
-        
-        <a href="#contact" 
-           class="relative px-10 py-5 bg-white/10 text-white font-Jost font-semibold rounded-full hover:bg-white/20 transition-all duration-300 text-lg sm:text-xl shadow-lg hover:shadow-xl overflow-hidden group backdrop-blur-md">
-          <span class="relative z-10">Contact expert</span>
-          <span class="absolute inset-0 bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-          
-        </a>
-      </div>
+
+      <app-search></app-search>
+     
+      
     </div>
   </div>
 

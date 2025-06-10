@@ -1,0 +1,319 @@
+<div @fadeInUp class="search-container w-full max-w-4xl mx-auto px-4">
+  <!-- Desktop Search -->
+  <div class="hidden md:block">
+    <div class="bg-white rounded-full shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300">
+      <div class="flex items-center">
+        <!-- Location -->
+        <div class="flex-1 px-6 py-4 cursor-pointer hover:bg-gray-50 rounded-l-full transition-colors relative"
+             (click)="setActiveField('location')"
+             [class.active-field]="activeField === 'location'"
+             [class.bg-white]="activeField === 'location'">
+          <div class="text-xs font-Jost font-semibold text-gray-700 mb-1">OÙ</div>
+          <div class="text-sm text-gray-600 font-Jost truncate">
+            {{searchForm.location || 'Rechercher une destination'}}
+          </div>
+          
+          <!-- Location Dropdown -->
+          <div *ngIf="activeField === 'location'" 
+               class="location-dropdown absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl z-50 max-h-80 overflow-y-auto">
+            <div class="p-4 border-b border-gray-100">
+              <input #locationInput
+                     type="text" 
+                     placeholder="Rechercher une destination" 
+                     class="input-field w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-900"
+                     [(ngModel)]="searchForm.location"
+                     (input)="onLocationInput()" />
+            </div>
+            <div *ngFor="let suggestion of filteredLocationSuggestions.slice(0, 6)" 
+                 class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                 (click)="selectLocation(suggestion)">
+              <div class="flex items-center space-x-3">
+                <i class="pi pi-map-marker text-gray-400"></i>
+                <div>
+                  <div class="font-medium text-gray-900">{{suggestion.name}}</div>
+                  <div class="text-sm text-gray-500">{{suggestion.region}}</div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="filteredLocationSuggestions.length === 0" class="px-4 py-3 text-gray-500 text-sm">
+              Aucun résultat trouvé
+            </div>
+          </div>
+        </div>
+        
+
+        <!-- Check-in -->
+<div class="flex-1 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors border-l border-gray-200 relative"
+     (click)="setActiveField('checkin')"
+     [class.active-field]="activeField === 'checkin'"
+     [class.bg-white]="activeField === 'checkin'">
+  <div class="text-xs font-Jost font-semibold text-gray-700 mb-1">ARRIVÉE</div>
+  <div class="text-sm font-Jost text-gray-600">
+    {{searchForm.checkin || 'Ajouter des dates'}}
+  </div>
+</div>
+
+<!-- Check-out -->
+<div class="flex-1 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors border-l border-gray-200 relative"
+     (click)="setActiveField('checkout')"
+     [class.active-field]="activeField === 'checkout'"
+     [class.bg-white]="activeField === 'checkout'">
+  <div class="text-xs font-Jost font-semibold text-gray-700 mb-1">DÉPART</div>
+  <div class="text-sm font-Jost text-gray-600">
+    {{searchForm.checkout || 'Ajouter des dates'}}
+  </div>
+</div>
+
+<!-- Calendar Dropdown - UNE SEULE FOIS -->
+<div *ngIf="isDropdownOpen && (activeField === 'checkin' || activeField === 'checkout')" 
+     class="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 w-full max-w-2xl min-w-[640px]">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between p-6 border-b border-gray-100">
+    <button (click)="previousMonth()" 
+            class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    
+    <div class="flex gap-12 font-semibold text-gray-900">
+      <span *ngFor="let month of displayedMonths">
+        {{ formatMonth(month) }}
+      </span>
+    </div>
+    
+    <button (click)="nextMonth()"
+            class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Calendriers -->
+  <div class="flex p-6 gap-8">
+    <div *ngFor="let month of displayedMonths" class="flex-1">
+      
+      <!-- Jours de la semaine -->
+      <div class="grid grid-cols-7 gap-1 mb-2">
+        <div *ngFor="let day of weekDays" class="text-xs font-medium text-gray-500 text-center py-2">
+          {{ day }}
+        </div>
+      </div>
+      
+      <!-- Jours du calendrier -->
+      <div class="grid grid-cols-7 gap-1">
+        <ng-container *ngFor="let day of daysInMonth(month)">
+          
+          <!-- Cellule vide -->
+          <div *ngIf="!day" class="h-10"></div>
+          
+          <!-- Bouton de date -->
+          <button *ngIf="day" 
+                  (click)="onDateClick(day)"
+                  [disabled]="isDisabled(day)"
+                  class="h-10 w-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200 relative
+                         hover:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                         {{ isStartDate(day) || isEndDate(day) ? 'bg-gray-900 text-white hover:bg-gray-800' : '' }}
+                         {{ isInRange(day) && !isStartDate(day) && !isEndDate(day) ? 'bg-gray-100 text-gray-900' : '' }}
+                         {{ isToday(day) && !isStartDate(day) && !isEndDate(day) ? 'border-2 border-gray-900' : '' }}">
+            
+            <!-- Background pour les dates en range -->
+            <div *ngIf="isInRange(day) || isStartDate(day) || isEndDate(day)"
+                 class="absolute inset-0 bg-gray-100 -z-10
+                        {{ isStartDate(day) ? 'rounded-l-full' : '' }}
+                        {{ isEndDate(day) ? 'rounded-r-full' : '' }}
+                        {{ isStartDate(day) && isEndDate(day) ? 'rounded-full' : '' }}">
+            </div>
+            
+            {{ formatDay(day) }}
+          </button>
+          
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div class="flex items-center justify-between p-6 border-t border-gray-100">
+    <div class="text-sm text-gray-600">
+      <span *ngIf="selectedStartDate && selectedEndDate">
+        {{ getNightsBetween() }} nuit{{ getNightsBetween() > 1 ? 's' : '' }}
+      </span>
+    </div>
+    <button (click)="closeCalendar()"
+            class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+      Fermer
+    </button>
+  </div>
+</div>
+
+
+        <!-- Guests -->
+        <div class="flex-1 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors border-l border-gray-200 relative"
+             (click)="setActiveField('guests')"
+             [class.active-field]="activeField === 'guests'"
+             [class.bg-white]="activeField === 'guests'">
+          <div class="text-xs font-Jost font-semibold text-gray-700 mb-1">VOYAGEURS</div>
+          <div class="text-sm font-Jost text-gray-600">
+            {{searchForm.adults + searchForm.children > 0 ? 
+              (searchForm.adults + searchForm.children) + ' voyageur' + (searchForm.adults + searchForm.children > 1 ? 's' : '') : 
+              'Ajouter des voyageurs'}}
+          </div>
+          
+          <!-- Guests Dropdown -->
+          <div *ngIf="activeField === 'guests'" 
+               class="guest-dropdown absolute top-full right-0 mt-2 w-80 bg-white rounded-2xl border z-50 p-6">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-medium text-gray-900">Adultes</div>
+                  <div class="text-sm text-gray-500">13 ans et plus</div>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <button (click)="updateGuests('adults', 'decrement')"
+                          [disabled]="searchForm.adults <= 1"
+                          class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="pi text-black pi-minus text-xs"></i>
+                  </button>
+                  <span class="w-8 text-black text-center">{{searchForm.adults}}</span>
+                  <button (click)="updateGuests('adults', 'increment')"
+                          class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900">
+                    <i class="pi pi-plus text-black text-xs"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-medium text-gray-900">Enfants</div>
+                  <div class="text-sm text-gray-500">2 à 12 ans</div>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <button (click)="updateGuests('children', 'decrement')"
+                          [disabled]="searchForm.children <= 0"
+                          class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="pi text-black pi-minus text-xs"></i>
+                  </button>
+                  <span class="w-8 text-black text-center">{{searchForm.children}}</span>
+                  <button (click)="updateGuests('children', 'increment')"
+                          class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900">
+                    <i class="pi text-black pi-plus text-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Button -->
+        <button (click)="performSearch()"
+                class="search-btn bg-[#FFD166] hover:bg-[#FFD166] text-white rounded-full p-4 m-2 transition-all duration-200 flex items-center justify-center min-w-[48px] shadow-md">
+          <i class="pi pi-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Search -->
+  <div class="md:hidden">
+    <button (click)="toggleMobileSearch()"
+            class="mobile-summary-btn w-full bg-white rounded-full shadow-md border border-gray-200 p-4 transition-all hover:shadow-lg">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <i class="pi pi-search text-gray-600"></i>
+          <div class="text-left">
+            <div class="font-semibold text-gray-900">Où allez-vous ?</div>
+            <div class="text-sm text-gray-500">{{getMobileSearchSummary()}}</div>
+          </div>
+        </div>
+        <div class="bg-[#FFD166] text-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+          <i class="pi pi-search text-sm"></i>
+        </div>
+      </div>
+    </button>
+
+    <!-- Mobile Search Panel -->
+    <div *ngIf="showMobileSearch" [@slideDown]
+         class="mobile-search-panel mt-4 bg-white rounded-2xl border overflow-hidden">
+      
+      <!-- Location -->
+      <div class="p-6 border-b border-gray-100">
+        <label class="block text-sm font-semibold text-gray-900 mb-3">Destination</label>
+        <input type="text" 
+               placeholder="Rechercher une destination" 
+               class="input-field w-full px-4 py-3 bg-gray-50 rounded-xl focus:outline-none focus:bg-white focus:ring-2 focus:ring-gray-900"
+               [(ngModel)]="searchForm.location" />
+      </div>
+
+      <!-- Dates -->
+      <div class="p-6 border-b border-gray-100">
+        <label class="block text-sm font-semibold text-gray-900 mb-3">Quand</label>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Arrivée</label>
+            <input type="date" 
+                   class="input-field w-full px-3 py-2 bg-gray-50 rounded-lg focus:outline-none focus:bg-white"
+                   [(ngModel)]="searchForm.checkin" />
+          </div>
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Départ</label>
+            <input type="date" 
+                   class="input-field w-full px-3 py-2 bg-gray-50 rounded-lg focus:outline-none focus:bg-white"
+                   [(ngModel)]="searchForm.checkout" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Guests -->
+      <div class="p-6">
+        <label class="block text-sm font-semibold text-gray-900 mb-3">Voyageurs</label>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-900">Adultes</span>
+            <div class="flex items-center space-x-3">
+              <button (click)="updateGuests('adults', 'decrement')"
+                      [disabled]="searchForm.adults <= 1"
+                      class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="pi pi-minus text-xs"></i>
+              </button>
+              <span class="w-8 text-center">{{searchForm.adults}}</span>
+              <button (click)="updateGuests('adults', 'increment')"
+                      class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
+                <i class="pi pi-plus text-xs"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-900">Enfants</span>
+            <div class="flex items-center space-x-3">
+              <button (click)="updateGuests('children', 'decrement')"
+                      [disabled]="searchForm.children <= 0"
+                      class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="pi pi-minus text-xs"></i>
+              </button>
+              <span class="w-8 text-center">{{searchForm.children}}</span>
+              <button (click)="updateGuests('children', 'increment')"
+                      class="guest-btn w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
+                <i class="pi pi-plus text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="p-6 bg-gray-50 flex space-x-3">
+        <button (click)="clearSearch()"
+                class="action-btn clear flex-1 py-3 text-gray-700 font-medium hover:bg-gray-100 rounded-lg transition-colors">
+          Effacer
+        </button>
+        <button (click)="performSearch()"
+                class="action-btn search flex-1 bg-[#FFD166] hover:bg-[#FFD166] text-white font-semibold rounded-lg py-3 transition-colors shadow-md">
+          Rechercher
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
