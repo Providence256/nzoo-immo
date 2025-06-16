@@ -358,6 +358,21 @@ export class BannerComponent {
     }
   }
 
+  devenirProprietaire(): void {
+    // Navigation vers la page devenir propriétaire
+    // this.router.navigate(['/devenir-proprietaire']);
+
+    // Ou ouvrir un formulaire de contact
+    // this.dialog.open(ContactProprietaireComponent);
+
+    // Ou scroll vers une section
+    // this.scrollToSection('proprietaire-section');
+
+    console.log('Navigation vers devenir propriétaire');
+  }
+
+  estimerRevenus() {}
+
   // Méthode pour gérer la saisie dans le champ location
   onLocationInput() {
     this.filterLocationSuggestions();

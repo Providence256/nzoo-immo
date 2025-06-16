@@ -4,17 +4,17 @@
       
       <!-- Left Section: Logo -->
       <div class="flex items-center flex-shrink-0">
-        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-400 to-teal-500 flex items-center justify-center text-white shadow-lg">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white shadow-lg">
           <i class="pi pi-th-large text-lg"></i>
         </div>
         <h2 class="ml-3 text-xl font-bold font-Jost text-gray-900 hidden sm:block">
-          <span class="text-teal-500">nzoo</span><span class="text-amber-500">.immo</span>
+          <span class="text-blue-500">nzoo</span><span class="text-amber-500">.immo</span>
         </h2>
       </div>
 
       <!-- Center Section: Navigation Menu -->
       <nav class="hidden lg:flex items-center justify-center flex-1 max-w-2xl mx-8">
-        <div class="flex items-center bg-white border border-gray-300 rounded-full hover:shadow-lg transition-all duration-300 px-2">
+        <div class="flex items-center bg-white rounded-full  transition-all duration-300 px-2">
           
           <!-- Dashboard -->
           <a routerLink="/admin/dashboard" 
@@ -35,7 +35,7 @@
               [class.text-gray-900]="activeDropdown === 'elements'">
               <i class="pi pi-box mr-2"></i>
               Éléments
-              <i class="pi pi-chevron-down ml-1 text-xs transition-transform duration-200" 
+              <i class="pi pi-chevron-down ml-1 text-xs transition-transform duration-200"
                  [class.rotate-180]="activeDropdown === 'elements'"></i>
             </button>
             
@@ -44,37 +44,43 @@
               <a routerLink="/admin/files/villes" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-map-marker mr-3 text-teal-500"></i>
+                <i class="pi pi-map-marker mr-3 text-gray-500"></i>
                 Villes
               </a>
               <a routerLink="/admin/files/communes" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-address-book mr-3 text-teal-500"></i>
+                <i class="pi pi-address-book mr-3 text-gray-500"></i>
                 Communes
+              </a>
+              <a routerLink="/admin/files/sous-type-hebergement" 
+                 routerLinkActive="bg-teal-50 text-teal-700"
+                 class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
+                <i class="pi pi-building mr-3 text-gray-500"></i>
+                Sous Type hébergement
               </a>
               <a routerLink="/admin/files/type-hebergement" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-building-columns mr-3 text-teal-500"></i>
+                <i class="pi pi-building-columns mr-3 text-gray-500"></i>
                 Type hébergement
               </a>
               <a routerLink="/admin/files/equipements" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-folder mr-3 text-teal-500"></i>
+                <i class="pi pi-folder mr-3 text-gray-500"></i>
                 Équipements
               </a>
               <a routerLink="/admin/files/devises" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-wallet mr-3 text-teal-500"></i>
+                <i class="pi pi-wallet mr-3 text-gray-500"></i>
                 Devises
               </a>
               <a routerLink="/admin/files/regles" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-key mr-3 text-teal-500"></i>
+                <i class="pi pi-key mr-3 text-gray-500"></i>
                 Règles
               </a>
             </div>
@@ -100,13 +106,13 @@
               <a routerLink="/admin/saisies/taux-change" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-dollar mr-3 text-teal-500"></i>
+                <i class="pi pi-dollar mr-3 text-gray-500"></i>
                 Cours de change
               </a>
               <a routerLink="/admin/saisies/list-annonce" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-building mr-3 text-teal-500"></i>
+                <i class="pi pi-building mr-3 text-gray-500"></i>
                 Annonces
               </a>
             </div>
@@ -132,13 +138,13 @@
               <a routerLink="/admin/parametres/societe" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-wrench mr-3 text-teal-500"></i>
+                <i class="pi pi-wrench mr-3 text-gray-500"></i>
                 Paramètre société
               </a>
               <a routerLink="/admin/parametres/utilisateurs" 
                  routerLinkActive="bg-teal-50 text-teal-700"
                  class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl mx-2 transition-all duration-150">
-                <i class="pi pi-user mr-3 text-teal-500"></i>
+                <i class="pi pi-user mr-3 text-gray-500"></i>
                 Utilisateurs
               </a>
             </div>
@@ -164,7 +170,7 @@
         <!-- Notifications -->
         <button class="relative p-3 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200">
           <i class="pi pi-bell text-lg"></i>
-          <span class="absolute -top-1 -right-1 bg-teal-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-md animate-pulse">3</span>
+          <span class="absolute -top-1 -right-1 bg-gray-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-md animate-pulse">3</span>
         </button>
 
         <!-- User Dropdown -->
@@ -185,10 +191,10 @@
             </div>
             <div class="py-2">
               <a href="/profile" class="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150">
-                <i class="pi pi-user mr-3 text-teal-500"></i>Profil
+                <i class="pi pi-user mr-3 text-gray-500"></i>Profil
               </a>
               <a routerLink="/home" class="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150">
-                <i class="pi pi-home mr-3 text-teal-500"></i>Site client
+                <i class="pi pi-home mr-3 text-gray-500"></i>Site client
               </a>
               <hr class="my-2 mx-6">
               <a href="#" (click)="logout()" class="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-red-50 transition-all duration-150">
@@ -234,37 +240,37 @@
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-map-marker mr-3 text-teal-500"></i>Villes
+                <i class="pi pi-map-marker mr-3 text-gray-500"></i>Villes
               </a>
               <a routerLink="/admin/files/communes" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-address-book mr-3 text-teal-500"></i>Communes
+                <i class="pi pi-address-book mr-3 text-gray-500"></i>Communes
               </a>
               <a routerLink="/admin/files/type-hebergement" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-building-columns mr-3 text-teal-500"></i>Type hébergement
+                <i class="pi pi-building-columns mr-3 text-gray-500"></i>Type hébergement
               </a>
               <a routerLink="/admin/files/equipements" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-folder mr-3 text-teal-500"></i>Équipements
+                <i class="pi pi-folder mr-3 text-gray-500"></i>Équipements
               </a>
               <a routerLink="/admin/files/devises" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-wallet mr-3 text-teal-500"></i>Devises
+                <i class="pi pi-wallet mr-3 text-gray-500"></i>Devises
               </a>
               <a routerLink="/admin/files/regles" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-key mr-3 text-teal-500"></i>Règles
+                <i class="pi pi-key mr-3 text-gray-500"></i>Règles
               </a>
             </div>
           </div>
@@ -286,13 +292,13 @@
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-dollar mr-3 text-teal-500"></i>Cours de change
+                <i class="pi pi-dollar mr-3 text-gray-500"></i>Cours de change
               </a>
               <a routerLink="/admin/saisies/list-annonce" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-building mr-3 text-teal-500"></i>Annonces
+                <i class="pi pi-building mr-3 text-gray-500"></i>Annonces
               </a>
             </div>
           </div>
@@ -314,13 +320,13 @@
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-wrench mr-3 text-teal-500"></i>Paramètre société
+                <i class="pi pi-wrench mr-3 text-gray-500"></i>Paramètre société
               </a>
               <a routerLink="/admin/parametres/utilisateurs" 
                  routerLinkActive="bg-teal-100 text-teal-700"
                  (click)="closeMobileMenu()"
                  class="flex items-center px-12 py-3 text-sm text-gray-600 hover:bg-gray-100 transition-all duration-150">
-                <i class="pi pi-user mr-3 text-teal-500"></i>Utilisateurs
+                <i class="pi pi-user mr-3 text-gray-500"></i>Utilisateurs
               </a>
             </div>
           </div>

@@ -1,5 +1,5 @@
 <!-- Hero Banner Component Template -->
-<section class="relative  w-full h-screen min-h-[800px] overflow-hidden">
+<section class="relative   w-full h-screen min-h-[800px] overflow-visible">
   
   <!-- Video Background with Parallax Effect -->
   <div class="absolute inset-0 overflow-hidden" #videoContainer>
@@ -31,9 +31,34 @@
         </p>
       </div>
 
-
       <app-search></app-search>
      
+      <div class="overflow-hidden">
+  <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mt-8">
+
+    <!-- Estimer mes revenus -->
+    <button (click)="estimerRevenus()"
+            class="group relative px-8 py-3 bg-[#FFD166] text-gray-900 font-Jost font-semibold text-xl rounded-full shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-yellow-400/50 min-w-[260px] sm:min-w-[300px]">
+      <span class="relative z-10 flex items-center justify-center gap-4">
+        <i class="pi pi-dollar text-2xl sm:text-3xl"></i>
+        Estimer mes revenus
+      </span>
+      <div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </button>
+
+    <!-- Devenir propriétaire -->
+    <button (click)="devenirProprietaire()"
+            class="group relative px-8 py-3 bg-transparent border-2 border-[#FFD166] text-[#FFD166] font-Jost font-semibold text-xl rounded-full shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out hover:bg-[#FFD166] hover:text-gray-900 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 min-w-[260px] sm:min-w-[300px]">
+      <span class="relative z-10 flex items-center justify-center gap-4">
+        <i class="pi pi-home text-2xl sm:text-3xl"></i>
+        Devenir propriétaire
+      </span>
+      <div class="absolute inset-0 bg-[#FFD166]/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </button>
+
+  </div>
+</div>
+
       
     </div>
   </div>

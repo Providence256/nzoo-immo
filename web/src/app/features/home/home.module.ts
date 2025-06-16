@@ -7,6 +7,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { BannerComponent } from './components/banner/banner.component';
 import { FeaturedPropertiesComponent } from './components/featured-property/featured-properties.component';
 import { SearchComponent } from './components/property-search/search.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,12 @@ import { SearchComponent } from './components/property-search/search.component';
     FeaturedPropertiesComponent,
     SearchComponent,
   ],
-  imports: [CommonModule, HomeRoutingModule, SharedModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    HomeRoutingModule,
+    SharedModule,
+    ReactiveFormsModule,
+    OverlayModule,
+  ],
 })
 export class HomeModule {}

@@ -7,6 +7,13 @@ import {
   BadgeModule
 } from "./chunk-XT3IKCBQ.js";
 import "./chunk-5G7WYC4N.js";
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-LDY4X2N2.js";
 import "./chunk-2ZXM7VXU.js";
 import {
   Ripple
@@ -32,13 +39,6 @@ import {
   getWidth,
   resolve
 } from "./chunk-3NELQC5U.js";
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-LDY4X2N2.js";
 import "./chunk-TZYIWKO4.js";
 import "./chunk-XODCXPAZ.js";
 import {

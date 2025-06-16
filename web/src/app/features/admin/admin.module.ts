@@ -18,6 +18,7 @@ import { TauxChangeComponent } from './saisies/pages/taux-changes/taux-change.co
 import { AddAnnonceComponent } from './saisies/pages/add-annonce/add-annonce.component';
 import { ListAnnoncesComponent } from './saisies/pages/list-annonce/list-annonces.component';
 import { NewAnnonceComponent } from './saisies/pages/new annonce/new-annonce.component';
+import { SousTypeHebergementComponent } from './files/pages/sous-type-hebergement/sous-type-hebergement.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -51,6 +52,7 @@ const routes: Routes = [
     DashboardComponent,
     VillesComponent,
     CommunesComponent,
+    SousTypeHebergementComponent,
     TypeHebergementComponent,
     EquipementsComponent,
     DevisesComponent,

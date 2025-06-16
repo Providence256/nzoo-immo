@@ -30,7 +30,17 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<TypeHebergement>> CreateTypeHebergement(TypeHebergementRequest request)
         {
-            var typeHebergement = mapper.Map<TypeHebergement>(request);
+            var typeHebergement = new TypeHebergement
+            {
+                Code = request.Code,
+                Designation = request.Designation,
+                Icon = request.Icon,
+                SousTypes = request.SousTypeIds.Select(id => new SousTypeByHebergement
+                {
+                    SousTypeHebergementId = id
+                }).ToList()
+            };
+
             await repo.AddAsync(typeHebergement);
 
 

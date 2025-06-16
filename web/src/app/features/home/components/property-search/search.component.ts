@@ -4,7 +4,9 @@ import {
   ElementRef,
   HostListener,
   OnInit,
+  TemplateRef,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
@@ -48,6 +50,7 @@ import { fr } from 'date-fns/locale';
 })
 export class SearchComponent implements OnInit {
   @ViewChild('locationInput') locationInput!: ElementRef;
+
   dropdownPosition = { top: '0px', left: '0px', width: '0px' };
 
   activeField: string | null = null;

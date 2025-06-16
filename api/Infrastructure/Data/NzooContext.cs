@@ -31,6 +31,17 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
 
 
 
+        modelBuilder.Entity<SousTypeByHebergement>()
+                    .HasOne(x => x.TypeHebergement)
+                    .WithMany(t => t.SousTypes)
+                    .HasForeignKey(x => x.TypeHebergementId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SousTypeByHebergement>()
+                    .HasOne(x => x.SousTypeHebergement)
+                    .WithMany()
+                    .HasForeignKey(x => x.SousTypeHebergementId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<TauxChange>()
                     .HasOne(e => e.Devise)

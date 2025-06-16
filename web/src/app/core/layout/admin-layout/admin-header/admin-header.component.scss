@@ -21,8 +21,8 @@ button, a {
 
 /* Active state for navigation links */
 .router-link-active {
-  @apply bg-teal-50 text-teal-700;
-  border-left: 3px solid theme('colors.teal.500');
+  @apply bg-teal-50 text-gray-700;
+  border-left: 3px solid theme('colors.gray.500');
 }
 
 /* Hover effects for dropdown items */
@@ -60,7 +60,7 @@ button, a {
 
 /* Focus styles for accessibility */
 button:focus, a:focus {
-  @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+  @apply outline-none ring-1 ring-gray-300 ring-offset-1;
 }
 
 /* Notification badge animation */
