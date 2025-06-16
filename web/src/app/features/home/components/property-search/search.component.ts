@@ -7,7 +7,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { format, isBefore, isSameDay, startOfDay } from 'date-fns';
+import {
+  addDays,
+  addMonths,
+  endOfMonth,
+  format,
+  isBefore,
+  isSameDay,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 @Component({
@@ -38,6 +48,7 @@ import { fr } from 'date-fns/locale';
 })
 export class SearchComponent implements OnInit {
   @ViewChild('locationInput') locationInput!: ElementRef;
+  dropdownPosition = { top: '0px', left: '0px', width: '0px' };
 
   activeField: string | null = null;
   showMobileSearch = false;
@@ -71,20 +82,24 @@ export class SearchComponent implements OnInit {
 
   today: Date = new Date();
   minDate = new Date();
-  maxDate = new Date(new Date().setFullYear(this.today.getFullYear() + 1));
+  maxDate = new Date(2030, 11, 31);
 
   constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    for (let i = 0; i < 7; i++) {
+      this.weekDays.push(
+        format(addDays(weekStart, i), 'EEE', { locale: fr }).charAt(0)
+      );
+    }
     this.initializeCalendar();
-    this.weekDays = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM'];
   }
 
   initializeCalendar() {
-    const currentDate = new Date();
     this.displayedMonths = [
-      new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
+      startOfMonth(this.today),
+      startOfMonth(addMonths(this.today, 1)),
     ];
   }
 
@@ -211,18 +226,20 @@ export class SearchComponent implements OnInit {
   }
 
   daysInMonth(month: Date): (Date | null)[] {
+    const start = startOfMonth(month);
+    const end = endOfMonth(month);
     const days: (Date | null)[] = [];
-    const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
-    const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0);
-    const startDay = startOfMonth.getDay(); // 0 = dimanche
 
-    // Ajouter les espaces vides pour les jours avant le début du mois
-    for (let i = 0; i < startDay; i++) {
+    const firstDayDate = new Date(month.getFullYear(), month.getMonth(), 1);
+
+    const firstDayOfWeek = firstDayDate.getDay();
+    const mondayAdjusted = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+    for (let i = 0; i < mondayAdjusted; i++) {
       days.push(null);
     }
 
-    // Ajouter tous les jours du mois
-    for (let day = 1; day <= endOfMonth.getDate(); day++) {
+    for (let day = 1; day <= end.getDate(); day++) {
       days.push(new Date(month.getFullYear(), month.getMonth(), day));
     }
 

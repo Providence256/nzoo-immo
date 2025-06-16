@@ -119,7 +119,6 @@
             </div>
           </div>
         </div>
-
         <!-- Search Button -->
         <button (click)="performSearch()"
                 class="search-btn bg-[#FFD166] hover:bg-[#FFD166] text-white rounded-full p-4 m-2 transition-all duration-200 flex items-center justify-center min-w-[48px] shadow-md">
@@ -130,12 +129,13 @@
       <!-- Calendar Dropdown - Positionné correctement -->
       <div *ngIf="isDropdownOpen && (activeField === 'checkin' || activeField === 'checkout')" 
            [@slideDown]
-           class="calendar-dropdown absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-[100] w-full max-w-2xl min-w-[640px]">
+           class="calendar-dropdown absolute  top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-[100] w-full max-w-2xl min-w-[640px]"
+           >
         
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-100">
           <button (click)="previousMonth()" 
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
+                  class="w-8 h-8 rounded-full calendar-nav-btn border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
@@ -143,12 +143,12 @@
           
           <div class="flex gap-12 font-semibold text-gray-900">
             <span *ngFor="let month of displayedMonths">
-              {{ formatMonth(month) }}
+              {{ formatMonth(month) | uppercase }}
             </span>
           </div>
           
           <button (click)="nextMonth()"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
+                  class="w-8 h-8 rounded-full calendar-nav-btn border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
@@ -161,7 +161,7 @@
             
             <!-- Jours de la semaine -->
             <div class="grid grid-cols-7 gap-1 mb-2">
-              <div *ngFor="let day of weekDays" class="text-xs font-medium text-gray-500 text-center py-2">
+              <div *ngFor="let day of weekDays" class="text-xs font-medium calendar-days text-gray-500 text-center py-2">
                 {{ day }}
               </div>
             </div>

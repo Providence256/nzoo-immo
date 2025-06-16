@@ -128,9 +128,9 @@ $transition: all 0.2s ease;
 
 .calendar-dropdown {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  top: var(--dropdown-top, 100%);
+  left: var(--dropdown-left, 0);
+  width: var(--dropdown-width, 100%);
   margin-top: 8px;
   background: white;
   border-radius: 16px;
@@ -160,6 +160,7 @@ $transition: all 0.2s ease;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  color: $dark-grey;
 }
 
 .calendar-nav-btn:hover {
@@ -204,6 +205,7 @@ $transition: all 0.2s ease;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
+  text-transform: uppercase;
 }
 
 /* Day button - VERSION FINALE */
@@ -347,3 +349,4 @@ $transition: all 0.2s ease;
 .active-field {
   @apply shadow-lg border-gray-300 bg-white relative z-10;
 }
+
