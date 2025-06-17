@@ -12,6 +12,7 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     public DbSet<Commune> Communes { get; set; }
     public DbSet<Devise> Devises { get; set; }
     public DbSet<Equipement> Equipements { get; set; }
+    public DbSet<SousTypeByHebergement> SousTypeByHebergements { get; set; }
     public DbSet<TypeHebergement> TypeHebergements { get; set; }
     public DbSet<Rule> Rules { get; set; }
     public DbSet<TauxChange> TauxChanges { get; set; }
@@ -23,6 +24,7 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     public DbSet<ListingRule> ListingRules { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<BookingAvailability> BookingAvailabilities { get; set; }
+    public DbSet<HostEntity> Hosts { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

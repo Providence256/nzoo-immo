@@ -3,7 +3,7 @@ using Core.Entities.Identity;
 
 namespace Core.Entities;
 
-public class Host : BaseEntity
+public class HostEntity : BaseEntity
 {
     public int UserId { get; set; }
     public string? PhoneNumber { get; set; }

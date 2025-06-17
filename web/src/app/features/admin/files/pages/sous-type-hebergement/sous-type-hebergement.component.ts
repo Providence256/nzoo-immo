@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { BreadcrumbService } from '../../../../../core/services/breadcrumb.service';
-import { EquipementService } from '../../services/equipement.service';
+import { SousTypeHebergementService } from '../../services/sous-type-hebergement.service';
 
 @Component({
   selector: 'app-sous-type-hebergement',
   templateUrl: './sous-type-hebergement.component.html',
+  styleUrl: './sous-type-hebergement.component.scss',
 })
 export class SousTypeHebergementComponent implements OnInit {
   dialog: boolean = false;
@@ -14,169 +15,103 @@ export class SousTypeHebergementComponent implements OnInit {
   formGroup!: FormGroup;
 
   iconList: string[] = [
-    // 🏡 Property & Listings
+    // 🏡 Types d'hébergement
     'house',
+    'home',
     'apartment',
     'villa',
-    'home_work',
-    'holiday_village',
-    'location_city',
-    'maps_home_work',
-    'domain',
-    'storefront',
+    'cottage',
+    'cabin',
+    'hotel',
+    'chalet',
+    'bungalow',
+
+    // 🏢 Types commerciaux
     'business',
+    'storefront',
+    'warehouse',
+    'factory',
+    'shop',
+    'restaurant',
+    'hotel_class',
 
-    // 🛏️ Amenities & Features
-    'king_bed',
-    'single_bed',
-    'bed',
-    'bathtub',
-    'shower',
-    'hot_tub',
-    'pool',
-    'ac_unit',
-    'wifi',
-    'tv',
-    'fireplace',
-    'smoke_free',
-    'pets',
-    'local_laundry_service',
-    'local_parking',
-    'security',
-    'kitchen',
-    'flatware',
-
-    // 📍 Location & Travel
-    'location_on',
-    'place',
-    'map',
-    'public',
-    'near_me',
-    'explore',
-    'flight',
-    'train',
-    'directions_bus',
-    'directions_car',
-    'directions_boat',
-    'hiking',
+    // 🏖️ Hébergements de vacances
     'beach_access',
-    'local_airport',
+    'holiday_village',
+    'umbrella',
+    'sunny',
+    'waves',
+    'sailing',
+    'surfing',
+    'pool',
+    'hot_tub',
+    'spa',
+    'golf_course',
 
-    // 📅 Booking & Scheduling
-    'event',
-    'calendar_today',
-    'date_range',
-    'schedule',
-    'alarm',
-    'access_time',
-    'pending',
-    'watch_later',
-
-    // 💰 Pricing & Payments
-    'attach_money',
-    'credit_card',
-    'payment',
-    'account_balance_wallet',
-    'monetization_on',
-    'receipt',
-    'redeem',
-    'price_check',
-    'request_quote',
-
-    // 👤 Users & Profiles
-    'person',
-    'person_outline',
-    'people',
-    'group',
-    'account_circle',
-    'face',
-    'admin_panel_settings',
-    'supervisor_account',
-    'support_agent',
-
-    // 💬 Messaging & Reviews
-    'chat',
-    'comment',
-    'rate_review',
-    'star',
-    'stars',
-    'feedback',
-    'question_answer',
-    'help',
-
-    // ⚙️ Settings & Navigation
-    'settings',
-    'tune',
-    'dashboard',
-    'menu',
-    'apps',
-    'widgets',
-    'more_horiz',
-    'more_vert',
-
-    // 🔒 Security & Authentication
-    'lock',
-    'lock_open',
-    'verified_user',
-    'fingerprint',
-    'shield',
-    'vpn_key',
-    'password',
+    // 🏞️ Nature et extérieur
+    'forest',
+    'nature',
+    'deck',
+    'balcony',
+    'yard',
   ];
 
   filteredIcons: string[] = [...this.iconList];
-  equipements: any[] = [];
-  filteredEquipements: any[] = [];
-  equipement: any = {};
+  sousTypes: any[] = [];
+  filteredSousTypes: any[] = [];
+  sousType: any = {};
   loading: boolean = false;
   submitted: boolean = false;
   searchText: string = '';
 
   constructor(
     private breadcrumbService: BreadcrumbService,
-    private equipementService: EquipementService,
+    private sousTypeService: SousTypeHebergementService,
     private messageService: MessageService
   ) {
     this.breadcrumbService.setItems([
       { label: 'Élément de base' },
-      { label: 'Equipements', routerLink: ['/files/equipements'] },
+      {
+        label: "Sous-Types d'Hébergement",
+        routerLink: ['/files/sous-types-hebergement'],
+      },
     ]);
   }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadEquipements();
+    this.loadSousTypes();
   }
 
   initForm(): void {
     this.formGroup = new FormGroup({
-      code: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(50),
-      ]),
-      designation: new FormControl('', [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(100),
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(500),
       ]),
       icon: new FormControl('', Validators.required),
       searchIcon: new FormControl(''),
     });
   }
 
-  loadEquipements(): void {
+  loadSousTypes(): void {
     this.loading = true;
-    this.equipementService.getEquipements().subscribe({
+    this.sousTypeService.getSousTypeHebergements().subscribe({
       next: (response) => {
-        this.equipements = response;
-        this.filteredEquipements = [...this.equipements];
+        this.sousTypes = response;
+        this.filteredSousTypes = [...this.sousTypes];
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading equipements:', error);
+        console.error('Error loading sous-types:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'Impossible de charger les équipements',
+          detail: "Impossible de charger les sous-types d'hébergement",
           life: 3000,
         });
         this.loading = false;
@@ -187,12 +122,12 @@ export class SousTypeHebergementComponent implements OnInit {
   openDialog(): void {
     this.dialog = true;
     this.formGroup.reset();
-    this.equipement = {};
+    this.sousType = {};
     this.submitted = false;
     this.filteredIcons = [...this.iconList];
   }
 
-  saveEquipement(): void {
+  saveSousType(): void {
     this.submitted = true;
 
     if (this.formGroup.invalid) {
@@ -205,31 +140,31 @@ export class SousTypeHebergementComponent implements OnInit {
       return;
     }
 
-    const equipementData = {
-      code: this.formGroup.get('code')!.value,
-      designation: this.formGroup.get('designation')!.value,
+    const sousTypeData: Omit<any, 'id'> = {
+      name: this.formGroup.get('name')!.value,
+      description: this.formGroup.get('description')!.value,
       icon: this.formGroup.get('icon')!.value,
     };
 
     this.loading = true;
 
-    if (this.equipement.id) {
-      // Update existing equipement
-      this.equipementService
-        .updateEquipement(this.equipement.id, equipementData)
+    if (this.sousType.id) {
+      // Update existing sous-type
+      this.sousTypeService
+        .updateSousTypeHebergement(this.sousType.id, sousTypeData)
         .subscribe({
           next: () => {
-            this.handleSuccess('Équipement modifié avec succès');
+            this.handleSuccess("Sous-type d'hébergement modifié avec succès");
           },
           error: (error) => {
             this.handleError(error, 'Échec lors de la modification');
           },
         });
     } else {
-      // Create new equipement
-      this.equipementService.createEquipement(equipementData).subscribe({
+      // Create new sous-type
+      this.sousTypeService.createSousTypeHebergement(sousTypeData).subscribe({
         next: () => {
-          this.handleSuccess('Équipement ajouté avec succès');
+          this.handleSuccess("Sous-type d'hébergement ajouté avec succès");
         },
         error: (error) => {
           this.handleError(error, "Échec lors de l'ajout");
@@ -248,7 +183,7 @@ export class SousTypeHebergementComponent implements OnInit {
     this.dialog = false;
     this.loading = false;
     this.submitted = false;
-    this.loadEquipements();
+    this.loadSousTypes();
   }
 
   handleError(error: any, message: string): void {
@@ -273,38 +208,39 @@ export class SousTypeHebergementComponent implements OnInit {
   }
 
   selectIcon(icon: string): void {
-    this.equipement.icon = icon;
+    this.sousType.icon = icon;
     this.formGroup.get('icon')?.setValue(icon);
     this.formGroup.get('icon')?.markAsTouched();
   }
 
   filterIcons(): void {
-    const searchValue = this.formGroup.get('searchIcon')?.value.toLowerCase();
+    const searchValue =
+      this.formGroup.get('searchIcon')?.value?.toLowerCase() || '';
     this.filteredIcons = this.iconList.filter((icon) =>
       icon.toLowerCase().includes(searchValue)
     );
   }
 
-  filterEquipements(): void {
+  filterSousTypes(): void {
     if (!this.searchText.trim()) {
-      this.filteredEquipements = [...this.equipements];
+      this.filteredSousTypes = [...this.sousTypes];
       return;
     }
 
     const search = this.searchText.toLowerCase();
-    this.filteredEquipements = this.equipements.filter(
-      (equipement) =>
-        equipement.code.toLowerCase().includes(search) ||
-        equipement.designation.toLowerCase().includes(search) ||
-        equipement.icon.toLowerCase().includes(search)
+    this.filteredSousTypes = this.sousTypes.filter(
+      (sousType) =>
+        sousType.name.toLowerCase().includes(search) ||
+        sousType.description.toLowerCase().includes(search) ||
+        sousType.icon.toLowerCase().includes(search)
     );
   }
 
-  editEquipement(data: any): void {
-    this.equipement = { ...data };
+  editSousType(data: any): void {
+    this.sousType = { ...data };
     this.formGroup.patchValue({
-      code: data.code,
-      designation: data.designation,
+      name: data.name,
+      description: data.description,
       icon: data.icon,
       searchIcon: data.icon,
     });
@@ -313,8 +249,8 @@ export class SousTypeHebergementComponent implements OnInit {
     this.filterIcons();
   }
 
-  deleteEquipement(data: any): void {
-    this.equipement = { ...data };
+  deleteSousType(data: any): void {
+    this.sousType = { ...data };
     this.deleteDialog = true;
   }
 
@@ -327,31 +263,31 @@ export class SousTypeHebergementComponent implements OnInit {
     this.deleteDialog = false;
   }
 
-  confirmDelete(id: any): void {
+  confirmDelete(id: number): void {
     if (!id) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erreur',
-        detail: "ID d'équipement invalide",
+        detail: 'ID de sous-type invalide',
       });
       return;
     }
 
     this.loading = true;
-    this.equipementService.deleteEquipement(id).subscribe({
+    this.sousTypeService.deleteSousTypeHebergement(id).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'info',
           summary: 'Suppression',
-          detail: 'Équipement supprimé avec succès',
+          detail: "Sous-type d'hébergement supprimé avec succès",
           life: 3000,
         });
         this.deleteDialog = false;
-        this.equipement = {};
-        this.loadEquipements();
+        this.sousType = {};
+        this.loadSousTypes();
       },
       error: (error) => {
-        console.error('Error deleting equipement:', error);
+        console.error('Error deleting sous-type:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',

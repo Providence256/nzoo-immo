@@ -8,5 +8,6 @@ public enum RoleType
     Root,
     Admin,
     Client,
+    Host,
 
 }
