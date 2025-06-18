@@ -14,6 +14,7 @@ public class HostEntity : BaseEntity
     public bool IsVerified { get; set; } = false;
     public DateTime? VerifiedDate { get; set; }
     public bool IsActive { get; set; }
+    public string? HostDescription { get; set; }
 
     public virtual AppUser? User { get; set; }
     public virtual ICollection<Listing> Listings { get; set; } = new List<Listing>();

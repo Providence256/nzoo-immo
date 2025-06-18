@@ -9,6 +9,7 @@ public class HostResponse
     public string? UserName { get; set; }
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? HostDescription { get; set; }
     public DateTime JoinedDate { get; set; }
     public double Rating { get; set; }
     public int TotalReviews { get; set; }
@@ -16,6 +17,7 @@ public class HostResponse
     public bool IsVerified { get; set; }
     public DateTime VerifiedDate { get; set; }
     public bool IsActive { get; set; }
+    public string? Token { get; set; }
 }
 
 public class HostListResponse

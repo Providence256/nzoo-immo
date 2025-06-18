@@ -11,6 +11,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { PrimengModule } from '../../shared/_primeng/primeng.module';
 import { ForgotPasswordComponent } from './components/forget-password/forgot-password.component';
 import { AuthCallbackComponent } from './components/auth-call-back/auth-callback.component';
+import { BecomeHostComponent } from './components/become-host/become-host.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { AuthCallbackComponent } from './components/auth-call-back/auth-callback
     RegisterComponent,
     ForgotPasswordComponent,
     AuthCallbackComponent,
+    BecomeHostComponent,
   ],
   imports: [
     CommonModule,

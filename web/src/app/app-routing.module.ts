@@ -5,6 +5,8 @@ import { ClientLayoutComponent } from './core/layout/client-layout/client-layout
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
 import { DashboardComponent } from './features/admin/dashboard/components/dashboard.component';
 import { AdminGuard } from './core/authentication/admin.guard';
+import { BecomeHostComponent } from './features/auth/components/become-host/become-host.component';
+import { AuthGuard } from './core/authentication/auth.guard';
 
 // Import your auth guard for admin routes
 // import { AdminGuard } from './core/authentication/guards/admin.guard';
@@ -44,6 +46,11 @@ const routes: Routes = [
         path: 'auth',
         loadChildren: () =>
           import('./features/auth/auth.module').then((m) => m.AuthModule),
+      },
+      {
+        path: 'become-host',
+        component: BecomeHostComponent,
+        canActivate: [AuthGuard], // Assurez-vous que l'utilisateur est connecté
       },
     ],
   },

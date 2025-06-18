@@ -54,6 +54,11 @@
       <!-- Action Buttons -->
       <div class="flex items-center gap-2 sm:gap-4">
         <!-- User Menu - Different style for mobile/tablet vs desktop -->
+          <!-- Become Host Button - Hidden on mobile & tablet -->
+        <button routerLink="/become-host" class="hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:border-primary-400/50 hover:text-primary-300">
+          <span class="material-icons text-base">add_home</span>
+          <span>Devenez hôte</span>
+        </button>
         <div class="relative">
           <!-- Mobile/Tablet User Icon -->
           <button (click)="toggleDropdown()"

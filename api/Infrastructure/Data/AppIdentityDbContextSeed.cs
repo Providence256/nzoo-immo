@@ -42,6 +42,8 @@ public class AppIdentityDbContextSeed
 
             var clientRole = new AppRole { Name = SeedRoleType.Client.ToString() };
             await roleManager.CreateAsync(clientRole);
+            var hostRole = new AppRole { Name = SeedRoleType.Host.ToString() };
+            await roleManager.CreateAsync(hostRole);
         }
     }
 
@@ -51,5 +53,6 @@ public class AppIdentityDbContextSeed
         Root,
         Admin,
         Client,
+        Host
     }
 }

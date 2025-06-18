@@ -53,6 +53,18 @@ export class AuthService {
     this.currentUserSubject.next(user);
   }
 
+  public updateUserRole(newRole: string, newToken?: string): void {
+    const currentUser = this.getCurrentUser();
+    if (currentUser) {
+      const updateUser = {
+        ...currentUser,
+        role: newRole,
+        ...(newToken && { token: newToken }),
+      };
+      this.setCurrentUser(updateUser);
+    }
+  }
+
   login(email: string, password: string): Observable<User> {
     return this.http
       .post<User>(`${this.apiUrl}/login`, { email, password })

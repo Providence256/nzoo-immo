@@ -3,6 +3,7 @@ using API.DTOs.HostDto;
 using API.Helpers;
 using Core.Entities;
 using Core.Entities.Identity;
+using Core.Interfaces;
 using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +15,12 @@ namespace API.Controllers
     [ApiController]
     public class HostsController(
                     UserManager<AppUser> userManager,
-                    IGenericRepository<HostEntity> hostRepo) : ControllerBase
+                    IGenericRepository<HostEntity> hostRepo,
+                    ITokenService tokenService) : ControllerBase
     {
 
         [HttpPost("become-host")]
-        [Authorize]
+        [Authorize(Roles = "Client")]
         public async Task<ActionResult<HostResponse>> BecomeHost(BecomeHostRequest request)
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
@@ -31,21 +33,20 @@ namespace API.Controllers
             if (existingHost.Any(h => h.UserId == user.Id))
                 return BadRequest("User already a host");
 
-            var roleResult = await userManager.AddToRoleAsync(user, RoleType.Host.ToString());
-
-            if (!roleResult.Succeeded)
-                return BadRequest("Failed to assign host role");
 
             var host = new HostEntity
             {
                 UserId = user.Id,
                 PhoneNumber = request.PhoneNumber,
+                HostDescription = request.HostDescription,
                 JoinedDate = DateTime.UtcNow,
                 IsActive = true,
                 IsVerified = false // verify later through a verification process
             };
 
             await hostRepo.AddAsync(host);
+
+            var token = await tokenService.CreateToken(user);
 
             var response = new HostResponse
             {
@@ -59,7 +60,8 @@ namespace API.Controllers
                 TotalReviews = host.TotalReviews,
                 TotalBookings = host.TotalBookings,
                 IsVerified = host.IsVerified,
-                IsActive = host.IsActive
+                IsActive = host.IsActive,
+                Token = token,
             };
 
             return Ok(response);
@@ -138,20 +140,114 @@ namespace API.Controllers
             return Ok(response);
 
         }
-        [HttpPost("verify")]
-        [Authorize(Roles = "Root")]
-        public async Task<ActionResult> VerifyHost(int hostId)
+        [HttpGet("all-hosts")]
+        [Authorize(Roles = "Admin, Root")]
+        public async Task<ActionResult<IEnumerable<HostResponse>>> GetAllHosts()
+        {
+            var hosts = await hostRepo.GetAllAsync();
+            var allhostResponse = new List<HostResponse>();
+
+            foreach (var host in hosts)
+            {
+                var user = await userManager.FindByIdAsync(host.UserId.ToString());
+                if (user != null)
+                {
+                    allhostResponse.Add(new HostResponse
+                    {
+                        Id = host.Id,
+                        UserId = host.UserId,
+                        UserName = user.UserName,
+                        Email = user.Email,
+                        PhoneNumber = host.PhoneNumber,
+                        HostDescription = host.HostDescription,
+                        JoinedDate = host.JoinedDate,
+                        IsActive = host.IsActive,
+                        IsVerified = host.IsVerified,
+                        Rating = host.Rating,
+                        TotalReviews = host.TotalReviews,
+                        TotalBookings = host.TotalBookings,
+
+                    });
+                }
+            }
+
+            return Ok(allhostResponse.OrderByDescending(h => h.JoinedDate));
+        }
+
+        [HttpGet("host/{id}")]
+        [Authorize(Roles = "Admin,Root")]
+        public async Task<ActionResult<HostResponse>> GetHostById(int id)
+        {
+            var host = await hostRepo.GetByIdAsync(id);
+
+            if (host == null)
+                return NotFound("Host not found");
+
+            var user = await userManager.FindByIdAsync(host.UserId.ToString());
+
+            if (user == null)
+                return NotFound("User not found");
+
+            var response = new HostResponse
+            {
+                Id = host.Id,
+                UserId = host.UserId,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = host.PhoneNumber,
+                HostDescription = host.HostDescription,
+                JoinedDate = host.JoinedDate,
+                IsActive = host.IsActive,
+                IsVerified = host.IsVerified,
+                Rating = host.Rating,
+                TotalReviews = host.TotalReviews,
+                TotalBookings = host.TotalBookings
+            };
+
+            return Ok(response);
+        }
+
+
+
+
+
+        [HttpPost("verify/{hostId}")]
+        [Authorize(Roles = "Root, Admin")]
+        public async Task<ActionResult> VerifyHost(int hostId, ApproveHostRequest request)
         {
             var host = await hostRepo.GetByIdAsync(hostId);
             if (host == null)
                 return NotFound("Host not found");
 
-            host.IsVerified = true;
-            host.VerifiedDate = DateTime.UtcNow;
+            var user = await userManager.FindByIdAsync(host.UserId.ToString());
 
-            await hostRepo.UpdateAsync(host);
+            if (user == null)
+                return NotFound("User not found");
 
-            return Ok("Host verified successfully");
+            if (request.IsApproved)
+            {
+                host.IsVerified = true;
+                host.VerifiedDate = DateTime.UtcNow;
+
+                await hostRepo.UpdateAsync(host);
+
+                var userRoles = await userManager.GetRolesAsync(user);
+
+                if (userRoles.Contains(RoleType.Client.ToString()))
+                {
+                    await userManager.RemoveFromRoleAsync(user, RoleType.Client.ToString());
+                }
+
+                await userManager.AddToRoleAsync(user, RoleType.Host.ToString());
+
+                return Ok("Host verified successfully");
+            }
+            else
+            {
+                await hostRepo.DeleteAsync(host);
+
+                return Ok(new { message = " Host application rejected" });
+            }
         }
     }
 }
