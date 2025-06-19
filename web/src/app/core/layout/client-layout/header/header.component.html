@@ -55,18 +55,32 @@
       <div class="flex items-center gap-2 sm:gap-4">
         <!-- User Menu - Different style for mobile/tablet vs desktop -->
           <!-- Become Host Button - Hidden on mobile & tablet -->
-        <button routerLink="/become-host" class="hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:border-primary-400/50 hover:text-primary-300">
+        <button 
+        *ngIf="!isHost; else hostModeBtn"
+        routerLink="/become-host" class="hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:border-primary-400/50 hover:text-primary-300">
           <span class="material-icons text-base">add_home</span>
           <span>Devenez hôte</span>
         </button>
+        <ng-template #hostModeBtn>
+            <button
+              routerLink="/admin/dashboard"
+              class="hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-white text-sm font-medium transition-all duration-300">
+              <span class="material-icons text-base">home_work</span>
+              <span>Mode Hôte</span>
+            </button>
+          </ng-template>
         <div class="relative">
           <!-- Mobile/Tablet User Icon -->
-          <button (click)="toggleDropdown()"
+          <button 
+          
+          (click)="toggleDropdown()"
                  class="lg:hidden flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-all duration-300">
             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white">
               <span class="material-icons text-lg">person</span>
             </div>
           </button>
+
+          
           
           <!-- Desktop User Menu -->
           <button (click)="toggleDropdown()"

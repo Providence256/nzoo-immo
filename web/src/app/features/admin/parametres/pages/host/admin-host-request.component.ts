@@ -153,7 +153,7 @@ export class AdminHostRequestComponent implements OnInit {
               : 'Demande rejetée',
             life: 5000,
           });
-          this.loadHostRequests(); // Recharger la liste
+          this.loadHostRequests();
         },
         error: (error) => {
           this.messageService.add({

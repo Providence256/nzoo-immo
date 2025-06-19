@@ -20,6 +20,8 @@ import { ListAnnoncesComponent } from './saisies/pages/list-annonce/list-annonce
 import { NewAnnonceComponent } from './saisies/pages/new annonce/new-annonce.component';
 import { SousTypeHebergementComponent } from './files/pages/sous-type-hebergement/sous-type-hebergement.component';
 import { AdminHostRequestComponent } from './parametres/pages/host/admin-host-request.component';
+import { HostCalendarComponent } from './host/pages/host-calendar/host-calendar.component';
+import { HostIntroductionComponent } from './host/pages/host-introduction/host-introduction.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -43,6 +45,11 @@ const routes: Routes = [
     path: 'saisies',
     loadChildren: () =>
       import('../admin/saisies/saisies.module').then((m) => m.SaisiesModule),
+  },
+  {
+    path: 'host',
+    loadChildren: () =>
+      import('../admin/host/hosts.module').then((m) => m.HostsModule),
   },
   {
     path: 'parametres',
@@ -70,6 +77,8 @@ const routes: Routes = [
     ListAnnoncesComponent,
     NewAnnonceComponent,
     AdminHostRequestComponent,
+    HostCalendarComponent,
+    HostIntroductionComponent,
   ],
   imports: [
     CommonModule,

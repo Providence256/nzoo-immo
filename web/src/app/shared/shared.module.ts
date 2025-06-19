@@ -13,14 +13,11 @@ import { FooterComponent } from './components/footer/footer.component';
 import { PrimengModule } from './_primeng/primeng.module';
 import { HeaderComponent } from '../core/layout/client-layout/header/header.component';
 import { AdminHeaderComponent } from '../core/layout/admin-layout/admin-header/admin-header.component';
-import { AdminSidebarComponent } from '../core/layout/admin-layout/admin-sidebar/admin-sidebar.component';
 import { BreadcrumbComponent } from '../core/layout/admin-layout/breadcrumb/breadcrumb.component';
-import { AdminSidebarItemComponent } from '../core/layout/admin-layout/admin-sidebar/admin-siderbaritem.component';
 import { BreadcrumbService } from '../core/services/breadcrumb.service';
-import { AdminMenuService } from '../core/services/admin-menu.service';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { GuestSelectorComponent } from './components/guest-selector/guest-selector.component';
-import { DialogService } from 'primeng/dynamicdialog';
+import { MenuService } from '../core/services/admin-menu.service';
 
 // Shared components that will be used throughout the app
 
@@ -34,9 +31,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 
     //Admin Shared
     AdminHeaderComponent,
-    AdminSidebarComponent,
     BreadcrumbComponent,
-    AdminSidebarItemComponent,
     DateRangePickerComponent,
     GuestSelectorComponent,
   ],
@@ -66,7 +61,6 @@ import { DialogService } from 'primeng/dynamicdialog';
     HeaderComponent,
 
     AdminHeaderComponent,
-    AdminSidebarComponent,
     BreadcrumbComponent,
     DateRangePickerComponent,
     GuestSelectorComponent,
@@ -74,7 +68,7 @@ import { DialogService } from 'primeng/dynamicdialog';
   providers: [
     // Add any shared services here
     BreadcrumbService,
-    AdminMenuService,
+    MenuService,
   ],
 })
 export class SharedModule {}

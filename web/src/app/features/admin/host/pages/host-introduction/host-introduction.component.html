@@ -1,0 +1,153 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <!-- Hero Section -->
+  <div class="container mx-auto px-4 py-12 lg:py-20">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- Left Column - Content -->
+      <div class="space-y-8">
+        <div class="space-y-6">
+          <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            Start hosting and 
+            <span class="text-blue-600">earn extra income</span>
+          </h1>
+          
+          <p class="text-xl text-gray-600 leading-relaxed">
+            Join millions of hosts worldwide and turn your space into a source of income. 
+            Whether it's a spare room, entire home, or unique property, we'll help you welcome guests safely and earn money.
+          </p>
+        </div>
+
+        <!-- CTA Button -->
+        <div class="pt-4">
+          <p-button 
+            label="Start Hosting Today" 
+            icon="pi pi-arrow-right" 
+            iconPos="right"
+            class="text-lg"
+            [style]="{'padding': '1rem 2rem', 'font-size': '1.1rem'}"
+            (onClick)="onStartHosting()">
+          </p-button>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="flex items-center space-x-8 pt-6">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-900">5M+</div>
+            <div class="text-sm text-gray-500">Active Hosts</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-900">4.8★</div>
+            <div class="text-sm text-gray-500">Average Rating</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-900">190+</div>
+            <div class="text-sm text-gray-500">Countries</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Hero Image -->
+      <div class="relative">
+        <div class="rounded-2xl overflow-hidden shadow-2xl">
+          <img 
+            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&h=600" 
+            alt="Beautiful home interior" 
+            class="w-full h-96 lg:h-[500px] object-cover">
+        </div>
+        
+        <!-- Floating Cards -->
+        <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 max-w-48">
+          <div class="flex items-center space-x-3">
+            <i class="pi pi-star-fill text-yellow-400 text-lg"></i>
+            <div>
+              <div class="font-semibold text-gray-900">€2,400</div>
+              <div class="text-sm text-gray-500">earned last month</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="absolute -top-6 -right-6 bg-white rounded-xl shadow-lg p-4 max-w-48">
+          <div class="flex items-center space-x-3">
+            <i class="pi pi-heart-fill text-red-400 text-lg"></i>
+            <div>
+              <div class="font-semibold text-gray-900">98%</div>
+              <div class="text-sm text-gray-500">guest satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits Section -->
+  <div class="bg-white py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          Why host with us?
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          We provide everything you need to start hosting confidently and successfully
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div *ngFor="let benefit of benefits" class="text-center space-y-4 group">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto group-hover:bg-blue-200 transition-colors">
+            <i [class]="benefit.icon + ' text-blue-600 text-2xl'"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900">{{ benefit.title }}</h3>
+          <p class="text-gray-600 leading-relaxed">{{ benefit.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it Works Section -->
+  <div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          It's easier than you think
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div class="text-center space-y-4">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+            1
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900">Share your space</h3>
+          <p class="text-gray-600">Tell us about your place - from a cozy room to an entire home</p>
+        </div>
+
+        <div class="text-center space-y-4">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+            2
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900">Set your price</h3>
+          <p class="text-gray-600">Choose your nightly rate and availability calendar</p>
+        </div>
+
+        <div class="text-center space-y-4">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+            3
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900">Welcome guests</h3>
+          <p class="text-gray-600">Get ready to host and start earning money</p>
+        </div>
+      </div>
+
+      <!-- Final CTA -->
+      <div class="text-center mt-12">
+        <p-button 
+          label="Get Started Now" 
+          icon="pi pi-arrow-right" 
+          iconPos="right"
+          size="large"
+          (onClick)="onStartHosting()">
+        </p-button>
+      </div>
+    </div>
+  </div>
+</div>

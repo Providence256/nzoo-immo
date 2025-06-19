@@ -50,6 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAtTop = true;
   user: User | null = null;
   currentRoute = '';
+  isHost = false;
 
   private userSub!: Subscription;
   private routerSub!: Subscription;
@@ -106,6 +107,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userMenuItems = [...this.clientMenuItems];
 
       const role = this.authService.isAdmin();
+      const isHost = this.authService.isHost();
+
+      this.isHost = isHost;
 
       if (role) {
         this.userMenuItems = [...this.adminMenuItems];

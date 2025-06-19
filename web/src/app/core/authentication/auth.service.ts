@@ -48,6 +48,11 @@ export class AuthService {
     return user?.role === 'admin' || user?.role === 'Root';
   }
 
+  public isHost(): boolean {
+    const user = this.currentUserSubject.value;
+    return user?.role === 'Host';
+  }
+
   public setCurrentUser(user: User): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUserSubject.next(user);
