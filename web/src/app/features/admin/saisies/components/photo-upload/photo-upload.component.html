@@ -1,0 +1,260 @@
+<div *ngIf="currentStep === 8" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Ajoutez des photos de votre logement
+        </h1>
+        <p class="text-xl text-gray-600 mb-4">
+          Vous aurez besoin de 5 photos pour commencer. Vous pourrez en ajouter d'autres plus tard.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Zone d'affichage des photos ajoutées -->
+        <div *ngIf="photos.length > 0" class="space-y-4">
+          <h3 class="text-xl font-semibold text-gray-800">
+            Photos ajoutées ({{ photos.length }})
+          </h3>
+          
+          <div 
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+            cdkDropList>
+            <div 
+              *ngFor="let photo of photos; let i = index"
+              class="relative group cursor-move bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300"
+              cdkDrag>
+              
+              <!-- Indicateur de position -->
+              <div class="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-full z-10">
+                {{ i + 1 }}
+              </div>
+              
+              <!-- Badge "Principale" pour la première photo -->
+              <div *ngIf="i === 0" class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full z-10">
+                Principale
+              </div>
+              
+              <!-- Image -->
+              <div class="aspect-square relative overflow-hidden">
+                <img 
+                  [src]="photo.url" 
+                  [alt]="photo.name"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                
+                <!-- Overlay avec boutons -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                  <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
+                    <button 
+                      (click)="previewPhotos(photo)"
+                      class="p-2 bg-white bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all duration-200">
+                      <i class="fas fa-eye text-gray-700"></i>
+                    </button>
+                    <button 
+                      (click)="removePhoto(i)"
+                      class="p-2 bg-red-500 bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all duration-200">
+                      <i class="fas fa-trash text-white"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Nom du fichier -->
+              <div class="p-2">
+                <p class="text-xs text-gray-600 truncate" [title]="photo.name">
+                  {{ photo.name }}
+                </p>
+                <p class="text-xs text-gray-400">
+                  {{ formatFileSize(photo.size) }}
+                </p>
+              </div>
+              
+              <!-- Indicateur de glisser-déposer -->
+              <div class="absolute inset-0 bg-blue-500 bg-opacity-20 border-2 border-blue-500 border-dashed rounded-xl opacity-0 transition-opacity duration-200" 
+                   *cdkDragPreview></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone d'ajout de photos -->
+        <div class="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center hover:border-gray-400 transition-colors bg-gradient-to-br from-gray-50 to-white">
+          <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-camera text-3xl text-gray-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold text-gray-700 mb-4">
+            {{ photos.length === 0 ? 'Ajoutez vos photos' : 'Ajouter plus de photos' }}
+          </h3>
+          <p class="text-lg text-gray-500 mb-6">
+            Glissez vos photos ici ou cliquez pour les sélectionner
+          </p>
+          <button 
+            (click)="openPhotoDialog()"
+            class="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <i class="fas fa-upload mr-2"></i>
+            Télécharger à partir de votre appareil
+          </button>
+          <p class="text-sm text-gray-400 mt-4">
+            Formats acceptés: JPG, PNG (max 10MB par photo)
+          </p>
+        </div>
+
+        <!-- Conseils pour les photos -->
+        <div *ngIf="showStepContent" class="bg-blue-50 rounded-2xl p-6 border border-blue-200">
+          <h4 class="font-semibold text-blue-900 mb-3 flex items-center">
+            <i class="fas fa-lightbulb mr-2 text-blue-600"></i>
+            Conseils pour de meilleures photos
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check text-blue-600 mt-1"></i>
+              <span>Utilisez un éclairage naturel</span>
+            </div>
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check text-blue-600 mt-1"></i>
+              <span>Montrez chaque pièce importante</span>
+            </div>
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check text-blue-600 mt-1"></i>
+              <span>Évitez les objets personnels</span>
+            </div>
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check text-blue-600 mt-1"></i>
+              <span>Capturez l'ambiance du lieu</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog pour l'ajout de photos -->
+    <div 
+      *ngIf="isDialogOpen" 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+      (click)="closeDialog($event)">
+      
+      <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden"
+           (click)="$event.stopPropagation()">
+        
+        <!-- Header du dialog -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 class="text-2xl font-bold text-gray-900">Ajouter des photos</h2>
+          <button 
+            (click)="closeDialog()"
+            class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200">
+            <i class="fas fa-times text-xl text-gray-500"></i>
+          </button>
+        </div>
+
+        <!-- Contenu du dialog -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+          
+          <!-- Zone de drag & drop -->
+          <div 
+            class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center mb-6 transition-colors duration-200"
+            [class.border-blue-400]="isDragOver"
+            [class.bg-blue-50]="isDragOver"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)">
+            
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
+            </div>
+            
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">
+              Glissez et déposez vos photos ici
+            </h3>
+            <p class="text-gray-500 mb-4">ou</p>
+            
+            <button 
+              (click)="triggerFileInput()"
+              class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+              Parcourir les fichiers
+            </button>
+            
+            <input 
+              #fileInput
+              type="file" 
+              multiple 
+              accept="image/jpeg,image/png,image/jpg"
+              (change)="onFileSelected($event)"
+              class="hidden">
+          </div>
+
+          <!-- Photos en attente d'ajout -->
+          <div *ngIf="pendingPhotos.length > 0" class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-800">
+              Photos sélectionnées ({{ pendingPhotos.length }})
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div 
+                *ngFor="let photo of pendingPhotos; let i = index"
+                class="relative group bg-gray-50 rounded-lg overflow-hidden">
+                
+                <div class="aspect-square relative">
+                  <img 
+                    [src]="photo.url" 
+                    [alt]="photo.name"
+                    class="w-full h-full object-cover">
+                  
+                  <button 
+                    (click)="removePendingPhoto(i)"
+                    class="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600">
+                    <i class="fas fa-times text-sm"></i>
+                  </button>
+                </div>
+                
+                <div class="p-2">
+                  <p class="text-xs text-gray-600 truncate" [title]="photo.name">
+                    {{ photo.name }}
+                  </p>
+                  <p class="text-xs text-gray-400">
+                    {{ formatFileSize(photo.size) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer du dialog -->
+        <div class="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+          <p class="text-sm text-gray-600">
+            {{ pendingPhotos.length }} photo(s) sélectionnée(s)
+          </p>
+          
+          <div class="flex space-x-3">
+            <button 
+              (click)="closeDialog()"
+              class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              Annuler
+            </button>
+            <button 
+              (click)="addPhotos()"
+              [disabled]="pendingPhotos.length === 0"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200">
+              Ajouter {{ pendingPhotos.length }} photo(s)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de prévisualisation -->
+    <div 
+      *ngIf="previewPhoto" 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 backdrop-blur-sm"
+      (click)="closePreview()">
+      
+      <div class="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
+        <img 
+          [src]="previewPhoto.url" 
+          [alt]="previewPhoto.name"
+          class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+        
+        <button 
+          (click)="closePreview()"
+          class="absolute top-4 right-4 p-3 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-all duration-200">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+    </div>

@@ -7,6 +7,7 @@ import { TauxChangeComponent } from './pages/taux-changes/taux-change.component'
 import { AddAnnonceComponent } from './pages/add-annonce/add-annonce.component';
 import { ListAnnoncesComponent } from './pages/list-annonce/list-annonces.component';
 import { NewAnnonceComponent } from './pages/new annonce/new-annonce.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   {
@@ -34,6 +35,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     ReactiveFormsModule,
+    DragDropModule,
   ],
 })
 export class SaisiesModule {}

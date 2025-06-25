@@ -213,7 +213,7 @@ export const MENU_CONFIG: { [key: string]: MenuItem[] } = {
       key: 'annonces',
       label: 'Annonces',
       icon: 'pi-home',
-      path: '/admin/host/annonces',
+      path: '/admin/saisies/new-annonce',
       roles: ['Host'],
     },
     {

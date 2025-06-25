@@ -129,99 +129,86 @@
 
       <!-- Calendar Dropdown - Positionné correctement -->
       <div *ngIf="isDropdownOpen && (activeField === 'checkin' || activeField === 'checkout')" 
-           [@slideDown]
-           class="calendar-dropdown absolute  top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-[100] w-full max-w-2xl min-w-[640px]"
-           >
-        
-        <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-gray-100">
-          <button (click)="previousMonth()" 
-                  class="w-8 h-8 rounded-full calendar-nav-btn border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </button>
-          
-          <div class="flex gap-12 font-semibold text-gray-900">
-            <span *ngFor="let month of displayedMonths">
-              {{ formatMonth(month) | uppercase }}
-            </span>
-          </div>
-          
-          <button (click)="nextMonth()"
-                  class="w-8 h-8 rounded-full calendar-nav-btn border border-gray-300 flex items-center justify-center hover:border-gray-900 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
+     [@slideDown]
+     class="calendar-dropdown absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-[100] w-full max-w-2xl min-w-[640px]">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between p-6 border-b border-gray-100">
+    <button (click)="previousMonth()" 
+            class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+      <i class="pi pi-chevron-left text-gray-600"></i>
+    </button>
+    
+    <div class="flex gap-12 font-Jost font-semibold text-gray-900">
+      <span *ngFor="let month of displayedMonths">
+        {{ formatMonth(month) | uppercase}}
+      </span>
+    </div>
+    
+    <button (click)="nextMonth()"
+            class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+      <i class="pi pi-chevron-right text-gray-600"></i>
+    </button>
+  </div>
+  
+  <!-- Calendriers -->
+  <div class="flex p-6 gap-8">
+    <div *ngFor="let month of displayedMonths" class="flex-1">
+      
+      <!-- Jours de la semaine -->
+      <div class="grid grid-cols-7 mb-4">
+        <div *ngFor="let day of weekDays" 
+             class="h-10 flex items-center justify-center text-xs font-medium text-gray-500 uppercase">
+          {{ day }}
         </div>
-        
-        <!-- Calendriers -->
-        <div class="flex p-6 gap-8">
-          <div *ngFor="let month of displayedMonths" class="flex-1">
-            
-            <!-- Jours de la semaine -->
-            <div class="grid grid-cols-7 gap-1 mb-2">
-              <div *ngFor="let day of weekDays" class="text-xs font-medium calendar-days text-gray-500 text-center py-2">
-                {{ day }}
-              </div>
-            </div>
-            
-            <!-- Jours du calendrier -->
-            <div class="grid grid-cols-7 gap-1">
-              <ng-container *ngFor="let day of daysInMonth(month)">
-                
-                <!-- Cellule vide -->
-                <div *ngIf="!day" class="h-10 w-10"></div>
-                
-                <!-- Bouton de date -->
-                <div *ngIf="day" class="relative">
-                  <!-- Background pour les dates en range -->
-                  <div *ngIf="isInRange(day) && !isStartDate(day) && !isEndDate(day)"
-                       class="absolute inset-0 bg-gray-100 h-10 w-10">
-                  </div>
-                  
-                  <!-- Background pour les dates de début/fin en range -->
-                  <div *ngIf="isStartDate(day) && isEndDate(day)"
-                       class="absolute inset-0 bg-gray-100 h-10 w-10 rounded-full">
-                  </div>
-                  <div *ngIf="isStartDate(day) && !isEndDate(day) && selectedEndDate"
-                       class="absolute inset-0 bg-gray-100 h-10 w-10 rounded-l-full">
-                  </div>
-                  <div *ngIf="isEndDate(day) && selectedStartDate"
-                       class="absolute inset-0 bg-gray-100 h-10 w-10 rounded-r-full">
-                  </div>
-                  
-                  <button (click)="onDateClick(day)"
-                          [disabled]="isDisabled(day)"
-                          class="relative h-10 w-10 text-black rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200 z-10
-                                 hover:bg-gray-200 disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-transparent
-                                 {{ isStartDate(day) || isEndDate(day) ? 'bg-gray-900 text-white hover:bg-gray-800' : '' }}
-                                 {{ isToday(day) && !isStartDate(day) && !isEndDate(day) ? 'border-2 border-gray-900' : '' }}">
-                    {{ formatDay(day) }}
-                  </button>
-                </div>
-                
-              </ng-container>
-            </div>
+      </div>
+      
+      <!-- Grille des jours -->
+      <div class="grid grid-cols-7">
+        <div *ngFor="let day of daysInMonth(month)" 
+             class="h-12 flex items-center justify-center relative">
+          
+          <!-- Background pour range -->
+          <div *ngIf="day && isInRange(day)"
+               class="absolute inset-0 bg-blue-50"
+               [ngClass]="{
+                 'rounded-l-full': isStartDate(day),
+                 'rounded-r-full': isEndDate(day),
+                 'rounded-full': isStartDate(day) && isEndDate(day)
+               }">
           </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="flex items-center justify-between p-6 border-t border-gray-100">
-          <div class="text-sm text-gray-600">
-            <span *ngIf="selectedStartDate && selectedEndDate">
-              {{ getNightsBetween() }} nuit{{ getNightsBetween() > 1 ? 's' : '' }}
-            </span>
-          </div>
-          <button (click)="closeCalendar()"
-                  class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
-            Fermer
+          
+          <!-- Bouton date -->
+          <button *ngIf="day"
+                  (click)="onDateClick(day)"
+                  [disabled]="isDisabled(day)"
+                  class="relative w-10 h-10 rounded-full text-black flex items-center justify-center text-sm font-medium transition-all z-10"
+                  [ngClass]="{
+                    'bg-blue-600 text-white hover:bg-blue-700': isStartDate(day) || isEndDate(day),
+                    'hover:bg-gray-100': !isStartDate(day) && !isEndDate(day) && !isDisabled(day),
+                    'text-gray-300 cursor-not-allowed': isDisabled(day),
+                    'ring-2 ring-blue-600': isToday(day) && !isStartDate(day) && !isEndDate(day)
+                  }">
+            {{ formatDay(day) }}
           </button>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- Footer -->
+  <div class="flex items-center justify-between p-6 border-t border-gray-100">
+    <div class="text-sm text-gray-600">
+      <span *ngIf="selectedStartDate && selectedEndDate">
+        {{ getNightsBetween() }} nuit{{ getNightsBetween() > 1 ? 's' : '' }}
+      </span>
+    </div>
+    <button (click)="closeCalendar()"
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      Valider
+    </button>
+  </div>
+</div>
 
   <!-- Mobile Search -->
   <div class="md:hidden">

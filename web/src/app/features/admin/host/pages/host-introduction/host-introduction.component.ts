@@ -10,27 +10,27 @@ export class HostIntroductionComponent {
   benefits = [
     {
       icon: 'pi pi-money-bill',
-      title: 'Earn Extra Income',
+      title: 'Gagnez un revenu supplémentaire',
       description:
-        'Generate passive income by sharing your space with travelers from around the world.',
+        'Générez des revenus passifs en partageant votre espace avec des voyageurs du monde entier.',
     },
     {
       icon: 'pi pi-shield',
-      title: 'Host Protection',
+      title: "Protection de l'hôte",
       description:
-        'Comprehensive insurance coverage and 24/7 support to keep you and your property safe.',
+        "Couverture d'assurance complète et assistance 24h/24 et 7j/7 pour assurer votre sécurité et celle de vos biens.",
     },
     {
       icon: 'pi pi-users',
-      title: 'Meet New People',
+      title: 'Rencontrer de nouvelles personnes',
       description:
-        'Connect with interesting guests and create memorable experiences for travelers.',
+        'Connectez-vous avec des invités intéressants et créez des expériences mémorables pour les voyageurs.',
     },
     {
       icon: 'pi pi-calendar',
-      title: 'Flexible Hosting',
+      title: 'Hébergement flexible',
       description:
-        "Host on your schedule - whether it's a spare room or your entire place.",
+        "Hébergez vos invités selon votre emploi du temps, qu'il s'agisse d'une pièce libre ou de votre logement entier.",
     },
   ];
 
@@ -38,6 +38,6 @@ export class HostIntroductionComponent {
 
   onStartHosting() {
     // Navigate to the announce/listing creation page
-    this.router.navigate(['/host/create-listing']);
+    this.router.navigate(['/admin/host/calendar']);
   }
 }

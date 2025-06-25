@@ -22,6 +22,7 @@ import { SousTypeHebergementComponent } from './files/pages/sous-type-hebergemen
 import { AdminHostRequestComponent } from './parametres/pages/host/admin-host-request.component';
 import { HostCalendarComponent } from './host/pages/host-calendar/host-calendar.component';
 import { HostIntroductionComponent } from './host/pages/host-introduction/host-introduction.component';
+import { PhotoUploadComponent } from './saisies/components/photo-upload/photo-upload.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -79,6 +80,7 @@ const routes: Routes = [
     AdminHostRequestComponent,
     HostCalendarComponent,
     HostIntroductionComponent,
+    PhotoUploadComponent,
   ],
   imports: [
     CommonModule,

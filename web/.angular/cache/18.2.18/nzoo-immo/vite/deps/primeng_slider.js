@@ -3,6 +3,9 @@ import {
 } from "./chunk-3MBEO5MG.js";
 import "./chunk-5G7WYC4N.js";
 import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-BMBTPMFB.js";
+import {
   BaseComponent
 } from "./chunk-7TM5EEZP.js";
 import "./chunk-LWGOPU6J.js";
@@ -17,9 +20,6 @@ import {
   isRTL,
   removeClass
 } from "./chunk-3NELQC5U.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-BMBTPMFB.js";
 import {
   CommonModule,
   NgClass,
@@ -75,8 +75,8 @@ import {
   ɵɵtemplate,
   ɵɵviewQuery
 } from "./chunk-FUF4CDAW.js";
-import "./chunk-PEBH6BBU.js";
 import "./chunk-WPM5VTLQ.js";
+import "./chunk-PEBH6BBU.js";
 import "./chunk-4S3KYZTJ.js";
 import "./chunk-WDMUDEB6.js";
 

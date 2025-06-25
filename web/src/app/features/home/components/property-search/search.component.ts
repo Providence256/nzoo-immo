@@ -313,6 +313,69 @@ export class SearchComponent implements OnInit {
     return classes.join(' ');
   }
 
+  trackByMonth(index: number, month: Date): string {
+    return `${month.getFullYear()}-${month.getMonth()}`;
+  }
+
+  trackByDay(index: number, day: Date | null): string {
+    return day ? day.toISOString() : `empty-${index}`;
+  }
+
+  /**
+   * Méthode améliorée pour obtenir les classes CSS d'un jour
+   */
+  getDayClasses(date: Date): string {
+    const classes: string[] = [];
+
+    if (this.isToday(date)) classes.push('today');
+    if (this.isStartDate(date)) classes.push('start-date');
+    if (this.isEndDate(date)) classes.push('end-date');
+    if (this.isInRange(date)) classes.push('in-range');
+    if (this.isSelected(date)) classes.push('selected');
+    if (this.isDisabled(date)) classes.push('disabled');
+
+    return classes.join(' ');
+  }
+
+  /**
+   * Accessibilité - Labels ARIA pour les jours
+   */
+  getDayAriaLabel(date: Date): string {
+    const dateStr = this.formatDisplayDate(date);
+
+    if (this.isDisabled(date)) {
+      return `${dateStr} - Non disponible`;
+    }
+
+    if (this.isStartDate(date)) {
+      return `${dateStr} - Date d'arrivée sélectionnée`;
+    }
+
+    if (this.isEndDate(date)) {
+      return `${dateStr} - Date de départ sélectionnée`;
+    }
+
+    if (this.isInRange(date)) {
+      return `${dateStr} - Dans la période sélectionnée`;
+    }
+
+    if (this.isToday(date)) {
+      return `${dateStr} - Aujourd'hui`;
+    }
+
+    return dateStr;
+  }
+
+  /**
+   * Méthode pour effacer les dates sélectionnées
+   */
+  clearDates(): void {
+    this.selectedStartDate = null;
+    this.selectedEndDate = null;
+    this.searchForm.checkin = '';
+    this.searchForm.checkout = '';
+  }
+
   closeCalendar() {
     this.isDropdownOpen = false;
     this.activeSelector = null;

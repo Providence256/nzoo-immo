@@ -5,6 +5,9 @@ import {
   AutoFocus
 } from "./chunk-3MBEO5MG.js";
 import "./chunk-5G7WYC4N.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-BMBTPMFB.js";
 import "./chunk-2ZXM7VXU.js";
 import {
   Ripple
@@ -42,9 +45,6 @@ import {
   uuid
 } from "./chunk-3NELQC5U.js";
 import "./chunk-3D5YJ6TY.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-BMBTPMFB.js";
 import {
   CommonModule,
   NgClass,
@@ -117,8 +117,8 @@ import {
   ɵɵtwoWayProperty,
   ɵɵviewQuery
 } from "./chunk-FUF4CDAW.js";
-import "./chunk-PEBH6BBU.js";
 import "./chunk-WPM5VTLQ.js";
+import "./chunk-PEBH6BBU.js";
 import "./chunk-4S3KYZTJ.js";
 import {
   __spreadProps,

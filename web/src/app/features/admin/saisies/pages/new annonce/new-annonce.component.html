@@ -1,83 +1,185 @@
 <div class="min-h-screen bg-white">
-      <!-- Header -->
-      <div class="border-b border-gray-200 px-6 py-4">
-        <div class="w-full mx-auto flex items-center justify-between">
-          <div class="flex items-center space-x-8">
-            <div class="text-sm text-gray-600">
-              {{ currentStep + 1 }} sur {{ steps.length }}
-            </div>
-            <button class="text-sm font-medium hover:underline">
-              Enregistrer et quitter
-            </button>
+  <!-- Header -->
+  <div class="border-b border-gray-200 px-6 py-4">
+    <div class="w-full mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-8">
+        <div class="text-sm text-gray-600">
+          {{ currentStep + 1 }} sur {{ steps.length }}
+        </div>
+        <button class="text-sm font-medium hover:underline text-gray-700">
+          Enregistrer et quitter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="px-6 py-4 border-b border-gray-200">
+    <div class="w-full mx-auto">
+      <div class="w-full bg-gray-200 rounded-full h-1">
+        <div 
+          class="bg-gradient-to-r from-pink-500 to-rose-500 h-1 rounded-full transition-all duration-500 ease-out"
+          [style.width.%]="((currentStep + 1) / steps.length) * 100"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-2xl mx-auto px-6 py-12">
+    
+    <!-- Step 0: Property Type -->
+    <div *ngIf="currentStep === 0" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Decriver votre logement!
+        </h1>
+        <p class="text-xl text-gray-600">
+          Choisissez le type qui correspond le mieux à votre propriété
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          *ngFor="let type of propertyTypes"
+          (click)="updateFormData('propertyType', type.id)"
+          class="group p-4 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-black transform hover:-translate-y-1"
+          [class.border-black]="formData.propertyType === type.id"
+          [class.bg-gray-100]="formData.propertyType === type.id"
+          [class.shadow-lg]="formData.propertyType === type.id"
+          [class.border-gray-200]="formData.propertyType !== type.id"
+        >
+          <div class="text-left">
+            <span class="material-icons-outlined  text-4xl mb-4 text-black group-hover:text-black">
+                {{ type.icon }}
+            </span>
+            <h3 class="font-bold text-lg mb-2 text-gray-900">{{ type.name }}</h3>
+           
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Progress Bar -->
-      <div class="px-6 py-4 border-b border-gray-200">
-        <div class="w-full mx-auto">
-          <div class="w-full bg-gray-200 rounded-full h-1">
-            <div 
-              class="bg-gray-900 h-1 rounded-full transition-all duration-300"
-              [style.width.%]="((currentStep + 1) / steps.length) * 100"
-            ></div>
-          </div>
-        </div>
+    <!-- Step 1:sous-Property Feature -->
+    <div *ngIf="currentStep === 1" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Quel type de logement proposez-vous ?
+        </h1>
+        <p class="text-xl text-gray-600">
+          Choisissez le type qui correspond le mieux à votre propriété
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+  <div
+    *ngFor="let feature of propertyFeatures"
+    (click)="updateFormData('propertyFeature', feature.id)"
+    class="group p-4 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-black transform hover:-translate-y-1"
+          [class.border-black]="formData.propertyFeature === feature.id"
+          [class.bg-gray-100]="formData.propertyFeature === feature.id"
+          [class.shadow-lg]="formData.propertyFeature === feature.id"
+          [class.border-gray-200]="formData.propertyFeature !== feature.id"
+  >
+    <div class="flex items-center justify-between">
+
+     
+      <!-- Text section -->
+      <div class="text-left">
+        <h3 class="font-bold text-lg mb-1 text-gray-900">{{ feature.name }}</h3>
+        <p class="text-sm text-gray-500">{{ feature.description }}</p>
       </div>
 
-      <!-- Main Content -->
-      <div class="max-w-2xl mx-auto px-6 py-12">
-        <!-- Step 0: Property Type -->
-        <div *ngIf="currentStep === 0" class="space-y-6">
-          <div>
-            <h1 class="text-3xl font-semibold text-gray-900 mb-2">
-              Quel type de logement proposez-vous ?
-            </h1>
-            <p class="text-gray-600">
-              Choisissez le type qui correspond le mieux à votre propriété
-            </p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div
-              *ngFor="let type of propertyTypes"
-              (click)="updateFormData('propertyType', type.id)"
-              class="p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 hover:border-gray-900"
-              [class.border-gray-900]="formData.propertyType === type.id"
-              [class.bg-gray-50]="formData.propertyType === type.id"
-              [class.border-gray-200]="formData.propertyType !== type.id"
-            >
-              <i [class]="type.icon + ' w-8 h-8 mb-4'"></i>
-              <h3 class="font-semibold text-blue-500 text-lg mb-2">{{ type.name }}</h3>
-              <p class="text-gray-600 text-sm">{{ type.desc }}</p>
-            </div>
-          </div>
-        </div>
+      <!-- Icon on the right -->
+      <span class="material-icons-outlined text-4xl text-black group-hover:text-black">
+        {{ feature.icon }}
+      </span>
+    </div>
+  </div>
+</div>
 
-        <!-- Step 1: Location -->
-        <div *ngIf="currentStep === 1" class="space-y-6">
-          <div>
-            <h1 class="text-3xl font-semibold text-gray-900 mb-2">
-              Où se trouve votre logement ?
-            </h1>
-            <p class="text-gray-600">
-              Votre adresse ne sera partagée qu'après réservation
-            </p>
-          </div>
-          <div class="space-y-4">
-            <div class="relative">
-              <i class="fas fa-map-marker-alt absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
-              <input
-                type="text"
-                placeholder="Saisir l'adresse"
-                [(ngModel)]="formData.location"
-                class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl text-lg focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-              />
-            </div>
-          </div>
-        </div>
+    </div>
 
-        <!-- Step 2: Capacity -->
-        <div *ngIf="currentStep === 2" class="space-y-6">
+    <!-- Step 2: Location -->
+    <div *ngIf="currentStep === 2" class="space-y-8">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      Où se trouve votre logement ?
+    </h1>
+    <p class="text-xl text-gray-600">
+      Votre adresse ne sera partagée qu'après réservation
+    </p>
+  </div>
+
+  <div class="max-w-md mx-auto space-y-4">
+
+    <!-- Ville -->
+    <div class="relative">
+      <span class="material-icons absolute left-4 top-5 text-gray-500 text-lg">location_city</span>
+      <select
+        [(ngModel)]="formData.location.ville"
+        (change)="updateLocationField('ville', $any($event.target).value)"
+        class="w-full pl-14 pr-4 font-Jost py-5 text-black border-2 border-gray-200 rounded-2xl text-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-300 appearance-none bg-white"
+      >
+        <option value="">Sélectionner une ville</option>
+        <option *ngFor="let ville of villes" [value]="ville.id">{{ ville.name }}</option>
+      </select>
+    </div>
+
+    <!-- Commune -->
+    <div class="relative">
+      <span class="material-icons absolute left-4 top-5 text-gray-500 text-lg">place</span>
+      <select
+        [(ngModel)]="formData.location.commune"
+        (change)="updateLocationField('commune', $any($event.target).value)"
+        [disabled]="!formData.location.ville"
+        class="w-full pl-14 font-Jost text-black pr-4 py-5 border-2 border-gray-200 rounded-2xl text-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-300 appearance-none bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+      >
+        <option value="">Sélectionner une commune</option>
+        <option *ngFor="let commune of availableCommunes" [value]="commune.id">{{ commune.name }}</option>
+      </select>
+    </div>
+
+    <!-- Quartier -->
+    <div class="relative">
+      <span class="material-icons absolute left-4 top-5 text-gray-500 text-lg">apartment</span>
+      <input
+        type="text"
+        placeholder="Quartier"
+        [(ngModel)]="formData.location.quartier"
+        (input)="updateLocationField('quartier', $any($event.target).value)"
+        class="w-full pl-14 pr-4 py-5 font-Jost text-black border-2 border-gray-200 rounded-2xl text-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-300"
+      />
+    </div>
+
+    <!-- Avenue -->
+    <div class="relative">
+      <span class="material-icons absolute left-4 top-5 text-gray-500 text-lg">route</span>
+      <input
+        type="text"
+        placeholder="Avenue/Rue"
+        [(ngModel)]="formData.location.avenue"
+        (input)="updateLocationField('avenue', $any($event.target).value)"
+        class="w-full pl-14 pr-4 py-5 border-2 font-Jost text-black border-gray-200 rounded-2xl text-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-300"
+      />
+    </div>
+
+    <!-- Numéro -->
+    <div class="relative">
+      <span class="material-icons absolute left-4 top-5 text-gray-500 text-lg">tag</span>
+      <input
+        type="text"
+        placeholder="Numéro"
+        [(ngModel)]="formData.location.numero"
+        (input)="updateLocationField('numero', $any($event.target).value)"
+        class="w-full pl-14 pr-4 font-Jost text-black py-5 border-2 border-gray-200 rounded-2xl text-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-300"
+      />
+    </div>
+    
+  </div>
+</div>
+
+
+    <!-- Step 3: Capacity -->
+    <div *ngIf="currentStep === 3" class="space-y-6">
           <div>
             <h1 class="text-3xl font-semibold text-gray-900 mb-2">
               Partagez quelques informations de base sur votre logement
@@ -90,20 +192,20 @@
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <div class="flex items-center space-x-4">
                 <i class="fas fa-users w-6 h-6 text-gray-600"></i>
-                <span class="text-lg font-medium">Voyageurs</span>
+                <span class="text-lg text-black font-medium">Voyageurs</span>
               </div>
               <div class="flex items-center space-x-4">
                 <button
                   (click)="decrementField('guests')"
                   [disabled]="formData.guests <= 1"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
+                  class="w-8 h-8 rounded-full  text-black border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
                 >
                   -
                 </button>
-                <span class="w-8 text-center font-medium">{{ formData.guests }}</span>
+                <span class="w-8 text-center text-black font-medium">{{ formData.guests }}</span>
                 <button
                   (click)="incrementField('guests')"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900"
+                  class="w-8 h-8 rounded-full border text-black border-gray-300 flex items-center justify-center hover:border-gray-900"
                 >
                   +
                 </button>
@@ -113,20 +215,20 @@
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <div class="flex items-center space-x-4">
                 <i class="fas fa-bed w-6 h-6 text-gray-600"></i>
-                <span class="text-lg font-medium">Chambres</span>
+                <span class="text-lg text-black font-medium">Chambres</span>
               </div>
               <div class="flex items-center space-x-4">
                 <button
                   (click)="decrementField('bedrooms')"
                   [disabled]="formData.bedrooms <= 1"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
+                  class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
                 >
                   -
                 </button>
-                <span class="w-8 text-center font-medium">{{ formData.bedrooms }}</span>
+                <span class="w-8 text-center text-black font-medium">{{ formData.bedrooms }}</span>
                 <button
                   (click)="incrementField('bedrooms')"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900"
+                  class="w-8 h-8 rounded-full border text-black border-gray-300 flex items-center justify-center hover:border-gray-900"
                 >
                   +
                 </button>
@@ -136,20 +238,20 @@
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <div class="flex items-center space-x-4">
                 <i class="fas fa-bath w-6 h-6 text-gray-600"></i>
-                <span class="text-lg font-medium">Salles de bain</span>
+                <span class="text-lg text-black font-medium">Lits</span>
               </div>
               <div class="flex items-center space-x-4">
                 <button
                   (click)="decrementField('bathrooms')"
                   [disabled]="formData.bathrooms <= 1"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
+                  class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
                 >
                   -
                 </button>
-                <span class="w-8 text-center font-medium">{{ formData.bathrooms }}</span>
+                <span class="w-8 text-center text-black font-medium">{{ formData.bathrooms }}</span>
                 <button
                   (click)="incrementField('bathrooms')"
-                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-900"
+                  class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900"
                 >
                   +
                 </button>
@@ -158,149 +260,342 @@
           </div>
         </div>
 
-        <!-- Step 3: Amenities -->
-        <div *ngIf="currentStep === 3" class="space-y-6">
-          <div>
-            <h1 class="text-3xl font-semibold text-gray-900 mb-2">
-              Dites aux voyageurs ce que votre logement a à offrir
-            </h1>
-            <p class="text-gray-600">
-              Vous pourrez ajouter d'autres équipements après avoir publié votre annonce
-            </p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div
-              *ngFor="let amenity of amenitiesList"
-              (click)="toggleAmenity(amenity.id)"
-              class="p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 hover:border-gray-900"
-              [class.border-gray-900]="isAmenitySelected(amenity.id)"
-              [class.bg-gray-50]="isAmenitySelected(amenity.id)"
-              [class.border-gray-200]="!isAmenitySelected(amenity.id)"
-            >
-              <div class="flex items-center space-x-4">
-                <i [class]="amenity.icon + ' w-6 h-6'"></i>
-                <span class="font-medium">{{ amenity.name }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 4: Photos -->
-        <div *ngIf="currentStep === 4" class="space-y-6">
-          <div>
-            <h1 class="text-3xl font-semibold text-gray-900 mb-2">
-              Ajoutez des photos de votre logement
-            </h1>
-            <p class="text-gray-600">
-              Vous aurez besoin de 5 photos pour commencer. Vous pourrez en ajouter d'autres ou apporter des modifications plus tard.
-            </p>
-          </div>
-          <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-gray-400 transition-colors">
-            <i class="fas fa-camera w-12 h-12 text-gray-400 mx-auto mb-4"></i>
-            <p class="text-lg font-medium text-gray-600 mb-2">Glissez vos photos ici</p>
-            <p class="text-gray-500">Choisissez au moins 5 photos</p>
-            <button class="mt-4 px-6 py-2 border border-gray-900 text-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition-colors">
-              Télécharger à partir de votre appareil
-            </button>
-          </div>
-        </div>
-
-        <!-- Step 5: Title and Description -->
-        <div *ngIf="currentStep === 5" class="space-y-6">
-          <div>
-            <h1 class="text-3xl font-semibold text-gray-900 mb-2">
-              Créez maintenant votre titre
-            </h1>
-            <p class="text-gray-600">
-              Les titres courts fonctionnent le mieux. Ne vous inquiétez pas, vous pourrez toujours le modifier plus tard.
-            </p>
-          </div>
-          <div class="space-y-6">
-            <div>
-              <textarea
-                placeholder="Titre de votre annonce"
-                [(ngModel)]="formData.title"
-                maxlength="50"
-                rows="3"
-                class="w-full p-4 border border-gray-300 rounded-xl text-lg resize-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-              ></textarea>
-              <p class="text-sm text-gray-500 mt-2">{{ formData.title.length }}/50</p>
-            </div>
-            
-            <div>
-              <h3 class="text-lg font-semibold mb-2">Créez votre description</h3>
-              <p class="text-gray-600 mb-4">Partagez ce qui rend votre logement spécial.</p>
-              <textarea
-                placeholder="Description de votre logement"
-                [(ngModel)]="formData.description"
-                maxlength="500"
-                rows="5"
-                class="w-full p-4 border border-gray-300 rounded-xl text-lg resize-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-              ></textarea>
-              <p class="text-sm text-gray-500 mt-2">{{ formData.description.length }}/500</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 6: Price -->
-        <div *ngIf="currentStep === 6" class="space-y-6">
-          <div>
-            <h1 class="text-3xl font-semibold text-gray-900 mb-2">
-              Fixez maintenant votre prix
-            </h1>
-            <p class="text-gray-600">
-              Vous pourrez le modifier à tout moment
-            </p>
-          </div>
-          <div class="bg-white border-2 border-gray-200 rounded-xl p-8">
-            <div class="flex items-center justify-center space-x-2 mb-4">
-              <i class="fas fa-euro-sign w-8 h-8 text-gray-600"></i>
-              <input
-                type="number"
-                placeholder="00"
-                [(ngModel)]="formData.price"
-                min="1"
-                class="text-4xl font-semibold text-center border-none outline-none bg-transparent w-32"
-              />
-              <span class="text-2xl text-gray-600">par nuit</span>
-            </div>
-            <p class="text-center text-gray-500">Prix de base avant taxes</p>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6">
-            <h3 class="font-semibold mb-4">Tarification intelligente</h3>
-            <p class="text-gray-600 text-sm">
-              Nous ajusterons automatiquement votre prix en fonction de la demande, de la saisonnalité et d'autres facteurs pour maximiser vos revenus.
-            </p>
-            <div class="flex items-center justify-between mt-4">
-              <span class="text-sm font-medium">Activer la tarification intelligente</span>
-              <div class="w-12 h-6 bg-gray-300 rounded-full relative cursor-pointer">
-                <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Step 4: Bathroom Types -->
+    <div *ngIf="currentStep === 4" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Type de salles de bain
+        </h1>
+        <p class="text-xl font-Jost text-gray-600">
+          Précisez le type de chaque salle de bain
+        </p>
       </div>
+      
+      <div class="space-y-6">
+  <div
+    *ngFor="let type of bathroomTypes"
+    class="flex justify-between items-start py-4 border-b border-gray-200"
+  >
+    <div class="flex items-start space-x-4">
+     
+      <div>
+        <span class="text-lg text-black font-medium">{{ type.name }}</span>
+        <p class="text-sm text-gray-500">{{ type.description }}</p>
+      </div>
+    </div>
 
-      <!-- Navigation -->
-      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4">
-        <div class="w-full  flex items-center justify-between">
-          <button
-            (click)="handlePrevious()"
-            [disabled]="currentStep === 0"
-            class="flex items-center space-x-2 px-6 py-3 text-gray-900 font-medium rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <i class="fas fa-chevron-left w-4 h-4"></i>
-            <span>Précédent</span>
-          </button>
+    <!-- Optional buttons, remove if not needed -->
+    <div class="flex items-center space-x-4">
+      <button
+      (click)="decrementBathroomType(type.id)"
+      [disabled]="!canDecrementBathroomType(type.id)"
+        class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900"
+      >
+        -
+      </button>
+      <span class="w-8 text-center text-black font-medium">
+        {{getBathroomTypeCount(type.id)}}
+      </span>
+      <button
+      (click)="incrementBathroomType(type.id)"
+        class="w-8 h-8 rounded-full border text-black border-gray-300 flex items-center justify-center hover:border-gray-900"
+      >
+        +
+      </button>
+    </div>
+  </div>
+</div>
 
-          <button
-            (click)="handleNext()"
-            [disabled]="!isStepValid() || currentStep === steps.length - 1"
-            class="flex items-center space-x-2 px-8 py-3 bg-pink-500 text-white font-medium rounded-lg hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <span>{{ currentStep === steps.length - 1 ? 'Publier' : 'Suivant' }}</span>
-            <i *ngIf="currentStep !== steps.length - 1" class="fas fa-chevron-right w-4 h-4"></i>
-          </button>
+
+    </div>
+
+   
+
+    <!-- Step 5: Who Else On Site -->
+    <div *ngIf="currentStep === 5" class="space-y-8">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      Qui d'autre pourrait être sur place ?
+    </h1>
+    <p class="text-xl text-gray-600">
+      Informez vos voyageurs de qui ils pourraient rencontrer
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    <div
+      *ngFor="let option of whoElseOptions"
+      (click)="updateFormData('whoElseOnSite', option.id)"
+      class="group p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-md"
+      [class.border-black]="formData.whoElseOnSite === option.id"
+      [class.bg-gray-50]="formData.whoElseOnSite === option.id"
+      [class.border-gray-200]="formData.whoElseOnSite !== option.id"
+    >
+      <div class="flex items-center space-x-4">
+        <!-- Material Icon -->
+        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+          <span class="material-icons-outlined text-black text-2xl">{{ option.icon }}</span>
+        </div>
+
+        <div class="flex-1">
+          <h3 class="font-semibold text-lg text-gray-900">{{ option.name }}</h3>
+          <p class="text-gray-600">{{ option.description }}</p>
+        </div>
+
+        <div *ngIf="formData.whoElseOnSite === option.id">
+          <span class="material-icons-outlined text-black text-xl">check_circle</span>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+
+    <!-- Step 6: Property Description -->
+    <div *ngIf="currentStep === 6" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Décrivez votre logement
+        </h1>
+        <p class="text-xl text-gray-600">
+          Partagez ce qui rend votre espace spécial et unique
+        </p>
+      </div>
+      <div class="max-w-xl mx-auto">
+        <div class="bg-white rounded-2xl border-2 border-gray-200 p-6 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-200 transition-all duration-300">
+          <div class="flex items-start space-x-3 mb-4">
+            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+              <i class="fas fa-pen text-indigo-600"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Description détaillée</h3>
+              <p class="text-sm text-gray-600">Aidez les voyageurs à s'imaginer dans votre espace</p>
+            </div>
+          </div>
+          <textarea
+            placeholder="Décrivez l'atmosphère, les espaces, ce qui rend votre logement unique..."
+            [(ngModel)]="formData.propertyDescription"
+            maxlength="800"
+            rows="6"
+            class="w-full p-4 border-0 resize-none focus:outline-none text-lg placeholder-gray-400"
+          ></textarea>
+          <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+            <p class="text-sm text-gray-500">Minimum 50 caractères recommandés</p>
+            <p class="text-sm font-medium text-gray-600">{{ formData.propertyDescription.length }}/800</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7: Amenities -->
+   <div *ngIf="currentStep === 7" class="space-y-8">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      Quels équipements proposez-vous ?
+    </h1>
+    <p class="text-xl text-gray-600">
+      Ajoutez les équipements que vous offrez à vos voyageurs
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div
+      *ngFor="let amenity of amenitiesList"
+      (click)="toggleAmenity(amenity.id)"
+      class="group p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-md transform hover:-translate-y-1 text-center"
+      [class.border-black]="isAmenitySelected(amenity.id)"
+      [class.bg-gray-50]="isAmenitySelected(amenity.id)"
+      [class.shadow-md]="isAmenitySelected(amenity.id)"
+      [class.border-gray-200]="!isAmenitySelected(amenity.id)"
+    >
+      <div class="flex flex-col items-start space-y-2 text-left">
+        <span class="material-icons-outlined text-black text-3xl group-hover:text-black">
+          {{ amenity.icon }}
+        </span>
+        <span class=" text-lg text-gray-900">{{ amenity.name }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Step 8: Photos -->
+    
+  <div *ngIf="currentStep === 8" class="space-y-8">
+      
+    <app-photo-upload
+      [showStepContent]="false"
+      (photosChanged)="handlePhotosChange($event)"
+    ></app-photo-upload>
+    
+    
+          
+  </div>
+
+    <!-- Step 9: Title and Description -->
+    <div *ngIf="currentStep === 9" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Créez votre titre et description
+        </h1>
+        <p class="text-xl text-gray-600">
+          Donnez envie aux voyageurs de réserver votre logement
+        </p>
+      </div>
+      <div class="space-y-8">
+        <div class="bg-white rounded-2xl border-2 border-gray-200 p-6 focus-within:border-pink-500 focus-within:ring-2 focus-within:ring-pink-200 transition-all duration-300">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+              <i class="fas fa-heading text-pink-600"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Titre de votre annonce</h3>
+              <p class="text-sm text-gray-600">Soyez accrocheur et précis</p>
+            </div>
+          </div>
+          <textarea
+            placeholder="Ex: Appartement cosy avec vue sur mer au cœur de Nice"
+            [(ngModel)]="formData.title"
+            maxlength="60"
+            rows="2"
+            class="w-full p-4 border-0 resize-none focus:outline-none text-xl font-medium placeholder-gray-400"
+          ></textarea>
+          <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+            <p class="text-sm text-gray-500">Les titres courts sont plus efficaces</p>
+            <p class="text-sm font-medium" [class.text-red-600]="formData.title.length > 60" [class.text-gray-600]="formData.title.length <= 60">
+              {{ formData.title.length }}/60
+            </p>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl border-2 border-gray-200 p-6 focus-within:border-purple-500 focus-within:ring-2 focus-within:ring-purple-200 transition-all duration-300">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <i class="fas fa-align-left text-purple-600"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Description pour les voyageurs</h3>
+              <p class="text-sm text-gray-600">Décrivez l'expérience qu'ils vivront</p>
+            </div>
+          </div>
+          <textarea
+            placeholder="Partagez ce qui rend votre logement spécial : l'ambiance, les équipements, le quartier..."
+            [(ngModel)]="formData.description"
+            maxlength="500"
+            rows="5"
+            class="w-full p-4 border-0 resize-none focus:outline-none text-lg placeholder-gray-400"
+          ></textarea>
+          <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+            <p class="text-sm text-gray-500">Minimum 100 caractères recommandés</p>
+            <p class="text-sm font-medium text-gray-600">{{ formData.description.length }}/500</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 10: Price -->
+    <div *ngIf="currentStep === 10" class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Fixez votre prix
+        </h1>
+        <p class="text-xl text-gray-600">
+          Vous pourrez l'ajuster à tout moment selon la demande
+        </p>
+      </div>
+      <div class="max-w-md mx-auto space-y-6">
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-3xl p-12 text-center">
+          <div class="flex items-center justify-center space-x-3 mb-6">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <i class="fas fa-euro-sign text-2xl text-green-600"></i>
+            </div>
+            <input
+              type="number"
+              placeholder="00"
+              [(ngModel)]="formData.price"
+              min="1"
+              max="9999"
+              class="text-5xl font-bold text-center border-none outline-none bg-transparent w-32 text-green-700 placeholder-green-400"
+            />
+            <div class="text-2xl text-green-600 font-semibold">
+              <div>par</div>
+              <div>nuit</div>
+            </div>
+          </div>
+          <p class="text-green-700 font-medium">Prix de base avant taxes et frais</p>
+        </div>
+        
+        <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-chart-line text-blue-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-gray-900 mb-2">Tarification intelligente</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Ajustement automatique selon la demande, les événements locaux et la saisonnalité pour maximiser vos revenus.
+              </p>
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Activer la tarification intelligente</span>
+                <div class="relative">
+                  <input type="checkbox" class="sr-only" id="smart-pricing">
+                  <label for="smart-pricing" class="block w-12 h-6 bg-gray-300 rounded-full cursor-pointer transition-colors hover:bg-gray-400">
+                    <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform shadow-sm"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estimation des revenus -->
+        <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-6 border border-pink-200">
+          <h4 class="font-semibold text-pink-900 mb-3 flex items-center">
+            <i class="fas fa-calculator mr-2 text-pink-600"></i>
+            Estimation des revenus mensuels
+          </h4>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-pink-700 mb-1">
+              {{ formData.price ? ((+formData.price) * 20 | number) : 0 }}€
+            </div>
+            <p class="text-sm text-pink-600">Basé sur 20 nuits/mois à {{ formData.price || 0 }}€/nuit</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-6 py-6 shadow-lg">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <button
+        (click)="handlePrevious()"
+        [disabled]="currentStep === 0"
+        class="flex items-center space-x-3 px-6 py-4 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+      >
+        <i class="fas fa-chevron-left"></i>
+        <span>Précédent</span>
+      </button>
+
+      <!-- Step indicator -->
+      <div class="hidden md:flex items-center space-x-2">
+        <div *ngFor="let step of steps; let i = index" 
+             class="w-2 h-2 rounded-full transition-all duration-300"
+             [class.bg-pink-500]="i <= currentStep"
+             [class.bg-gray-300]="i > currentStep">
+        </div>
+      </div>
+
+      <button
+        (click)="handleNext()"
+        [disabled]="!isStepValid()"
+        class="flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg"
+      >
+        <span>{{ currentStep === steps.length - 1 ? 'Publier l\'annonce' : 'Suivant' }}</span>
+        <i *ngIf="currentStep !== steps.length - 1" class="fas fa-chevron-right"></i>
+        <i *ngIf="currentStep === steps.length - 1" class="fas fa-check"></i>
+      </button>
+    </div>
+  </div>
+</div>

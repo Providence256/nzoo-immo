@@ -42,6 +42,8 @@ namespace API.Controllers
                             .FirstOrDefaultAsync(x => x.Id == id);
             return Ok(listing);
         }
+
+        
         [HttpGet("listing-by-ville/{villeId:int}")]
         public async Task<ActionResult<ListingResponse>> GetAllListingByVille(int villeId)
         {

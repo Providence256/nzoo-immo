@@ -7,6 +7,7 @@ import { DashboardComponent } from './features/admin/dashboard/components/dashbo
 import { AdminGuard } from './core/authentication/admin.guard';
 import { BecomeHostComponent } from './features/auth/components/become-host/become-host.component';
 import { AuthGuard } from './core/authentication/auth.guard';
+import { HostIntroductionComponent } from './features/admin/host/pages/host-introduction/host-introduction.component';
 
 // Import your auth guard for admin routes
 // import { AdminGuard } from './core/authentication/guards/admin.guard';
@@ -50,7 +51,7 @@ const routes: Routes = [
       {
         path: 'become-host',
         component: BecomeHostComponent,
-        canActivate: [AuthGuard], // Assurez-vous que l'utilisateur est connecté
+        canActivate: [AuthGuard],
       },
     ],
   },
@@ -71,6 +72,11 @@ const routes: Routes = [
         component: DashboardComponent,
       },
     ],
+  },
+  {
+    path: 'host-introduction',
+    component: HostIntroductionComponent,
+    canActivate: [AuthGuard],
   },
 
   // Wildcard route for 404

@@ -8,6 +8,7 @@ import { BannerComponent } from './components/banner/banner.component';
 import { FeaturedPropertiesComponent } from './components/featured-property/featured-properties.component';
 import { SearchComponent } from './components/property-search/search.component';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { TestimonialsComponent } from './components/testimonial/testimonial.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     BannerComponent,
     FeaturedPropertiesComponent,
     SearchComponent,
+    TestimonialsComponent,
   ],
   imports: [
     CommonModule,

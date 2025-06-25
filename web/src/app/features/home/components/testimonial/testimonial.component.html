@@ -1,0 +1,147 @@
+<section class="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header Section -->
+    <div class="text-center mb-16" [@fadeInScale]>
+      <h2 class="text-4xl md:text-5xl font-bold font-Jost bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+        Ce que disent nos clients
+      </h2>
+      <p class="text-lg text-gray-600 font-Jost max-w-3xl mx-auto mb-8">
+        Découvrez les témoignages authentiques de nos voyageurs satisfaits
+      </p>
+      
+      <!-- Stats Bar -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-blue-600 font-Jost mb-2">{{ overallStats.averageRating }}</div>
+            <div class="flex justify-center mb-2">
+              <div class="flex space-x-1">
+                <i *ngFor="let star of getStarArray(5)" 
+                   class="pi pi-star-fill text-yellow-400 text-sm"></i>
+              </div>
+            </div>
+            <div class="text-sm text-gray-600 font-Jost">Note moyenne</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl font-bold text-purple-600 font-Jost mb-2">{{ overallStats.totalReviews.toLocaleString() }}</div>
+            <div class="text-sm text-gray-600 font-Jost">Avis clients</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl font-bold text-green-600 font-Jost mb-2">{{ overallStats.fiveStarPercentage }}%</div>
+            <div class="text-sm text-gray-600 font-Jost">5 étoiles</div>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl font-bold text-orange-600 font-Jost mb-2">{{ overallStats.recommendationRate }}%</div>
+            <div class="text-sm text-gray-600 font-Jost">Recommandent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" [@slideInLeft]>
+      <div *ngFor="let testimonial of testimonials" 
+           class="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 hover:-translate-y-2">
+        
+        <!-- Header -->
+        <div class="p-6 pb-4">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-4">
+              <div class="relative">
+                <img [src]="testimonial.avatar" 
+                     [alt]="testimonial.name"
+                     class="w-14 h-14 rounded-full object-cover ring-2 ring-blue-100">
+                <div *ngIf="testimonial.verified" 
+                     class="absolute -bottom-1 -right-1 bg-blue-600 rounded-full p-1">
+                  <i class="pi pi-check text-white text-xs"></i>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-bold text-gray-900 font-Jost">{{ testimonial.name }}</h4>
+                <p class="text-sm text-gray-500 font-Jost">{{ testimonial.location }}</p>
+              </div>
+            </div>
+            
+            <!-- Property Type Badge -->
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+              {{ testimonial.propertyType }}
+            </span>
+          </div>
+          
+          <!-- Rating -->
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="flex space-x-1">
+              <i *ngFor="let star of getStarArray(testimonial.rating)" 
+                 [class]="star ? 'pi pi-star-fill text-yellow-400' : 'pi pi-star text-gray-300'"
+                 class="text-sm"></i>
+            </div>
+            <span class="text-sm text-gray-600 font-Jost">{{ testimonial.rating }}/5</span>
+          </div>
+        </div>
+        
+        <!-- Comment -->
+        <div class="px-6 pb-6">
+          <p class="text-gray-700 font-Jost leading-relaxed mb-4">
+            "{{ testimonial.comment }}"
+          </p>
+          
+          <div class="flex items-center justify-between text-sm text-gray-500">
+            <span class="font-Jost">{{ formatDate(testimonial.date) }}</span>
+            <div class="flex items-center space-x-1">
+              <i class="pi pi-verified text-green-500"></i>
+              <span class="font-Jost">Vérifié</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Hover Effect Decoration -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"></div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center mt-16">
+      <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl shadow-2xl p-8 md:p-12 max-w-4xl mx-auto">
+        <h3 class="text-3xl md:text-4xl font-bold text-white font-Jost mb-4">
+          Rejoignez nos clients satisfaits
+        </h3>
+        <p class="text-xl text-blue-100 font-Jost mb-8 max-w-2xl mx-auto">
+          Réservez votre prochain séjour et découvrez pourquoi tant de voyageurs nous font confiance
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button class="bg-white text-blue-600 font-bold py-4 px-8 rounded-full font-Jost hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+            Réserver maintenant
+          </button>
+          <button class="border-2 border-white text-white font-bold py-4 px-8 rounded-full font-Jost hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+            Voir les propriétés
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust Indicators -->
+    <div class="mt-16 text-center">
+      <p class="text-gray-600 font-Jost mb-8">Ils nous font confiance</p>
+      <div class="flex justify-center items-center space-x-8 grayscale hover:grayscale-0 transition-all duration-300">
+        <div class="flex items-center space-x-2">
+          <i class="pi pi-verified text-green-500 text-2xl"></i>
+          <span class="font-Jost font-semibold text-gray-700">Annonces vérifiées</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <i class="pi pi-shield text-blue-500 text-2xl"></i>
+          <span class="font-Jost font-semibold text-gray-700">Paiement sécurisé</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <i class="pi pi-headphones text-purple-500 text-2xl"></i>
+          <span class="font-Jost font-semibold text-gray-700">Support 24/7</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

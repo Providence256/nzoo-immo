@@ -3983,6 +3983,12 @@ function transferArrayItem(currentArray, targetArray, currentIndex, targetIndex)
     targetArray.splice(to, 0, currentArray.splice(from, 1)[0]);
   }
 }
+function copyArrayItem(currentArray, targetArray, currentIndex, targetIndex) {
+  const to = clamp(targetIndex, targetArray.length);
+  if (currentArray.length) {
+    targetArray.splice(to, 0, currentArray[currentIndex]);
+  }
+}
 function clamp(value, max) {
   return Math.max(0, Math.min(max, value));
 }
@@ -6481,9 +6487,26 @@ var DragDropModule = class _DragDropModule {
 })();
 
 export {
+  DragRef,
   moveItemInArray,
   transferArrayItem,
+  copyArrayItem,
+  DropListRef,
+  DragDropRegistry,
+  DragDrop,
+  CDK_DRAG_PARENT,
+  CDK_DRAG_HANDLE,
+  CdkDragHandle,
+  CDK_DRAG_CONFIG,
+  CDK_DROP_LIST,
+  CdkDrag,
+  CDK_DROP_LIST_GROUP,
   CdkDropListGroup,
+  CdkDropList,
+  CDK_DRAG_PREVIEW,
+  CdkDragPreview,
+  CDK_DRAG_PLACEHOLDER,
+  CdkDragPlaceholder,
   DragDropModule
 };
-//# sourceMappingURL=chunk-LEQFLSZ5.js.map
+//# sourceMappingURL=chunk-C43LFK2O.js.map
