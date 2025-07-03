@@ -154,24 +154,9 @@ public class BookingService : IBookingService
         double cleaningFee = listingPrice.FraisMenage;
         double guestFee = 0;
 
-        if (GetGuestCount(request.Adults, request.Children) > 1)
-        {
-            guestFee = listingPrice.PersoSuppl * (GetGuestCount(request.Adults, request.Children) - 1);
-        }
+
 
         double discount = 0;
-        if (nights >= 30 && listingPrice.ReductionMensu > 0)
-        {
-            discount = basePrice * (listingPrice.ReductionMensu / 100);
-        }
-        else if (nights >= 7 && listingPrice.ReductionHebdo > 0)
-        {
-            discount = basePrice * (listingPrice.ReductionHebdo / 100);
-        }
-        else if (listingPrice.Reduction > 0)
-        {
-            discount = basePrice * (listingPrice.Reduction / 100);
-        }
 
         double totalPrice = basePrice + cleaningFee - discount;
 

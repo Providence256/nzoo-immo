@@ -1,88 +1,71 @@
 import {
   Component,
-  ViewChild,
-  ElementRef,
+  EventEmitter,
   Input,
   Output,
-  EventEmitter,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-
-export interface PhotoItem {
-  id: string;
-  file: File;
-  url: string;
-  name: string;
-  size: number;
-}
+import { Subscription } from 'rxjs';
+import {
+  PhotoFile,
+  PhotoUploadService,
+} from '../../services/photo-upload.service';
 
 @Component({
   selector: 'app-photo-upload',
   templateUrl: './photo-upload.component.html',
-  styles: [
-    `
-      .drag-over {
-        border-color: #3b82f6;
-        background-color: #eff6ff;
-      }
-
-      .cdk-drag-preview {
-        box-sizing: border-box;
-        border-radius: 12px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        opacity: 0.8;
-        transform: rotate(5deg);
-      }
-
-      .cdk-drag-placeholder {
-        opacity: 0.3;
-        border: 2px dashed #3b82f6;
-      }
-
-      .cdk-drag-animating {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-      }
-    `,
-  ],
 })
-export class PhotoUploadComponent {
+export class PhotoUploadComponent implements OnInit, OnDestroy {
+  @Input() showStepContent: boolean = true;
+  @Output() photosChanged = new EventEmitter<PhotoFile[]>();
+  @Output() validationChanged = new EventEmitter<boolean>();
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // Rendez currentStep configurable via @Input
-  @Input() currentStep: number = 8;
-  @Input() showStepContent: boolean = true;
-  @Output() photosChanged = new EventEmitter<PhotoItem[]>();
-  isDialogOpen = false;
+  photos: PhotoFile[] = [];
   isDragOver = false;
-  photos: PhotoItem[] = [];
-  pendingPhotos: PhotoItem[] = [];
-  previewPhoto: PhotoItem | null = null;
+  currentPreviewPhoto: PhotoFile | null = null;
 
-  private readonly maxFileSize = 10 * 1024 * 1024; // 10MB
-  private readonly allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+  private subscriptions: Subscription[] = [];
 
-  openPhotoDialog(): void {
-    this.isDialogOpen = true;
-    this.pendingPhotos = [];
+  // Propriétés utilitaires
+  Math = Math;
+
+  constructor(private photoService: PhotoUploadService) {}
+
+  ngOnInit() {
+    // S'abonner aux photos du service
+    const photosSubscription = this.photoService.photos$.subscribe((photos) => {
+      this.photos = photos;
+      this.photosChanged.emit(photos);
+    });
+
+    // S'abonner à la validation du service
+    const validationSubscription = this.photoService.validation$.subscribe(
+      (isValid) => {
+        this.validationChanged.emit(isValid);
+      }
+    );
+
+    this.subscriptions.push(photosSubscription, validationSubscription);
   }
 
-  closeDialog(event?: Event): void {
-    if (event && event.target !== event.currentTarget) {
-      return;
-    }
-    this.isDialogOpen = false;
-    this.pendingPhotos = [];
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  triggerFileInput(): void {
-    this.fileInput.nativeElement.click();
-  }
-
+  // Gestion des fichiers
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.processFiles(Array.from(input.files));
     }
+    // Reset input value pour permettre la sélection du même fichier
+    input.value = '';
   }
 
   onDragOver(event: DragEvent): void {
@@ -104,83 +87,113 @@ export class PhotoUploadComponent {
     }
   }
 
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
   private processFiles(files: File[]): void {
-    files.forEach((file) => {
-      if (this.validateFile(file)) {
-        const photoItem: PhotoItem = {
-          id: this.generateId(),
-          file,
-          url: URL.createObjectURL(file),
-          name: file.name,
-          size: file.size,
-        };
-        this.pendingPhotos.push(photoItem);
-      }
-    });
-  }
+    const validFiles = files.filter((file) => this.isValidFile(file));
 
-  private validateFile(file: File): boolean {
-    if (!this.allowedTypes.includes(file.type)) {
-      alert(`Le format ${file.type} n'est pas supporté. Utilisez JPG ou PNG.`);
-      return false;
+    const newPhotos: PhotoFile[] = validFiles.map((file) => ({
+      id: this.generateId(),
+      file: file,
+      url: URL.createObjectURL(file),
+      name: file.name,
+      size: file.size,
+    }));
+
+    this.photoService.addPhotos(newPhotos);
+
+    // Afficher un message si certains fichiers ont été rejetés
+    if (validFiles.length !== files.length) {
+      const rejectedCount = files.length - validFiles.length;
+      console.warn(
+        `${rejectedCount} fichier(s) rejeté(s) - format ou taille non valide`
+      );
+      // Ici vous pourriez afficher une notification toast
     }
-
-    if (file.size > this.maxFileSize) {
-      alert(`Le fichier ${file.name} est trop volumineux (max 10MB).`);
-      return false;
-    }
-
-    return true;
   }
 
-  addPhotos(): void {
-    this.photos.push(...this.pendingPhotos);
-    this.photosChanged.emit(this.photos);
-    this.closeDialog();
-  }
+  private isValidFile(file: File): boolean {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
 
-  removePendingPhoto(index: number): void {
-    const photo = this.pendingPhotos[index];
-    URL.revokeObjectURL(photo.url);
-    this.pendingPhotos.splice(index, 1);
-  }
-
-  removePhoto(index: number): void {
-    const photo = this.photos[index];
-    URL.revokeObjectURL(photo.url);
-    this.photos.splice(index, 1);
-    this.photosChanged.emit(this.photos);
-  }
-
-  onPhotoDrop(event: CdkDragDrop<PhotoItem[]>): void {
-    moveItemInArray(this.photos, event.previousIndex, event.currentIndex);
-    this.photosChanged.emit(this.photos);
-  }
-
-  previewPhotos(photo: PhotoItem): void {
-    this.previewPhoto = photo;
-  }
-
-  closePreview(): void {
-    this.previewPhoto = null;
-  }
-
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    return validTypes.includes(file.type) && file.size <= maxSize;
   }
 
   private generateId(): string {
-    return Math.random().toString(36).substr(2, 9);
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
-  ngOnDestroy(): void {
-    // Nettoyer les URLs d'objets pour éviter les fuites mémoire
-    [...this.photos, ...this.pendingPhotos].forEach((photo) => {
-      URL.revokeObjectURL(photo.url);
-    });
+  // Gestion des photos
+  removePhoto(index: number): void {
+    this.photoService.removePhoto(index);
+  }
+
+  onPhotosReorder(event: any): void {
+    const dragDropEvent = event as CdkDragDrop<PhotoFile[]>;
+    this.photoService.reorderPhotos(
+      dragDropEvent.previousIndex,
+      dragDropEvent.currentIndex
+    );
+  }
+
+  // Prévisualisation
+  previewPhoto(photo: PhotoFile): void {
+    this.currentPreviewPhoto = photo;
+  }
+
+  closePreview(): void {
+    this.currentPreviewPhoto = null;
+  }
+
+  getCurrentPhotoIndex(): number {
+    if (!this.currentPreviewPhoto) return -1;
+    return this.photos.findIndex(
+      (photo) => photo.id === this.currentPreviewPhoto!.id
+    );
+  }
+
+  showPreviousPhoto(): void {
+    const currentIndex = this.getCurrentPhotoIndex();
+    if (currentIndex > 0) {
+      this.currentPreviewPhoto = this.photos[currentIndex - 1];
+    }
+  }
+
+  showNextPhoto(): void {
+    const currentIndex = this.getCurrentPhotoIndex();
+    if (currentIndex < this.photos.length - 1) {
+      this.currentPreviewPhoto = this.photos[currentIndex + 1];
+    }
+  }
+
+  // Utilitaires
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Validation
+  isValidForNextStep(): boolean {
+    return this.photoService.isValidForNextStep();
+  }
+
+  // Méthodes publiques pour l'accès depuis le parent
+  getPhotos(): PhotoFile[] {
+    return this.photoService.getPhotos();
+  }
+
+  getPhotosCount(): number {
+    return this.photos.length;
+  }
+
+  clearPhotos(): void {
+    this.photoService.clearPhotos();
   }
 }

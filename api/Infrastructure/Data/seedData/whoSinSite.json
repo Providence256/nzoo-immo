@@ -1,0 +1,28 @@
+[
+  {
+
+      "Name": "Personne",
+      "Description": "Vous aurez l'espace entièrement pour vous",
+      "Icon": "person_off"
+    },
+    {
+      "Name": "L'hôte",
+      "Description": "L'hôte vit sur place ou à proximité",
+      "Icon": "person" 
+    },
+    {
+      "Name": "La famille de l'hôte",
+      "Description": "La famille de l'hôte pourrait être présente",
+      "Icon": "family_restroom"
+    },
+    {
+      "Name": "D'autres voyageurs",
+      "Description": "D'autres invités pourraient partager l'espace",
+      "Icon": "groups"
+    },
+    {
+      "Name": "Personnel de service",
+      "Description": "Personnel de ménage ou de maintenance",
+      "Icon": "support_agent" 
+    }
+]

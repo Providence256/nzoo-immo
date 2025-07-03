@@ -7,6 +7,10 @@ import { DeviseApiService } from '../../../../core/api/devise-api.service';
 import { RegleApiService } from '../../../../core/api/regle-api.service';
 import { VilleApiService } from '../../../../core/api/ville-api.service';
 import { CommuneApiService } from '../../../../core/api/commune-api.service';
+import { SousTypeHebergementApiService } from '../../../../core/api/sous-type-hebergement-api.service';
+import { BathroomTypeApiService } from '../../../../core/api/bathtoom-type-api.service';
+import { WhoIsOnSiteApiService } from '../../../../core/api/whoisonsite-api.service';
+import { DiscountApiService } from '../../../../core/api/discount-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +23,11 @@ export class AnnoncesService {
     private deviseApi: DeviseApiService,
     private ruleApi: RegleApiService,
     private villeApi: VilleApiService,
-    private communeApi: CommuneApiService
+    private communeApi: CommuneApiService,
+    private sousType: SousTypeHebergementApiService,
+    private bathroomTypeApi: BathroomTypeApiService,
+    private onSiteApi: WhoIsOnSiteApiService,
+    private reductionApi: DiscountApiService
   ) {}
 
   // Annonces
@@ -79,5 +87,29 @@ export class AnnoncesService {
   //Commune by ville
   getAllCommunesByVille(villedId: number): Observable<any[]> {
     return this.communeApi.findAllCommunesByVille(villedId);
+  }
+
+  // Sous Type Hebergement
+  findSousTypeByType(typeId: number): Observable<any[]> {
+    return this.sousType.getSousByType(typeId);
+  }
+
+  // Bathroom Types
+  findBathroomTypes(): Observable<any[]> {
+    return this.bathroomTypeApi.findAll();
+  }
+
+  findBathroomTypeById(id: number): Observable<any> {
+    return this.bathroomTypeApi.find(id);
+  }
+
+  // Who is on site
+  findAllOnSites(): Observable<any[]> {
+    return this.onSiteApi.findAll();
+  }
+
+  // Discounts
+  findAllDiscounts(): Observable<any[]> {
+    return this.reductionApi.findAll();
   }
 }

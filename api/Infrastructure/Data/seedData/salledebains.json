@@ -1,0 +1,14 @@
+[
+  {
+     "Name": "Privée attenante",
+     "Description": "Salle de bain privée dans la chambre"
+  },
+  {
+     "Name": "Privée",
+     "Description": "Salle de bain privée séparée de la chambre"
+  },
+  {
+     "Name": "Partagée",
+     "Description": "Salle de bain partagée avec d'autres voyageurs"
+  } 
+]

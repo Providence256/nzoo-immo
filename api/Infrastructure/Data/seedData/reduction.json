@@ -1,0 +1,26 @@
+[
+  {
+    "Name" : "Promotion nouvelles annonces",
+    "Description": "Proposez une reduction de 20% sur vos 3 premières réservations.",
+    "Percentage": 20,
+    "Type": "NewListing"
+  },
+  {
+    "Name" : "Réduction pour réservations de dernieres minutes",
+    "Description": "Pour les séjours réservés 14 jours oun moins avant l'arrivée.",
+    "Percentage": 10,
+    "Type": "LastMinute"
+  },
+  {
+    "Name" : "Réduction à la semaine",
+    "Description": "Pour les séjours de 7 nuits ou plus",
+    "Percentage": 5,
+    "Type": "Weekly"
+  },
+  {
+    "Name" : "Réservation au mois",
+    "Description": "Pour les séjours de 28 nuits ou plus",
+    "Percentage": 10,
+    "Type": "Monthly"
+  }
+]

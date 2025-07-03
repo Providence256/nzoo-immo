@@ -193,6 +193,36 @@ namespace Infrastructure.Migrations
                     b.ToTable("Devises");
                 });
 
+            modelBuilder.Entity("Core.Entities.Discount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Percentage")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts");
+                });
+
             modelBuilder.Entity("Core.Entities.Equipement", b =>
                 {
                     b.Property<int>("Id")
@@ -401,6 +431,33 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Entities.Identity.BathroomType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BathroomTypes");
+                });
+
             modelBuilder.Entity("Core.Entities.Listing", b =>
                 {
                     b.Property<int>("Id")
@@ -424,9 +481,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("NbreChambres")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NbreDouches")
                         .HasColumnType("int");
 
                     b.Property<int>("NbreLits")
@@ -458,6 +512,9 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("WhoElseOnSite")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HostEntityId");
@@ -469,6 +526,67 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Listings");
+                });
+
+            modelBuilder.Entity("Core.Entities.ListingBathroomType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BathroomTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ListingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BathroomTypeId");
+
+                    b.HasIndex("ListingId");
+
+                    b.ToTable("ListingBathroomType");
+                });
+
+            modelBuilder.Entity("Core.Entities.ListingDiscount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ListingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountId");
+
+                    b.HasIndex("ListingId");
+
+                    b.ToTable("ListingDiscount");
                 });
 
             modelBuilder.Entity("Core.Entities.ListingEquipement", b =>
@@ -595,19 +713,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ListingId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("PersoSuppl")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("PrixBase")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Reduction")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ReductionHebdo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ReductionMensu")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -732,7 +838,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SousTypeHebergement");
+                    b.ToTable("SousTypeHebergements");
                 });
 
             modelBuilder.Entity("Core.Entities.TauxChange", b =>
@@ -841,6 +947,34 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Villes");
+                });
+
+            modelBuilder.Entity("Core.Entities.WhoInSite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WhoInSites");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1055,6 +1189,44 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entities.ListingBathroomType", b =>
+                {
+                    b.HasOne("Core.Entities.Identity.BathroomType", "BathroomType")
+                        .WithMany("ListingBathroomTypes")
+                        .HasForeignKey("BathroomTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Listing", "Listing")
+                        .WithMany("BathroomTypes")
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BathroomType");
+
+                    b.Navigation("Listing");
+                });
+
+            modelBuilder.Entity("Core.Entities.ListingDiscount", b =>
+                {
+                    b.HasOne("Core.Entities.Discount", "Discount")
+                        .WithMany("ListingDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Listing", "Listing")
+                        .WithMany("Discounts")
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Discount");
+
+                    b.Navigation("Listing");
+                });
+
             modelBuilder.Entity("Core.Entities.ListingEquipement", b =>
                 {
                     b.HasOne("Core.Entities.Equipement", "Equipement")
@@ -1239,6 +1411,11 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Core.Entities.Discount", b =>
+                {
+                    b.Navigation("ListingDiscounts");
+                });
+
             modelBuilder.Entity("Core.Entities.HostEntity", b =>
                 {
                     b.Navigation("Listings");
@@ -1251,8 +1428,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Host");
                 });
 
+            modelBuilder.Entity("Core.Entities.Identity.BathroomType", b =>
+                {
+                    b.Navigation("ListingBathroomTypes");
+                });
+
             modelBuilder.Entity("Core.Entities.Listing", b =>
                 {
+                    b.Navigation("BathroomTypes");
+
+                    b.Navigation("Discounts");
+
                     b.Navigation("Equipements");
 
                     b.Navigation("Location");

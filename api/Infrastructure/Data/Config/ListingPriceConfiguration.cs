@@ -17,19 +17,8 @@ public class ListingPriceConfiguration : IEntityTypeConfiguration<ListingPrice>
             .IsRequired()
             .HasColumnType("decimal(18,2)");
 
-        builder.Property(p => p.Reduction)
-            .HasColumnType("decimal(18,2)");
-
-        builder.Property(p => p.ReductionHebdo)
-            .HasColumnType("decimal(18,2)");
-
-        builder.Property(p => p.ReductionMensu)
-            .HasColumnType("decimal(18,2)");
-
         builder.Property(p => p.FraisMenage)
             .HasColumnType("decimal(18,2)");
 
-        builder.Property(p => p.PersoSuppl)
-            .HasColumnType("decimal(18,2)");
     }
 }

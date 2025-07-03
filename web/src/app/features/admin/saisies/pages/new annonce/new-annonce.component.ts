@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
-import { PhotoItem } from '../../components/photo-upload/photo-upload.component';
+import { Component, OnInit } from '@angular/core';
+import { th } from 'date-fns/locale';
+import { PhotoFile } from '../../services/photo-upload.service';
+import { AnnoncesService } from '../../services/annonces.service';
+import { FormBuilder } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import {
+  ListingBathroomTypeRequest,
+  ListingRequest,
+} from '../../../../../core/models/listing-request.model';
 
 interface FormData {
   propertyType: string;
@@ -22,45 +30,20 @@ interface FormData {
   description: string;
   photos: string[];
   price: string;
-}
-
-interface PropertyType {
-  id: string;
-  name: string;
-  icon: string;
-  desc: string;
-}
-
-interface Amenity {
-  id: string;
-  name: string;
-  icon: string;
-}
-
-interface PropertyFeature {
-  id: string;
-  name: string;
-  icon: string;
-  description: string;
+  devise: string;
+  selectedDiscounts: string[];
 }
 
 interface BathroomInfo {
   id: number;
-  type: 'private-attached' | 'private' | 'shared';
+  type: string;
 }
 
-interface BathroomType {
-  id: 'private-attached' | 'private' | 'shared';
-  name: string;
-  description: string;
-  icon: string;
-}
-
-interface WhoElseOption {
+interface Discount {
   id: string;
   name: string;
   description: string;
-  icon: string;
+  percentage: number;
 }
 
 interface Ville {
@@ -78,8 +61,20 @@ interface Commune {
   selector: 'app-new-annonce',
   templateUrl: './new-annonce.component.html',
 })
-export class NewAnnonceComponent {
+export class NewAnnonceComponent implements OnInit {
   currentStep = 0;
+  photosValid = false;
+  uploadedPhotos: PhotoFile[] = [];
+  photoFiles: File[] = [];
+
+  villes: any[] = [];
+  communes: any[] = [];
+  propertyTypes: any[] = [];
+  devises: any[] = [];
+  whoElseOptions: any[] = [];
+  bathroomTypes: any[] = [];
+  propertyFeatures: any[] = [];
+  amenitiesList: any[] = [];
 
   formData: FormData = {
     propertyType: '',
@@ -102,61 +97,108 @@ export class NewAnnonceComponent {
     description: '',
     photos: [],
     price: '',
+    devise: '',
+    selectedDiscounts: [],
   };
 
   steps = [
     'Type de propriété',
+    'sous-type',
     'Localisation',
     'Capacité',
     'Salles de bain',
-    'Caractéristiques',
     "Qui d'autre sur place",
-    'Description détaillée',
     'Équipements',
     'Photos',
     'Titre et description',
     'Prix',
+    'Reduction',
   ];
 
-  // Données des villes et communes (exemple)
-  villes: Ville[] = [
-    {
-      id: 'kinshasa',
-      name: 'Kinshasa',
-      communes: [
-        { id: 'gombe', name: 'Gombe' },
-        { id: 'lingwala', name: 'Lingwala' },
-        { id: 'kintambo', name: 'Kintambo' },
-        { id: 'kalamu', name: 'Kalamu' },
-        { id: 'lemba', name: 'Lemba' },
-        { id: 'limete', name: 'Limété' },
-        { id: 'matete', name: 'Matete' },
-        { id: 'ngiri-ngiri', name: 'Ngiri-Ngiri' },
-        { id: 'kasa-vubu', name: 'Kasa-Vubu' },
-        { id: 'bandalungwa', name: 'Bandalungwa' },
-      ],
-    },
-    {
-      id: 'lubumbashi',
-      name: 'Lubumbashi',
-      communes: [
-        { id: 'lubumbashi-centre', name: 'Lubumbashi Centre' },
-        { id: 'kampemba', name: 'Kampemba' },
-        { id: 'katuba', name: 'Katuba' },
-        { id: 'kamalondo', name: 'Kamalondo' },
-        { id: 'kenya', name: 'Kenya' },
-      ],
-    },
-    {
-      id: 'mbuji-mayi',
-      name: 'Mbuji-Mayi',
-      communes: [
-        { id: 'kananga', name: 'Kananga' },
-        { id: 'bipemba', name: 'Bipemba' },
-        { id: 'muya', name: 'Muya' },
-      ],
-    },
-  ];
+  discountsList: any[] = [];
+
+  constructor(
+    private service: AnnoncesService,
+    private fb: FormBuilder,
+    private messageService: MessageService
+  ) {}
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.service.findAllTypes().subscribe({
+      next: (response) => (this.propertyTypes = response),
+      error: (err) => this.handleError(err),
+    });
+
+    this.service.findAllVilles().subscribe({
+      next: (response) => (this.villes = response),
+      error: (err) => this.handleError(err),
+    });
+
+    this.service.findAllDevises().subscribe({
+      next: (response) => (this.devises = response),
+      error: (err) => this.handleError(err),
+    });
+
+    this.service.findBathroomTypes().subscribe({
+      next: (response) => {
+        this.bathroomTypes = response;
+      },
+      error: (err) => this.handleError(err),
+    });
+
+    this.service.findAllOnSites().subscribe({
+      next: (response) => {
+        this.whoElseOptions = response;
+      },
+      error: (err) => this.handleError(err),
+    });
+
+    this.service.findAllEquipements().subscribe({
+      next: (response) => {
+        this.amenitiesList = response;
+      },
+      error: (err) => this.handleError(err),
+    });
+
+    this.service.findAllDiscounts().subscribe({
+      next: (response) => {
+        this.discountsList = response;
+      },
+      error: (err) => this.handleError(err),
+    });
+  }
+
+  loadCommuneByVille() {
+    const villeId = this.formData.location.ville;
+
+    if (!villeId) {
+      this.communes = [];
+      return;
+    }
+
+    this.service.getAllCommunesByVille(parseInt(villeId)).subscribe({
+      next: (response) => (this.communes = response),
+      error: (err) => this.handleError(err),
+    });
+  }
+
+  handleTypeSelection(typeId: string): void {
+    this.updateFormData('propertyType', typeId);
+    this.loadSousTypeByType(parseInt(typeId));
+  }
+
+  loadSousTypeByType(typeId: number): void {
+    this.service.findSousTypeByType(typeId).subscribe({
+      next: (response) => {
+        this.propertyFeatures = response;
+        console.log('Sous-types chargés:', this.propertyFeatures);
+      },
+      error: (err) => this.handleError(err),
+    });
+  }
 
   // Communes disponibles selon la ville sélectionnée
   get availableCommunes(): Commune[] {
@@ -165,137 +207,6 @@ export class NewAnnonceComponent {
     );
     return selectedVille ? selectedVille.communes : [];
   }
-
-  propertyTypes: PropertyType[] = [
-    {
-      id: 'house',
-      name: 'Maison',
-      icon: 'home',
-      desc: 'Une propriété résidentielle complète',
-    },
-    {
-      id: 'apartment',
-      name: 'Appartement',
-      icon: 'apartment',
-      desc: 'Un espace dans un immeuble résidentiel',
-    },
-    {
-      id: 'villa',
-      name: 'Villa',
-      icon: 'holiday_village',
-      desc: 'Une grande maison de luxe avec jardin',
-    },
-    {
-      id: 'cabin',
-      name: 'Cabane',
-      icon: 'cabin',
-      desc: 'Un refuge rustique en pleine nature',
-    },
-    {
-      id: 'studio',
-      name: 'Studio',
-      icon: 'meeting_room',
-      desc: 'Un espace compact et fonctionnel',
-    },
-    {
-      id: 'loft',
-      name: 'Loft',
-      icon: 'warehouse',
-      desc: 'Un espace ouvert de style industriel',
-    },
-  ];
-
-  bathroomTypes: BathroomType[] = [
-    {
-      id: 'private-attached',
-      name: 'Privée attenante',
-      description: 'Salle de bain privée dans la chambre',
-      icon: 'fas fa-door-closed',
-    },
-    {
-      id: 'private',
-      name: 'Privée',
-      description: 'Salle de bain privée séparée',
-      icon: 'fas fa-lock',
-    },
-    {
-      id: 'shared',
-      name: 'Partagée',
-      description: "Salle de bain partagée avec d'autres",
-      icon: 'fas fa-share-alt',
-    },
-  ];
-
-  propertyFeatures: PropertyFeature[] = [
-    {
-      id: 'peaceful',
-      name: 'Logement entier',
-      icon: 'home',
-      description: "Les voyageurs auront l'space entier pour eux",
-    },
-    {
-      id: 'unique',
-      name: 'Une Chambre',
-      icon: 'holiday_village',
-      description:
-        'les voyageurs ont leur propre chambre dans un logement et on acces a des espaces partagés',
-    },
-    {
-      id: 'family-friendly',
-      name: 'Une Chambre Partagée dans une auberge de Jeunesse',
-      icon: 'meeting_room',
-      description:
-        'les voyageurs dorment dans une chambre partagée dans une auberge de jeunesse gérée par un professionnel, avec du personnel sur place 24h/24, 7j/7',
-    },
-  ];
-
-  whoElseOptions: WhoElseOption[] = [
-    {
-      id: 'no-one',
-      name: 'Personne',
-      description: "Vous aurez l'espace entièrement pour vous",
-      icon: 'person_off', // anciennement: fa-user-check
-    },
-    {
-      id: 'host',
-      name: "L'hôte",
-      description: "L'hôte vit sur place ou à proximité",
-      icon: 'person', // anciennement: fa-user-tie
-    },
-    {
-      id: 'family',
-      name: "La famille de l'hôte",
-      description: "La famille de l'hôte pourrait être présente",
-      icon: 'diversity_3', // ou 'group' si tu préfères
-    },
-    {
-      id: 'other-guests',
-      name: "D'autres voyageurs",
-      description: "D'autres invités pourraient partager l'espace",
-      icon: 'groups', // anciennement: fa-users
-    },
-    {
-      id: 'staff',
-      name: 'Personnel de service',
-      description: 'Personnel de ménage ou de maintenance',
-      icon: 'support_agent', // ou 'engineering'
-    },
-  ];
-
-  amenitiesList: Amenity[] = [
-    { id: 'wifi', name: 'Wi-Fi', icon: 'wifi' },
-    { id: 'parking', name: 'Parking gratuit', icon: 'local_parking' },
-    { id: 'kitchen', name: 'Cuisine équipée', icon: 'kitchen' },
-    { id: 'tv', name: 'Télévision', icon: 'tv' },
-    { id: 'coffee', name: 'Machine à café', icon: 'coffee_maker' },
-    { id: 'pool', name: 'Piscine', icon: 'pool' },
-    { id: 'gym', name: 'Salle de sport', icon: 'fitness_center' },
-    { id: 'washer', name: 'Lave-linge', icon: 'local_laundry_service' },
-    { id: 'air-conditioning', name: 'Climatisation', icon: 'ac_unit' },
-    { id: 'heating', name: 'Chauffage', icon: 'whatshot' },
-    { id: 'balcony', name: 'Balcon/Terrasse', icon: 'balcony' }, // si non dispo, 'deck'
-    { id: 'garden', name: 'Jardin', icon: 'yard' },
-  ];
 
   handleNext(): void {
     if (this.currentStep < this.steps.length - 1) {
@@ -319,7 +230,7 @@ export class NewAnnonceComponent {
     this.formData.location = { ...this.formData.location, [field]: value };
     // Reset commune when ville changes
     if (field === 'ville') {
-      this.formData.location.commune = '';
+      this.loadCommuneByVille();
     }
   }
 
@@ -333,15 +244,11 @@ export class NewAnnonceComponent {
     }
   }
 
-  getBathroomTypeCount(
-    type: 'private-attached' | 'private' | 'shared'
-  ): number {
+  getBathroomTypeCount(type: any): number {
     return this.formData.bathroomTypes.filter((bt) => bt.type === type).length;
   }
 
-  incrementBathroomType(type: 'private-attached' | 'private' | 'shared'): void {
-    const totalBathrooms = this.formData.bathroomTypes.length;
-
+  incrementBathroomType(type: string): void {
     const newId =
       Math.max(...this.formData.bathroomTypes.map((bt) => bt.id), 0) + 1;
     this.formData.bathroomTypes.push({
@@ -350,13 +257,12 @@ export class NewAnnonceComponent {
     });
   }
 
-  decrementBathroomType(type: 'private-attached' | 'private' | 'shared'): void {
+  decrementBathroomType(type: string): void {
     const index = this.formData.bathroomTypes.findIndex(
       (bt) => bt.type === type
     );
     if (index > -1) {
       this.formData.bathroomTypes.splice(index, 1);
-      // Optionnel : réorganiser les IDs pour qu'ils soient consécutifs
       this.formData.bathroomTypes.forEach((bt, i) => {
         bt.id = i + 1;
       });
@@ -396,9 +302,9 @@ export class NewAnnonceComponent {
     return this.formData.propertyFeature.includes(featureId);
   }
 
-  getBathroomTypeName(type: 'private-attached' | 'private' | 'shared'): string {
+  getBathroomTypeName(type: any): string {
     const bathroomType = this.bathroomTypes.find((bt) => bt.id === type);
-    return bathroomType ? bathroomType.name : '';
+    return bathroomType ? bathroomType.type : '';
   }
 
   isStepValid(): boolean {
@@ -422,36 +328,149 @@ export class NewAnnonceComponent {
           this.formData.bathrooms >= 1
         );
       case 4:
-        return this.formData.bathroomTypes.length === this.formData.bathrooms;
+        return true;
       case 5:
         return this.formData.whoElseOnSite !== '';
       case 6:
-        return this.formData.propertyDescription.trim() !== '';
+        return true;
       case 7:
-        return true;
+        return this.photosValid && this.uploadedPhotos.length >= 5;
       case 8:
-        return true;
-      case 9:
         return (
           this.formData.title.trim() !== '' &&
           this.formData.description.trim() !== ''
         );
-      case 10:
+      case 9:
         return (
           this.formData.price !== '' && parseFloat(this.formData.price) > 0
         );
+      case 10:
+        return true;
       default:
         return false;
     }
   }
 
-  handlePhotosChange(photos: PhotoItem[]): void {
-    console.log('Nouvelles photos:', photos);
-    // Votre logique ici
+  handlePhotosChange(photos: PhotoFile[]): void {
+    this.uploadedPhotos = photos;
+    this.formData.photos = photos.map((photo) => photo.id);
+    this.photoFiles = photos
+      .map((photo) => photo.file)
+      .filter((file) => file !== undefined);
+    this.photosValid = photos.length >= 5;
+    this.handlePhotosValidation(this.photosValid);
+  }
+
+  handlePhotosValidation(isValid: boolean): void {
+    this.photosValid = isValid;
+  }
+
+  toggleDiscount(discountId: string): void {
+    const index = this.formData.selectedDiscounts.indexOf(discountId);
+    if (index > -1) {
+      this.formData.selectedDiscounts.splice(index, 1);
+    } else {
+      this.formData.selectedDiscounts.push(discountId);
+    }
+  }
+
+  // Méthode pour vérifier si une réduction est sélectionnée
+  isDiscountSelected(discountId: string): boolean {
+    return this.formData.selectedDiscounts.includes(discountId);
+  }
+
+  // Méthode pour obtenir les réductions sélectionnées
+  getSelectedDiscounts(): Discount[] {
+    return this.discountsList.filter((discount) =>
+      this.formData.selectedDiscounts.includes(discount.id)
+    );
   }
 
   submitForm(): void {
-    console.log('Données du formulaire:', this.formData);
-    alert('Annonce créée avec succès !');
+    const listingRequest = this.mapFormDataToListingRequest();
+
+    // console.log('Données du formulaire mappées:', listingRequest);
+
+    // Créer FormData pour l'envoi multipart/form-data
+    const formData = new FormData();
+
+    // Ajouter les données JSON (sauf les fichiers)
+    const { photos, ...jsonData } = listingRequest;
+    formData.append('data', JSON.stringify(jsonData));
+
+    // Ajouter les fichiers photos
+    this.photoFiles.forEach((file, index) => {
+      formData.append(`photos`, file, file.name);
+    });
+
+    console.log('FormData prêt à être envoyé:', formData);
+
+    this.service.add(formData).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: 'Annonce créée avec succès',
+          life: 3000,
+        });
+        console.log('Annonce créée avec succès:', response);
+      },
+      error: (error) => {
+        this.handleError(error);
+      },
+    });
+  }
+
+  handleError(error: any): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Une erreur est survenue lors du chargement des données',
+      life: 3000,
+    });
+    console.error(error);
+  }
+
+  // Méthode pour convertir FormData vers ListingRequest
+  private mapFormDataToListingRequest(): ListingRequest {
+    const bathroomTypesMap: { [key: string]: number } = {};
+    this.formData.bathroomTypes.forEach((bathroom) => {
+      const typeId = bathroom.type;
+      bathroomTypesMap[typeId] = (bathroomTypesMap[typeId] || 0) + 1;
+    });
+
+    const bathroomTypes: ListingBathroomTypeRequest[] = Object.entries(
+      bathroomTypesMap
+    ).map(([typeId, count]) => ({
+      bathroomTypeId: parseInt(typeId),
+      count: count,
+    }));
+
+    return {
+      typeHebergementId: parseInt(this.formData.propertyType),
+      sousTypeHebergementId: parseInt(this.formData.propertyFeature),
+      nbreVisiteurs: this.formData.guests,
+      nbreChambres: this.formData.bedrooms,
+      nbreLits: this.formData.bathrooms,
+      title: this.formData.title,
+      description: this.formData.description,
+      whoElseOnSite: this.formData.whoElseOnSite || undefined,
+      villeId: parseInt(this.formData.location.ville),
+      communeId: parseInt(this.formData.location.commune),
+      quartier: this.formData.location.quartier,
+      avenue: this.formData.location.avenue,
+      numeroDomicile: this.formData.location.numero,
+      deviseId: parseInt(this.formData.devise),
+      prixBase: parseFloat(this.formData.price),
+      equipements: this.formData.amenities.map((amenityId) => ({
+        equipementId: parseInt(amenityId),
+      })),
+      photos: this.photoFiles,
+      bathroomTypes: bathroomTypes.length > 0 ? bathroomTypes : undefined,
+      discountsIds:
+        this.formData.selectedDiscounts.length > 0
+          ? this.formData.selectedDiscounts.map((id) => parseInt(id))
+          : undefined,
+    };
   }
 }

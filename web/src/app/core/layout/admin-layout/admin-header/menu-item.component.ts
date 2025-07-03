@@ -134,9 +134,21 @@ export const MENU_CONFIG: { [key: string]: MenuItem[] } = {
           roles: ['admin', 'Root'],
         },
         {
+          path: '/admin/files/bathroom-type',
+          label: 'Type des salles de bain',
+          icon: 'pi-warehouse',
+          roles: ['admin', 'Root'],
+        },
+        {
           path: '/admin/files/equipements',
           label: 'Équipements',
           icon: 'pi-folder',
+          roles: ['admin', 'Root'],
+        },
+        {
+          path: '/admin/files/discounts',
+          label: 'Réduction',
+          icon: 'pi-percentage',
           roles: ['admin', 'Root'],
         },
         {

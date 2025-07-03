@@ -38,6 +38,6 @@ export class HostIntroductionComponent {
 
   onStartHosting() {
     // Navigate to the announce/listing creation page
-    this.router.navigate(['/admin/host/calendar']);
+    this.router.navigate(['/admin/saisies/new-annonce']);
   }
 }

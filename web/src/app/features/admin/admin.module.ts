@@ -23,6 +23,9 @@ import { AdminHostRequestComponent } from './parametres/pages/host/admin-host-re
 import { HostCalendarComponent } from './host/pages/host-calendar/host-calendar.component';
 import { HostIntroductionComponent } from './host/pages/host-introduction/host-introduction.component';
 import { PhotoUploadComponent } from './saisies/components/photo-upload/photo-upload.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BathroomTypesComponent } from './files/pages/bathroom-types/bathroom-types.component';
+import { DiscountComponent } from './files/pages/discount/discount.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -70,7 +73,9 @@ const routes: Routes = [
     CommunesComponent,
     SousTypeHebergementComponent,
     TypeHebergementComponent,
+    BathroomTypesComponent,
     EquipementsComponent,
+    DiscountComponent,
     DevisesComponent,
     ReglesComponent,
     TauxChangeComponent,
@@ -88,6 +93,7 @@ const routes: Routes = [
     SharedModule,
     ReactiveFormsModule,
     PrimengModule,
+    DragDropModule,
   ],
 })
 export class AdminModule {}

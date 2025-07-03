@@ -54,6 +54,8 @@ export class SousTypeHebergementComponent implements OnInit {
     'deck',
     'balcony',
     'yard',
+    'support_agent',
+    'meeting_room',
   ];
 
   filteredIcons: string[] = [...this.iconList];

@@ -2,9 +2,11 @@ using System;
 using API.DTOs.BookingDto;
 using API.DTOs.CommuneDto;
 using API.DTOs.DeviseDto;
+using API.DTOs.DiscountDto;
 using API.DTOs.EquipementDto;
 using API.DTOs.ListingDto;
 using API.DTOs.RuleDto;
+using API.DTOs.SousTypehebergementDto;
 using API.DTOs.TauxChangeDto;
 using API.DTOs.TypehebergementDto;
 using API.DTOs.VilleDto;
@@ -22,9 +24,22 @@ public class MappingProfiles : Profile
         CreateMap<Commune, CommuneResponse>()
                             .ForMember(d => d.Ville, o => o.MapFrom(s => s.Ville.Designation))
                             .ReverseMap();
+        CreateMap<Discount, DiscountRequest>().ReverseMap();
         CreateMap<Devise, DeviseRequest>().ReverseMap();
         CreateMap<Equipement, EquipementRequest>().ReverseMap();
         CreateMap<TypeHebergement, TypeHebergementRequest>().ReverseMap();
+
+        CreateMap<TypeHebergement, TypeHebergementResponse>()
+            .ForMember(dest => dest.SousTypes, opt => opt.MapFrom(src => src.SousTypes))
+            .ReverseMap();
+
+        CreateMap<SousTypeHebergement, SousTypeRequest>().ReverseMap();
+
+        CreateMap<SousTypeByHebergement, SousTypeResponse>()
+                .ForMember(dest => dest.Designation, opt => opt.MapFrom(src => src.SousTypeHebergement != null ? src.SousTypeHebergement.Name : null))
+                .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.SousTypeHebergement != null ? src.SousTypeHebergement.Icon : null))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.SousTypeHebergement != null ? src.SousTypeHebergement.Description : null));
+
         CreateMap<Rule, RuleRequest>().ReverseMap();
         CreateMap<TauxChange, TauxChangeRequest>().ReverseMap();
         CreateMap<TauxChange, TauxChangeResponse>()

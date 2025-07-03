@@ -60,6 +60,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 
     return ConnectionMultiplexer.Connect(configuration);
 });
+
 builder.Services.AddSingleton<IBookingSessionService, BookingSessionService>();
 
 builder.Services.AddIdentityCore<AppUser>(opt =>
@@ -189,6 +190,7 @@ try
 {
     await context.Database.MigrateAsync();
     await AppIdentityDbContextSeed.SeedUsersAsync(userManager, roleManager);
+    await NzooContextSeed.SeedAsync(context);
 }
 catch (Exception ex)
 {

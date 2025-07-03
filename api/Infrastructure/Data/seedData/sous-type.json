@@ -1,0 +1,17 @@
+[
+  {
+    "Name" : "Un Logement entier",
+    "Description": "Les voyageurs disposent du logement dans son intégralité.",
+    "Icon": "home"
+  },
+  {
+    "Name" : "Une Chambre",
+    "Description": "les voyageurs ont leur propre chambre dans un logement et on acces a des espaces partagés.",
+    "Icon": "door_front"
+  },
+  {
+    "Name" : "Une Chambre Partagée dans une auberge de Jeunesse",
+    "Description": "les voyageurs dorment dans une chambre partagée dans une auberge de jeunesse gérée par un professionnel, avec du personnel sur place 24h/24, 7j/7.",
+    "Icon": "partner_exchange"
+  }
+]

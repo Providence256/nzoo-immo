@@ -21,6 +21,8 @@ import {
   startOfWeek,
 } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { VilleService } from '../../../admin/files/services/ville.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-search',
@@ -72,22 +74,20 @@ export class SearchComponent implements OnInit {
     children: 0,
   };
 
-  locationSuggestions = [
-    { name: 'Paris', region: 'Île-de-France, France' },
-    { name: 'Lyon', region: 'Auvergne-Rhône-Alpes, France' },
-    { name: 'Marseille', region: "Provence-Alpes-Côte d'Azur, France" },
-    { name: 'Bordeaux', region: 'Nouvelle-Aquitaine, France' },
-    { name: 'Nice', region: "Provence-Alpes-Côte d'Azur, France" },
-    { name: 'Toulouse', region: 'Occitanie, France' },
-  ];
+  villes: any[] = [];
 
-  filteredLocationSuggestions = [...this.locationSuggestions];
+  filteredLocationSuggestions: any[] = [];
 
   today: Date = new Date();
   minDate = new Date();
   maxDate = new Date(2030, 11, 31);
 
-  constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef,
+    private service: VilleService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -97,6 +97,17 @@ export class SearchComponent implements OnInit {
       );
     }
     this.initializeCalendar();
+    this.loadData();
+  }
+
+  loadData() {
+    this.service.getVilles().subscribe({
+      next: (response) => {
+        this.villes = response;
+        this.filteredLocationSuggestions = [...this.villes];
+      },
+      error: (err) => this.handleError(err),
+    });
   }
 
   initializeCalendar() {
@@ -140,12 +151,12 @@ export class SearchComponent implements OnInit {
 
   onLocationInput() {
     if (!this.searchForm.location) {
-      this.filteredLocationSuggestions = [...this.locationSuggestions];
+      this.filteredLocationSuggestions = [...this.villes];
       return;
     }
-    this.filteredLocationSuggestions = this.locationSuggestions.filter(
+    this.filteredLocationSuggestions = this.villes.filter(
       (location) =>
-        location.name
+        location.designation
           .toLowerCase()
           .includes(this.searchForm.location.toLowerCase()) ||
         location.region
@@ -155,7 +166,7 @@ export class SearchComponent implements OnInit {
   }
 
   selectLocation(location: any) {
-    this.searchForm.location = `${location.name}, ${location.region}`;
+    this.searchForm.location = `${location.designation}`;
     this.activeField = null;
   }
 
@@ -406,5 +417,15 @@ export class SearchComponent implements OnInit {
       this.isDropdownOpen = false;
       this.activeSelector = null;
     }
+  }
+
+  handleError(error: any): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Une erreur est survenue lors du chargement des données',
+      life: 3000,
+    });
+    console.error(error);
   }
 }

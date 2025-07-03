@@ -11,6 +11,8 @@ import { EquipementsComponent } from './pages/equipements/equipements.component'
 import { DevisesComponent } from './pages/devises/devises.component';
 import { ReglesComponent } from './pages/regles/regles.component';
 import { SousTypeHebergementComponent } from './pages/sous-type-hebergement/sous-type-hebergement.component';
+import { BathroomTypesComponent } from './pages/bathroom-types/bathroom-types.component';
+import { DiscountComponent } from './pages/discount/discount.component';
 
 // Import files components
 
@@ -32,8 +34,16 @@ const routes: Routes = [
     component: TypeHebergementComponent,
   },
   {
+    path: 'bathroom-type',
+    component: BathroomTypesComponent,
+  },
+  {
     path: 'equipements',
     component: EquipementsComponent,
+  },
+  {
+    path: 'discounts',
+    component: DiscountComponent,
   },
   {
     path: 'devises',

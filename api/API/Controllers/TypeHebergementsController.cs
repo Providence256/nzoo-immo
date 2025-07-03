@@ -1,20 +1,25 @@
 using API.DTOs.TypehebergementDto;
 using AutoMapper;
 using Core.Entities;
+using Core.Specification;
 using Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TypeHebergementsController(IGenericRepository<TypeHebergement> repo, IMapper mapper) : ControllerBase
+    public class TypeHebergementsController(IGenericRepository<TypeHebergement> repo, IGenericRepository<SousTypeByHebergement> sousTypeRepo, IMapper mapper) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<TypeHebergement>>> GetTypehebergements()
+        public async Task<ActionResult<IReadOnlyList<TypeHebergementResponse>>> GetTypehebergements()
         {
-            return Ok(await repo.GetAllAsync());
+            var spec = new TypeHebergementSpecification();
+            var types = await repo.ListAsync(spec);
+
+            var response = mapper.Map<IReadOnlyList<TypeHebergementResponse>>(types);
+
+            return Ok(response);
         }
 
         [HttpGet("{id:int}")]
@@ -35,15 +40,21 @@ namespace API.Controllers
                 Code = request.Code,
                 Designation = request.Designation,
                 Icon = request.Icon,
-                SousTypes = request.SousTypeIds.Select(id => new SousTypeByHebergement
-                {
-                    SousTypeHebergementId = id
-                }).ToList()
+
             };
 
             await repo.AddAsync(typeHebergement);
 
+            var sousTypes = request.SousTypeIds.Select(id => new SousTypeByHebergement
+            {
+                TypeHebergementId = typeHebergement.Id,
+                SousTypeHebergementId = id
+            }).ToList();
 
+            foreach (var sousType in sousTypes)
+            {
+                await sousTypeRepo.AddAsync(sousType);
+            }
             return CreatedAtAction("GetTypehebergements", new { id = typeHebergement.Id });
 
 

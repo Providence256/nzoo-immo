@@ -13,6 +13,10 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     public DbSet<Devise> Devises { get; set; }
     public DbSet<Equipement> Equipements { get; set; }
     public DbSet<SousTypeByHebergement> SousTypeByHebergements { get; set; }
+    public DbSet<SousTypeHebergement> SousTypeHebergements { get; set; }
+    public DbSet<Discount> Discounts { get; set; }
+    public DbSet<BathroomType> BathroomTypes { get; set; }
+    public DbSet<WhoInSite> WhoInSites { get; set; }
     public DbSet<TypeHebergement> TypeHebergements { get; set; }
     public DbSet<Rule> Rules { get; set; }
     public DbSet<TauxChange> TauxChanges { get; set; }
@@ -32,6 +36,8 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
         base.OnModelCreating(modelBuilder);
 
 
+        modelBuilder.Entity<SousTypeByHebergement>()
+                    .HasKey(st => st.Id);
 
         modelBuilder.Entity<SousTypeByHebergement>()
                     .HasOne(x => x.TypeHebergement)

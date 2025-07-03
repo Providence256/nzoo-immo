@@ -14,10 +14,11 @@ namespace API.Controllers
     [ApiController]
     public class AnnoncesController(IGenericRepository<Listing> listingRepo,
         IGenericRepository<ListingEquipement> listingEquiRepo,
-        IGenericRepository<ListingRule> listingRuleRepo,
         IGenericRepository<ListingPrice> listingPriceRepo,
         IGenericRepository<ListingPhoto> listingPhotoRepo,
         IGenericRepository<ListingLocation> listingLocRepo,
+        IGenericRepository<ListingBathroomType> listingBathroomTypeRepo,
+        IGenericRepository<ListingDiscount> listingDiscountRepo,
         IGenericRepository<Ville> villeRepo,
         IPhotoService photoService,
         IMapper mapper) : ControllerBase
@@ -43,7 +44,7 @@ namespace API.Controllers
             return Ok(listing);
         }
 
-        
+
         [HttpGet("listing-by-ville/{villeId:int}")]
         public async Task<ActionResult<ListingResponse>> GetAllListingByVille(int villeId)
         {
@@ -89,10 +90,12 @@ namespace API.Controllers
                 Title = request.Title,
                 Description = request.Description,
                 TypeHebergementId = request.TypeHebergementId,
+                SousTypeHebergementId = request.SousTypeHebergementId,
+                WhoElseOnSite = request.WhoElseOnSite,
                 NbreVisiteurs = request.NbreVisiteurs,
                 NbreChambres = request.NbreChambres,
-                NbreDouches = request.NbreDouches,
                 NbreLits = request.NbreLits,
+                Status = ListingStatus.Processing,
             };
 
             await listingRepo.AddAsync(listing);
@@ -113,15 +116,25 @@ namespace API.Controllers
             {
                 DeviseId = request.DeviseId,
                 PrixBase = request.PrixBase,
-                Reduction = request.Reduction,
-                ReductionHebdo = request.ReductionHebdo,
-                ReductionMensu = request.ReductionMensu,
-                FraisMenage = request.FraisMenage,
-                PersoSuppl = request.PersoSuppl,
                 ListingId = listing.Id
             };
 
             await listingPriceRepo.AddAsync(price);
+
+            if (request.BathroomTypes != null && request.BathroomTypes.Any())
+            {
+                foreach (var bathroomType in request.BathroomTypes.Where(bt => bt.Count > 0))
+                {
+                    var listingBathroomType = new ListingBathroomType
+                    {
+                        BathroomTypeId = bathroomType.BathroomTypeId,
+                        Count = bathroomType.Count,
+                        ListingId = listing.Id
+                    };
+
+                    await listingBathroomTypeRepo.AddAsync(listingBathroomType);
+                }
+            }
 
             if (request.Equipements != null && request.Equipements.Any())
             {
@@ -136,16 +149,16 @@ namespace API.Controllers
                 }
             }
 
-            if (request.Rules != null && request.Rules.Any())
+            if (request.DiscountsIds != null && request.DiscountsIds.Any())
             {
-                foreach (var rule in request.Rules)
+                foreach (var discountId in request.DiscountsIds)
                 {
-                    var listingRule = new ListingRule
+                    var listingDiscount = new ListingDiscount
                     {
-                        RuleId = rule.RuleId,
+                        DiscountId = discountId,
                         ListingId = listing.Id
                     };
-                    await listingRuleRepo.AddAsync(listingRule);
+                    await listingDiscountRepo.AddAsync(listingDiscount);
                 }
             }
 

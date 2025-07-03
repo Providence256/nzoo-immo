@@ -22,15 +22,19 @@ export class SousTypeHebergementApiService extends BaseApiService {
     return this.get<any>(`${this.endpoint}/${id}`);
   }
 
-  add(regle: any): Observable<any> {
-    return this.post<any>(this.endpoint, regle);
+  add(type: any): Observable<any> {
+    return this.post<any>(this.endpoint, type);
   }
 
-  edit(id: number, regle: any): Observable<any> {
-    return this.put<any>(`${this.endpoint}/${id}`, regle);
+  edit(id: number, type: any): Observable<any> {
+    return this.put<any>(`${this.endpoint}/${id}`, type);
   }
 
   deleteSousType(id: number): Observable<any> {
     return this.delete<any>(`${this.endpoint}/${id}`);
+  }
+
+  getSousByType(typeId: number): Observable<any[]> {
+    return this.get<any[]>(`${this.endpoint}/soustype-by-type/${typeId}`);
   }
 }

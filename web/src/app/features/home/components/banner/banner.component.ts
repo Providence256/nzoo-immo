@@ -360,15 +360,13 @@ export class BannerComponent {
 
   devenirProprietaire(): void {
     // Navigation vers la page devenir propriétaire
-    // this.router.navigate(['/devenir-proprietaire']);
+    this.router.navigate(['/become-host']);
 
     // Ou ouvrir un formulaire de contact
     // this.dialog.open(ContactProprietaireComponent);
 
     // Ou scroll vers une section
     // this.scrollToSection('proprietaire-section');
-
-    console.log('Navigation vers devenir propriétaire');
   }
 
   estimerRevenus() {}
