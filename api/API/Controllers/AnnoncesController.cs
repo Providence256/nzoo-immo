@@ -1,4 +1,5 @@
 using API.DTOs.ListingDto;
+using API.Helpers;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Core.Entities;
@@ -85,6 +86,8 @@ namespace API.Controllers
         {
             if (request == null) return BadRequest("Listing cannot be null");
 
+            var userId = User.GetUserId();
+
             var listing = new Listing
             {
                 Title = request.Title,
@@ -96,6 +99,7 @@ namespace API.Controllers
                 NbreChambres = request.NbreChambres,
                 NbreLits = request.NbreLits,
                 Status = ListingStatus.Processing,
+                UserId = userId,
             };
 
             await listingRepo.AddAsync(listing);

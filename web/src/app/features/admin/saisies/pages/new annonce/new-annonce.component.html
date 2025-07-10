@@ -646,15 +646,35 @@
 
       <button
         (click)="handleNext()"
-        [disabled]="!isStepValid()"
+        [disabled]="!isStepValid() || isSubmitting"
         class="flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-black to-black text-white font-semibold rounded-xl hover:from-black hover:to-black disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg"
       >
+       <ng-container *ngIf="!isSubmitting">
         <span>{{ currentStep === steps.length - 1 ? 'Publier l\'annonce' : 'Suivant' }}</span>
-       <span *ngIf="currentStep !== steps.length - 1" class="material-icons-outlined text-xl text-white-800">
-          chevron_right
-       </span>
+        <span *ngIf="currentStep !== steps.length - 1" class="material-icons-outlined text-xl text-white-800">
+            chevron_right
+        </span>
+       </ng-container>
+       
+       <ng-container *ngIf="isSubmitting">
+        <div class="flex items-center space-x-2">
+          <!-- Spinner animé -->
+          <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <span>Publication en cours...</span>
+        </div>
+       </ng-container>
     
       </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isSubmitting" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 flex items-center justify-center">
+  <div class="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center space-y-4 max-w-sm mx-4">
+    <div class="w-12 h-12 border-4 border-black/20 border-t-black rounded-full animate-spin"></div>
+    <div class="text-center">
+      <h3 class="font-semibold text-gray-900 mb-2">Publication en cours</h3>
+      <p class="text-gray-600 text-sm">Veuillez patienter pendant que nous créons votre annonce...</p>
     </div>
   </div>
 </div>

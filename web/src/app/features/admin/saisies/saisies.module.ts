@@ -8,6 +8,7 @@ import { AddAnnonceComponent } from './pages/add-annonce/add-annonce.component';
 import { ListAnnoncesComponent } from './pages/list-annonce/list-annonces.component';
 import { NewAnnonceComponent } from './pages/new annonce/new-annonce.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EditAnnonceComponent } from './pages/edit-annonce/edit-annonce.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path: 'list-annonce',
     component: ListAnnoncesComponent,
+  },
+  {
+    path: 'edit-annonce',
+    component: EditAnnonceComponent,
   },
 ];
 

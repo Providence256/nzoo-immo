@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { th } from 'date-fns/locale';
+import { is, th } from 'date-fns/locale';
 import { PhotoFile } from '../../services/photo-upload.service';
 import { AnnoncesService } from '../../services/annonces.service';
 import { FormBuilder } from '@angular/forms';
@@ -46,26 +46,17 @@ interface Discount {
   percentage: number;
 }
 
-interface Ville {
-  id: string;
-  name: string;
-  communes: Commune[];
-}
-
-interface Commune {
-  id: string;
-  name: string;
-}
-
 @Component({
   selector: 'app-new-annonce',
   templateUrl: './new-annonce.component.html',
+  styleUrls: ['./new-annonce.component.scss'],
 })
 export class NewAnnonceComponent implements OnInit {
   currentStep = 0;
   photosValid = false;
   uploadedPhotos: PhotoFile[] = [];
   photoFiles: File[] = [];
+  isSubmitting = false;
 
   villes: any[] = [];
   communes: any[] = [];
@@ -87,7 +78,7 @@ export class NewAnnonceComponent implements OnInit {
     },
     guests: 1,
     bedrooms: 1,
-    bathrooms: 1,
+    bathrooms: 0,
     bathroomTypes: [],
     amenities: [],
     propertyFeature: '',
@@ -201,7 +192,7 @@ export class NewAnnonceComponent implements OnInit {
   }
 
   // Communes disponibles selon la ville sélectionnée
-  get availableCommunes(): Commune[] {
+  get availableCommunes(): any[] {
     const selectedVille = this.villes.find(
       (v) => v.id === this.formData.location.ville
     );
@@ -387,23 +378,66 @@ export class NewAnnonceComponent implements OnInit {
   }
 
   submitForm(): void {
-    const listingRequest = this.mapFormDataToListingRequest();
+    this.isSubmitting = true;
 
-    // console.log('Données du formulaire mappées:', listingRequest);
-
-    // Créer FormData pour l'envoi multipart/form-data
     const formData = new FormData();
 
-    // Ajouter les données JSON (sauf les fichiers)
-    const { photos, ...jsonData } = listingRequest;
-    formData.append('data', JSON.stringify(jsonData));
+    // Add basic fields
+    formData.append('typeHebergementId', this.formData.propertyType);
+    formData.append('sousTypeHebergementId', this.formData.propertyFeature);
+    formData.append('nbreVisiteurs', this.formData.guests.toString());
+    formData.append('nbreChambres', this.formData.bedrooms.toString());
+    formData.append('nbreLits', this.formData.bathrooms.toString());
+    formData.append('title', this.formData.title);
+    formData.append('description', this.formData.description);
 
-    // Ajouter les fichiers photos
-    this.photoFiles.forEach((file, index) => {
-      formData.append(`photos`, file, file.name);
+    // Add optional whoElseOnSite
+    if (this.formData.whoElseOnSite) {
+      formData.append('whoElseOnSite', this.formData.whoElseOnSite);
+    }
+
+    // Add location fields
+    formData.append('villeId', this.formData.location.ville);
+    formData.append('communeId', this.formData.location.commune);
+    formData.append('quartier', this.formData.location.quartier);
+    formData.append('avenue', this.formData.location.avenue);
+    formData.append('numeroDomicile', this.formData.location.numero);
+
+    // Add price and devise
+    formData.append('deviseId', this.formData.devise);
+    formData.append('prixBase', this.formData.price);
+
+    // Add equipements
+    this.formData.amenities.forEach((amenityId, index) => {
+      formData.append(`equipements[${index}].equipementId`, amenityId);
     });
 
-    console.log('FormData prêt à être envoyé:', formData);
+    // Add bathroom types
+    const bathroomTypesMap: { [key: string]: number } = {};
+    this.formData.bathroomTypes.forEach((bathroom) => {
+      const typeId = bathroom.type;
+      bathroomTypesMap[typeId] = (bathroomTypesMap[typeId] || 0) + 1;
+    });
+
+    let bathroomIndex = 0;
+    Object.entries(bathroomTypesMap).forEach(([typeId, count]) => {
+      formData.append(`bathroomTypes[${bathroomIndex}].bathroomTypeId`, typeId);
+      formData.append(
+        `bathroomTypes[${bathroomIndex}].count`,
+        count.toString()
+      );
+      bathroomIndex++;
+    });
+
+    // Add discount IDs
+    this.formData.selectedDiscounts.forEach((discountId, index) => {
+      formData.append(`discountsIds[${index}]`, discountId);
+    });
+
+    // Add photos
+    this.photoFiles.forEach((file) => {
+      formData.append('photos', file, file.name);
+    });
 
     this.service.add(formData).subscribe({
       next: (response) => {
@@ -416,19 +450,38 @@ export class NewAnnonceComponent implements OnInit {
         console.log('Annonce créée avec succès:', response);
       },
       error: (error) => {
+        this.isSubmitting = false;
+        console.error('Erreur complète:', error);
         this.handleError(error);
       },
     });
   }
 
   handleError(error: any): void {
+    let errorMessage = 'Une erreur est survenue';
+
+    if (error.error) {
+      if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else if (error.error.message) {
+        errorMessage = error.error.message;
+      } else if (error.error.errors) {
+        // Handle validation errors
+        const validationErrors = Object.values(error.error.errors).flat();
+        errorMessage = validationErrors.join(', ');
+      }
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
     this.messageService.add({
       severity: 'error',
       summary: 'Erreur',
-      detail: 'Une erreur est survenue lors du chargement des données',
-      life: 3000,
+      detail: errorMessage,
+      life: 5000,
     });
-    console.error(error);
+
+    console.error('Erreur détaillée:', error);
   }
 
   // Méthode pour convertir FormData vers ListingRequest

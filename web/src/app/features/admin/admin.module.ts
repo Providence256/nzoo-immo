@@ -26,6 +26,7 @@ import { PhotoUploadComponent } from './saisies/components/photo-upload/photo-up
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BathroomTypesComponent } from './files/pages/bathroom-types/bathroom-types.component';
 import { DiscountComponent } from './files/pages/discount/discount.component';
+import { EditAnnonceComponent } from './saisies/pages/edit-annonce/edit-annonce.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -82,6 +83,7 @@ const routes: Routes = [
     AddAnnonceComponent,
     ListAnnoncesComponent,
     NewAnnonceComponent,
+    EditAnnonceComponent,
     AdminHostRequestComponent,
     HostCalendarComponent,
     HostIntroductionComponent,
