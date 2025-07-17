@@ -27,6 +27,16 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BathroomTypesComponent } from './files/pages/bathroom-types/bathroom-types.component';
 import { DiscountComponent } from './files/pages/discount/discount.component';
 import { EditAnnonceComponent } from './saisies/pages/edit-annonce/edit-annonce.component';
+import { BasicInfoSectionComponent } from './saisies/components/sections/basic-info-section.component';
+import { DiscountInputComponent } from './saisies/components/sections/discount-input.component';
+import { PricingSectionComponent } from './saisies/components/sections/pricing-section.component';
+import { SidebarNavigationComponent } from './saisies/components/shared/sidebar-navigation.component';
+import { PhotosSectionComponent } from './saisies/components/sections/photos-section.component';
+import { AvailabilitySettingComponent } from './saisies/components/sections/availability-settings.component';
+import { AmenitiesSectionComponent } from './saisies/components/sections/amenities-section.component';
+import { GuestSectionComponent } from './saisies/components/sections/guest-section.component';
+import { LocationSectionComponent } from './saisies/components/sections/location-section.component';
+import { RulesSectionComponent } from './saisies/components/sections/rules-section.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -88,6 +98,17 @@ const routes: Routes = [
     HostCalendarComponent,
     HostIntroductionComponent,
     PhotoUploadComponent,
+    SidebarNavigationComponent,
+    PhotosSectionComponent,
+    BasicInfoSectionComponent,
+    PricingSectionComponent,
+    DiscountInputComponent,
+    AvailabilitySettingComponent,
+    AmenitiesSectionComponent,
+    GuestSectionComponent,
+    AmenitiesSectionComponent,
+    LocationSectionComponent,
+    RulesSectionComponent,
   ],
   imports: [
     CommonModule,

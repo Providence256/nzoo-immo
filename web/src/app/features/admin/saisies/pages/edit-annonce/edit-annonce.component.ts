@@ -1,34 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { id } from 'date-fns/locale';
 import { MessageService } from 'primeng/api';
-
-interface Rule {
-  id: number;
-  name: string;
-  description: string;
-  icon: string;
-  active: boolean;
-}
-
-interface CancellationPolicy {
-  id: string;
-  name: string;
-  description: string;
-  refundPercentage: number;
-  timeLimit: string;
-  recommended?: boolean;
-}
-
-interface ReservationSetting {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  type: 'toggle' | 'select' | 'number';
-  value: any;
-  options?: any[];
-}
 
 @Component({
   selector: 'app-edit-annonce',
@@ -68,7 +40,7 @@ export class EditAnnonceComponent implements OnInit {
   ];
 
   // House rules
-  houseRules: Rule[] = [
+  houseRules: any[] = [
     {
       id: 1,
       name: 'Animaux autorisés',
@@ -107,7 +79,7 @@ export class EditAnnonceComponent implements OnInit {
   ];
 
   // Cancellation policies
-  cancellationPolicies: CancellationPolicy[] = [
+  cancellationPolicies: any[] = [
     {
       id: 'flexible',
       name: 'Flexible',
@@ -133,7 +105,7 @@ export class EditAnnonceComponent implements OnInit {
   ];
 
   // Reservation settings
-  reservationSettings: ReservationSetting[] = [
+  reservationSettings: any[] = [
     {
       id: 'instantBook',
       name: 'Réservation instantanée',
@@ -267,13 +239,26 @@ export class EditAnnonceComponent implements OnInit {
     this.listingForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(10)]],
       description: ['', [Validators.required, Validators.minLength(50)]],
-      price: [0, [Validators.required, Validators.min(1)]],
+      type: ['', [Validators.required]],
+      sousType: ['', Validators.required],
+      basePrice: [0, [Validators.required, Validators.min(1)]],
       guests: [1, [Validators.required, Validators.min(1)]],
+      advanceNotice: [''],
+      advanceNotice_time: [],
+      tripLength_min: [1],
+      tripLength_max: [365],
+      ville: ['', [Validators.required]],
+      commune: [{ value: null, disabled: true }, [Validators.required]],
+      quartier: ['', [Validators.required]],
+      avenue: ['', [Validators.required]],
+      numero: ['', [Validators.required]],
       bedrooms: [1, [Validators.required, Validators.min(1)]],
       bathrooms: [1, [Validators.required, Validators.min(1)]],
       cancellationPolicy: ['flexible', Validators.required],
-      checkInTime: ['15:00', Validators.required],
-      checkOutTime: ['11:00', Validators.required],
+      checkinStart: ['15:00', Validators.required],
+      checkinEnd: ['22:00', Validators.required],
+      checkoutTime: ['11:00', Validators.required],
+      acceptBabies: [false, Validators.required],
     });
   }
 
@@ -370,7 +355,7 @@ export class EditAnnonceComponent implements OnInit {
     return timeOption ? timeOption.label : timeValue || '-';
   }
 
-  toggleAmenity(amenityId: number) {
+  toggleAmenity(amenityId: any) {
     const amenity = this.amenities.find((a) => a.id === amenityId);
     if (amenity) {
       amenity.selected = !amenity.selected;

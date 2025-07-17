@@ -10,28 +10,6 @@
           <h1 class="text-xl font-semibold text-gray-900 hidden sm:block">Modifier l'annonce</h1>
           <h1 class="text-lg font-semibold text-gray-900 sm:hidden">Modifier</h1>
         </div>
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <p-button 
-            label="Aperçu" 
-            icon="pi pi-eye" 
-            [outlined]="true" 
-            (click)="previewListing()"
-            class="p-button-sm hidden sm:inline-flex">
-          </p-button>
-          <p-button 
-            icon="pi pi-eye" 
-            [outlined]="true" 
-            (click)="previewListing()"
-            class="p-button-sm sm:hidden">
-          </p-button>
-          <p-button 
-            label="Enregistrer" 
-            icon="pi pi-save" 
-            [loading]="isLoading"
-            (click)="onSave()"
-            class="p-button-sm">
-          </p-button>
-        </div>
       </div>
     </div>
   </div>
@@ -47,44 +25,13 @@
     </button>
 
     <!-- Desktop Sidebar Navigation -->
+    
     <div class="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto hidden xl:block">
-      <div class="sticky top-0 bg-white z-10 border-b border-gray-100">
-        <div class="p-6 pb-4">
-          <h2 class="text-lg font-semibold text-gray-900">Sections</h2>
-        </div>
-      </div>
-      
-      <div class="p-6 pt-2">
-        <nav class="space-y-2">
-          <div 
-            *ngFor="let section of sections; let i = index"
-            (click)="setActiveSection(section.id)"
-            class="flex items-center space-x-4 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-50 group relative"
-            [class.bg-gray-900]="activeSection === section.id"
-            [class.text-white]="activeSection === section.id"
-            [class.text-gray-700]="activeSection !== section.id">
-            
-            <!-- Step Number -->
-            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium"
-                 [class.bg-white]="activeSection === section.id"
-                 [class.text-gray-900]="activeSection === section.id"
-                 [class.bg-gray-100]="activeSection !== section.id"
-                 [class.text-gray-600]="activeSection !== section.id">
-              {{ i + 1 }}
-            </div>
-            
-            <div class="flex-1 min-w-0">
-              <div class="font-medium text-sm truncate">{{ section.label }}</div>
-              <div class="text-xs opacity-75 mt-1" [class.text-gray-300]="activeSection === section.id" [class.text-gray-500]="activeSection !== section.id">
-                {{ section.label }}
-              </div>
-            </div>
-            
-            <!-- Completion indicator -->
-           
-          </div>
-        </nav>
-      </div>
+      <app-sidebar-navigation
+        [sections]="sections"
+        [activeSection]="activeSection"
+        (sectionSelected)="setActiveSection($event)">
+      </app-sidebar-navigation>
     </div>
 
     <!-- Mobile Sidebar Overlay -->
@@ -132,90 +79,16 @@
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0">
-      <!-- Progress Bar -->
-      <div class="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="text-sm font-medium text-gray-900">
-              Étape {{ getCurrentStepNumber() }} sur {{ sections.length }}
-            </div>
-            <div class="text-sm text-gray-500">{{ getCurrentSectionLabel() }}</div>
-          </div>
-          <div class="text-sm text-gray-500">{{ getCompletionPercentage() }}% terminé</div>
-        </div>
-        <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
-          <div class="bg-gray-900 h-2 rounded-full transition-all duration-300" [style.width.%]="getCompletionPercentage()"></div>
-        </div>
-      </div>
 
       <!-- Content Container -->
       <div class="flex-1 overflow-y-auto bg-gray-50">
         <div class="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-
-
          <!-- Photos Section -->
-          <div *ngIf="activeSection === 'photos'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-            <div class="border-b border-gray-200 pb-6 mb-8">
-              <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Photos</h2>
-              <p class="text-gray-600 mt-2">Ajoutez au moins 5 photos de qualité de votre logement</p>
-            </div>
-            
-            <!-- Main Upload Area -->
-            <div class="mb-8">
-              <div class="aspect-[16/9] bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-100 transition-all">
-                <div class="text-center">
-                  <i class="pi pi-cloud-upload text-6xl text-gray-400 mb-4"></i>
-                  <p class="text-xl font-semibold text-gray-900 mb-2">Glissez vos photos ici</p>
-                  <p class="text-gray-600">ou cliquez pour parcourir</p>
-                  <p class="text-sm text-gray-500 mt-2">JPG, PNG jusqu'à 10MB</p>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Photo Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-              <div *ngFor="let photo of photos; let i = index" 
-                   class="aspect-square bg-gray-200 rounded-2xl relative group overflow-hidden">
-                <img [src]="photo.url" 
-                     class="w-full h-full object-cover" 
-                     [alt]="'Photo ' + (i + 1)">
-                
-                <!-- Photo overlay -->
-                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-200 flex items-center justify-center">
-                  <div class="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2">
-                    <button class="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors">
-                      <i class="pi pi-pencil text-gray-700"></i>
-                    </button>
-                    <button class="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors">
-                      <i class="pi pi-trash text-red-500"></i>
-                    </button>
-                  </div>
-                </div>
-                
-                <!-- Main photo badge -->
-                <div *ngIf="i === 0" class="absolute top-2 left-2 bg-white px-3 py-1 rounded-full text-xs font-medium">
-                  Photo principale
-                </div>
-              </div>
-            </div>
-            
-            <!-- Tips -->
-            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6">
-              <div class="flex items-start space-x-3">
-                <i class="pi pi-info-circle text-blue-600 text-xl mt-1"></i>
-                <div>
-                  <h3 class="font-semibold text-blue-900 mb-2">Conseils pour de meilleures photos</h3>
-                  <ul class="text-sm text-blue-800 space-y-1">
-                    <li>• Utilisez la lumière naturelle quand c'est possible</li>
-                    <li>• Montrez tous les espaces principaux</li>
-                    <li>• Évitez les photos floues ou sombres</li>
-                    <li>• La première photo sera votre photo de couverture</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
+         
+          <app-photos-section 
+            *ngIf="activeSection === 'photos'"
+            [photos]="photos">
+          </app-photos-section>
         
           <!-- Type Logement -->
           
@@ -236,10 +109,10 @@
                     [style]="{'width': '100%'}"
                     styleClass="w-full font-Jost">
                 </p-dropdown>
-                <div *ngIf="listingForm.get('title')?.invalid && listingForm.get('title')?.touched" 
+                <div *ngIf="listingForm.get('type')?.invalid && listingForm.get('type')?.touched" 
                      class="text-red-600 text-sm mt-2 flex items-center space-x-2">
                   <i class="pi pi-exclamation-triangle"></i>
-                  <span>Le titre doit contenir au moins 10 caractères</span>
+                  <span>Le type hebergement est obligatoire</span>
                 </div>
               </div>
               
@@ -250,14 +123,14 @@
                     optionLabel="designation" 
                     filter="true" 
                     placeholder="Sélectionnez un type d'hébergement"
-                    formControlName="type"
+                    formControlName="sousType"
                     [style]="{'width': '100%'}"
                     styleClass="w-full font-Jost">
                 </p-dropdown>
-                <div *ngIf="listingForm.get('description')?.invalid && listingForm.get('description')?.touched" 
+                <div *ngIf="listingForm.get('sousType')?.invalid && listingForm.get('sousType')?.touched" 
                      class="text-red-600 text-sm mt-2 flex items-center space-x-2">
                   <i class="pi pi-exclamation-triangle"></i>
-                  <span>La description doit contenir au moins 50 caractères</span>
+                  <span>Le sous type est obligatoire</span>
                 </div>
               </div>
               <div >
@@ -311,428 +184,92 @@
           </div>
 
            <!-- Pricing -->
-          <div *ngIf="activeSection === 'pricing'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-            <div class="border-b border-gray-200 pb-6 mb-8">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Tarification</h2>
-                <p class="text-gray-600 mt-2">Définissez un prix juste pour maximiser vos réservations</p>
-            </div>
-
-            <form [formGroup]="listingForm" class="space-y-8">
-                <!-- Base Price -->
-                <div>
-                <label class="block text-sm font-semibold text-gray-900 mb-3">Prix de Base *</label>
-                <div class="relative">
-                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">€</span>
-                    <input
-                    type="number"
-                    formControlName="basePrice"
-                    class="w-full pl-8 pr-4 py-3 text-gray-900 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base"
-                    placeholder="0">
-                </div>
-                <p class="text-sm text-gray-500 mt-2">Prix par nuit avant taxes</p>
-                </div>
-
-                <!-- Discounts Section -->
-                <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Remises</h3>
-                
-                <!-- Weekly Discount -->
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-900">Remise hebdomadaire</label>
-                        <p class="text-sm text-gray-500">Pour les séjours de 7 nuits ou plus</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="relative">
-                        <input
-                            type="number"
-                            formControlName="weeklyDiscount"
-                            class="w-20 px-3 py-2 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-center"
-                            placeholder="0"
-                            min="0"
-                            max="100">
-                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
-                        </div>
-                    </div>
-                    </div>
-
-                    <!-- Monthly Discount -->
-                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-900">Remise mensuelle</label>
-                        <p class="text-sm text-gray-500">Pour les séjours de 28 nuits ou plus</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="relative">
-                        <input
-                            type="number"
-                            formControlName="monthlyDiscount"
-                            class="w-20 px-3 py-2 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-center"
-                            placeholder="0"
-                            min="0"
-                            max="100">
-                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </form>
-        </div>
+        <app-pricing-section 
+            *ngIf="activeSection === 'pricing'"
+            [form]="listingForm">
+        </app-pricing-section>
 
         <!-- Availability -->
 
         <div *ngIf="activeSection === 'availability'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-  <div class="border-b border-gray-200 pb-6 mb-8">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Disponibilité</h2>
-    <p class="text-gray-600 mt-2">Gérez votre calendrier et vos paramètres de réservation</p>
-  </div>
+          <div class="border-b border-gray-200 pb-6 mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Disponibilité</h2>
+            <p class="text-gray-600 mt-2">Gérez votre calendrier et vos paramètres de réservation</p>
+          </div>
 
-  <form [formGroup]="listingForm" class="space-y-8">
-    <!-- Booking Settings -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Paramètres de réservation</h3>
-      
-      <div class="space-y-6">
-        <!-- Advance Notice -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-900">Préavis minimal</label>
-            <p class="text-sm text-gray-500">Délai avant qu'un voyageur puisse réserver</p>
-          </div>
-          <div class="w-48">
-            <p-dropdown
-              [options]="advanceNoticeOptions"
-              formControlName="advanceNotice"
-              placeholder="Sélectionner"
-              styleClass="w-full"
-              [showClear]="false">
-            </p-dropdown>
-          </div>
-        </div>
+          <form [formGroup]="listingForm" class="space-y-8">
+            <!-- Booking Settings -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Paramètres de réservation</h3>
+              
+            
+                 <!-- Trip Length Setting -->
+              <app-availability-setting
+                label="Durée du séjour"
+                description="Définissez la durée minimale et maximale du séjour"
+                controlName="tripLength"
+                [form]="listingForm"
+                type="tripLength"
+                containerClass="rounded-xl mb-4">
+              </app-availability-setting>
 
-        <!-- Preparation Time -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-900">Temps de préparation</label>
-            <p class="text-sm text-gray-500">Temps nécessaire entre les réservations</p>
-          </div>
-          <div class="w-48">
-            <p-dropdown
-              [options]="preparationTimeOptions"
-              formControlName="preparationTime"
-              placeholder="Sélectionner"
-              styleClass="w-full"
-              [showClear]="false">
-            </p-dropdown>
-          </div>
-        </div>
+              <!-- Advance Notice Setting -->
+              <app-availability-setting
+                label="Préavis de réservation"
+                description="Délai minimum entre la réservation et l'arrivée"
+                controlName="advanceNotice"
+                [form]="listingForm"
+                [options]="advanceNoticeOptions"
+                type="advanceNotice"
+                containerClass="rounded-xl mb-4">
+              </app-availability-setting>
 
-        <!-- Maximum Stay -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-900">Durée maximale de séjour</label>
-            <p class="text-sm text-gray-500">Nombre maximum de nuits</p>
-          </div>
-          <div class="w-48">
-            <p-dropdown
-              [options]="maxStayOptions"
-              formControlName="maxStay"
-              placeholder="Sélectionner"
-              styleClass="w-full"
-              [showClear]="false">
-            </p-dropdown>
-          </div>
-        </div>
 
-        <!-- Minimum Stay -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-900">Durée minimale de séjour</label>
-            <p class="text-sm text-gray-500">Nombre minimum de nuits</p>
-          </div>
-          <div class="w-48">
-            <p-dropdown
-              [options]="minStayOptions"
-              formControlName="minStay"
-              placeholder="Sélectionner"
-              styleClass="w-full"
-              [showClear]="false">
-            </p-dropdown>
-          </div>
-        </div>
+               
+              </div>
+          </form>
       </div>
-    </div>
-    
-  </form>
-</div>
+       
 
           <!-- Basic Information -->
-          <div *ngIf="activeSection === 'basic'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-            <div class="border-b border-gray-200 pb-6 mb-8">
-              <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Informations de base</h2>
-              <p class="text-gray-600 mt-2">Décrivez votre logement avec des détails précis</p>
-            </div>
-            
-            <form [formGroup]="listingForm" class="space-y-8">
-              <div>
-                <label class="block text-sm font-semibold text-gray-900 mb-3">Titre de l'annonce *</label>
-                <input 
-                  type="text" 
-                  formControlName="title"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base placeholder-gray-500"
-                  placeholder="Exemple : Appartement moderne avec vue sur la mer">
-                <div *ngIf="listingForm.get('title')?.invalid && listingForm.get('title')?.touched" 
-                     class="text-red-600 text-sm mt-2 flex items-center space-x-2">
-                  <i class="pi pi-exclamation-triangle"></i>
-                  <span>Le titre doit contenir au moins 10 caractères</span>
-                </div>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-semibold text-gray-900 mb-3">Description *</label>
-                <textarea 
-                  formControlName="description"
-                  rows="6"
-                  class="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base resize-none placeholder-gray-500"
-                  placeholder="Décrivez votre logement, ses points forts, le quartier et ce qui le rend unique..."></textarea>
-                <div *ngIf="listingForm.get('description')?.invalid && listingForm.get('description')?.touched" 
-                     class="text-red-600 text-sm mt-2 flex items-center space-x-2">
-                  <i class="pi pi-exclamation-triangle"></i>
-                  <span>La description doit contenir au moins 50 caractères</span>
-                </div>
-              </div>
-             
-            </form>
-          </div>
+           <app-basic-info-section 
+            *ngIf="activeSection === 'basic'"
+            [form]="listingForm">
+          </app-basic-info-section>
 
-          
 
           <!-- Amenities Section -->
-          <div *ngIf="activeSection === 'amenities'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-            <div class="border-b border-gray-200 pb-6 mb-8">
-              <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Équipements</h2>
-              <p class="text-gray-600 mt-2">vous avez ajouté ceci à votre liste jusqu'à présent</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div 
-                *ngFor="let amenity of amenities"
-                (click)="toggleAmenity(amenity.id)"
-                class="p-6 border-2 rounded-2xl cursor-pointer transition-all hover:shadow-md"
-                [class.border-gray-900]="amenity.selected"
-                [class.bg-gray-50]="amenity.selected"
-                [class.border-gray-200]="!amenity.selected">
-                <div class="flex items-center space-x-4">
-                  <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
-                       [class.bg-gray-900]="amenity.selected">
-                    <i [class]="amenity.icon" class="text-xl" 
-                       [class.text-white]="amenity.selected"
-                       [class.text-gray-600]="!amenity.selected"></i>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-semibold text-gray-900">{{ amenity.name }}</h3>
-                    <p class="text-sm text-gray-600 mt-1">{{ amenity.name }}</p>
-                  </div>
-                  <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center"
-                       [class.border-gray-900]="amenity.selected"
-                       [class.bg-gray-900]="amenity.selected"
-                       [class.border-gray-300]="!amenity.selected">
-                    <i class="pi pi-check text-white text-xs" *ngIf="amenity.selected"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        
+          <app-amenities-section 
+            *ngIf="activeSection === 'amenities'"
+            [form]="listingForm"
+            [amenities]="amenities"
+            (amenityToggled)="toggleAmenity($event)">
+          </app-amenities-section>
 
 
           <!-- Visitors Section -->
-          <div *ngIf="activeSection === 'guest'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-            <div class="border-b border-gray-200 pb-6 mb-8">
-              <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Modifier quelques informations de base sur votre logement</h2>
-                <p class="text-gray-600 mt-2">Indiquez le nombre de voyageurs, chambres et lits</p>
-            </div>
-            
-            <div>
-              <div class="space-y-8">
-            <div class="flex items-center justify-between py-4 border-b border-gray-200">
-              <div class="flex items-center space-x-4">
-                <i class="fas fa-users w-6 h-6 text-gray-600"></i>
-                <span class="text-lg text-black font-medium">Voyageurs</span>
-              </div>
-              <div class="flex items-center space-x-4">
-                <button
-                  class="w-8 h-8 rounded-full  text-black border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
-                >
-                  -
-                </button>
-                <span class="w-8 text-center text-black font-medium">1</span>
-                <button
-                  class="w-8 h-8 rounded-full border text-black border-gray-300 flex items-center justify-center hover:border-gray-900"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between py-4 border-b border-gray-200">
-              <div class="flex items-center space-x-4">
-                <i class="fas fa-bed w-6 h-6 text-gray-600"></i>
-                <span class="text-lg text-black font-medium">Chambres</span>
-              </div>
-              <div class="flex items-center space-x-4">
-                <button
-                  class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
-                >
-                  -
-                </button>
-                <span class="w-8 text-center text-black font-medium">1</span>
-                <button
-                  class="w-8 h-8 rounded-full border text-black border-gray-300 flex items-center justify-center hover:border-gray-900"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between py-4 border-b border-gray-200">
-              <div class="flex items-center space-x-4">
-                <i class="fas fa-bath w-6 h-6 text-gray-600"></i>
-                <span class="text-lg text-black font-medium">Lits</span>
-              </div>
-              <div class="flex items-center space-x-4">
-                <button
-                  class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900 disabled:opacity-50"
-                >
-                  -
-                </button>
-                <span class="w-8 text-center text-black font-medium">1</span>
-                <button
-                  class="w-8 h-8 rounded-full text-black border border-gray-300 flex items-center justify-center hover:border-gray-900"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
+        <app-guest-section 
+          *ngIf="activeSection === 'guest'"
+          [form]="listingForm"
+        >
+        </app-guest-section>
 
           <!-- Location Section -->
 
-          <div *ngIf="activeSection === 'location'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-  <div class="border-b border-gray-200 pb-6 mb-8">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Où se trouve votre logement ?</h2>
-    <p class="text-gray-600 mt-2">Votre adresse ne sera partagée qu'après réservation</p>
-  </div>
-  
-  <form [formGroup]="listingForm" class="space-y-8">
-    <!-- Location Fields -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Ville -->
-      <div>
-        <label class="block text-sm font-semibold text-gray-900 mb-3">Ville *</label>
-        <div class="relative">
-          <i class="pi pi-building absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-          <select
-            formControlName="ville"
-            (change)="updateLocationField('ville', $any($event.target).value)"
-            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base appearance-none bg-white"
-          >
-            <option value="">Sélectionner une ville</option>
-            <option *ngFor="let ville of villes" [value]="ville.id">{{ ville.designation }}</option>
-          </select>
-          <i class="pi pi-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-        </div>
-        <div *ngIf="listingForm.get('ville')?.invalid && listingForm.get('ville')?.touched"
-             class="text-red-600 text-sm mt-2 flex items-center space-x-2">
-          <i class="pi pi-exclamation-triangle"></i>
-          <span>Veuillez sélectionner une ville</span>
-        </div>
-      </div>
-
-      <!-- Commune -->
-      <div>
-        <label class="block text-sm font-semibold text-gray-900 mb-3">Commune *</label>
-        <div class="relative">
-          <i class="pi pi-map-marker absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-          <select
-            formControlName="commune"
-            (change)="updateLocationField('commune', $any($event.target).value)"
-            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base appearance-none bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
-            [disabled]="!listingForm.get('ville')?.value"
-          >
-            <option value="">Sélectionner une commune</option>
-            <option *ngFor="let commune of communes" [value]="commune.id">{{ commune.designation }}</option>
-          </select>
-          <i class="pi pi-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-        </div>
-        <div *ngIf="listingForm.get('commune')?.invalid && listingForm.get('commune')?.touched"
-             class="text-red-600 text-sm mt-2 flex items-center space-x-2">
-          <i class="pi pi-exclamation-triangle"></i>
-          <span>Veuillez sélectionner une commune</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Address Details -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Quartier -->
-      <div>
-        <label class="block text-sm font-semibold text-gray-900 mb-3">Quartier</label>
-        <div class="relative">
-          <i class="pi pi-home absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-          <input
-            type="text"
-            formControlName="quartier"
-            placeholder="Nom du quartier"
-            (input)="updateLocationField('quartier', $any($event.target).value)"
-            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base placeholder-gray-500"
-          />
-        </div>
-      </div>
-
-      <!-- Avenue/Rue -->
-      <div>
-        <label class="block text-sm font-semibold text-gray-900 mb-3">Avenue/Rue</label>
-        <div class="relative">
-          <i class="pi pi-directions absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-          <input
-            type="text"
-            formControlName="avenue"
-            placeholder="Nom de l'avenue ou rue"
-            (input)="updateLocationField('avenue', $any($event.target).value)"
-            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base placeholder-gray-500"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- Numéro -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label class="block text-sm font-semibold text-gray-900 mb-3">Numéro</label>
-        <div class="relative">
-          <i class="pi pi-hashtag absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-          <input
-            type="text"
-            formControlName="numero"
-            placeholder="Numéro de la propriété"
-            (input)="updateLocationField('numero', $any($event.target).value)"
-            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-base placeholder-gray-500"
-          />
-        </div>
-      </div>
-      <div></div> <!-- Empty div for grid alignment -->
-    </div>
- 
-  </form>
-</div>
+          <app-location-section 
+            *ngIf="activeSection === 'location'"
+            [form]="listingForm"
+            [villes]="villes"
+            [communes]="communes"
+            (locationFieldUpdated)="updateLocationField($event.field, $event.value)">
+          </app-location-section>
+        
 
 
  <!-- rule section -->
-    <div *ngIf="activeSection === 'rules'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
+    
+          <div *ngIf="activeSection === 'rules'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
   <div class="border-b border-gray-200 pb-6 mb-8">
     <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Règles de la maison</h2>
     <p class="text-gray-600 mt-2">Définissez les règles importantes que vos invités doivent respecter</p>
@@ -743,15 +280,10 @@
     <div>
       <h3 class="text-lg font-semibold text-gray-900 mb-4">Règles principales</h3>
       
-      <div class="space-y-4">
+      <div class="space-y-0">
         <!-- Smoking -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex items-center space-x-4">
-            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-              <i class="pi pi-ban text-gray-600"></i>
-            </div>
-            <span class="font-medium text-gray-900">Interdiction de fumer</span>
-          </div>
+        <div class="flex items-center justify-between p-4">
+          <span class="font-medium text-gray-900">Interdiction de fumer</span>
           <div class="flex space-x-2">
             <button 
               type="button"
@@ -769,16 +301,12 @@
             </button>
           </div>
         </div>
+        <hr class="border-gray-200">
 
         <!-- Pets -->
         <div class="space-y-4">
-          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-            <div class="flex items-center space-x-4">
-              <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                <i class="pi pi-heart text-gray-600"></i>
-              </div>
-              <span class="font-medium text-gray-900">Animaux domestiques autorisés</span>
-            </div>
+          <div class="flex items-center justify-between p-4">
+            <span class="font-medium text-gray-900">Animaux domestiques autorisés</span>
             <div class="flex space-x-2">
               <button 
                 type="button"
@@ -798,25 +326,23 @@
           </div>
           
           <!-- Pet Number Input - Shows when pets are allowed -->
-          <div *ngIf="listingForm.get('petsAllowed')?.value === true" class="ml-14 p-4 bg-gray-50 rounded-xl">
-            <label class="block text-sm font-medium text-gray-900 mb-2">Nombre d'animaux autorisés</label>
-            <input 
-              type="number" 
-              formControlName="maxPets"
-              min="1"
-              placeholder="Ex: 2"
-              class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+          <div *ngIf="listingForm.get('petsAllowed')?.value === true" class="px-4 pb-4">
+            <div class="p-4 bg-gray-50 rounded-xl">
+              <label class="block text-sm font-medium text-gray-900 mb-2">Nombre d'animaux autorisés</label>
+              <input 
+                type="number" 
+                formControlName="maxPets"
+                min="1"
+                placeholder="Ex: 2"
+                class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+            </div>
           </div>
         </div>
+        <hr class="border-gray-200">
 
         <!-- Parties -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex items-center space-x-4">
-            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-              <i class="pi pi-users text-gray-600"></i>
-            </div>
-            <span class="font-medium text-gray-900">Fêtes et événements autorisés</span>
-          </div>
+        <div class="flex items-center justify-between p-4">
+          <span class="font-medium text-gray-900">Fêtes et événements autorisés</span>
           <div class="flex space-x-2">
             <button 
               type="button"
@@ -834,15 +360,11 @@
             </button>
           </div>
         </div>
+        <hr class="border-gray-200">
 
         <!-- Photography -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex items-center space-x-4">
-            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-              <i class="pi pi-camera text-gray-600"></i>
-            </div>
-            <span class="font-medium text-gray-900">Séances photo/vidéo autorisées</span>
-          </div>
+        <div class="flex items-center justify-between p-4">
+          <span class="font-medium text-gray-900">Séances photo/vidéo autorisées</span>
           <div class="flex space-x-2">
             <button 
               type="button"
@@ -864,8 +386,6 @@
     </div>
   </form>
 </div>
-
-
 
 <!-- Booking setting section -->
 
@@ -920,89 +440,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Booking Timeline -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Délais de réservation</h3>
-      
-      <div class="space-y-4">
-        <!-- Advance Notice -->
-        <div class="border border-gray-200 rounded-xl p-4">
-          <label class="block text-sm font-medium text-gray-900 mb-2">Préavis minimum</label>
-          <p class="text-sm text-gray-600 mb-3">Combien de temps à l'avance les invités doivent-ils réserver ?</p>
-          <p-dropdown
-            [options]="advanceNoticeOptions"
-            formControlName="advanceNotice"
-            placeholder="Sélectionner"
-            styleClass="w-full"
-            optionLabel="label"
-            optionValue="value">
-          </p-dropdown>
-        </div>
-
-        <!-- Booking Window -->
-        <div class="border border-gray-200 rounded-xl p-4">
-          <label class="block text-sm font-medium text-gray-900 mb-2">Fenêtre de réservation</label>
-          <p class="text-sm text-gray-600 mb-3">Jusqu'à quand à l'avance les invités peuvent-ils réserver ?</p>
-          <p-dropdown
-            [options]="bookingWindowOptions"
-            formControlName="bookingWindow"
-            placeholder="Sélectionner"
-            styleClass="w-full"
-            optionLabel="label"
-            optionValue="value">
-          </p-dropdown>
-        </div>
-
-        <!-- Preparation Time -->
-        <div class="border border-gray-200 rounded-xl p-4">
-          <label class="block text-sm font-medium text-gray-900 mb-2">Temps de préparation</label>
-          <p class="text-sm text-gray-600 mb-3">Combien de temps vous faut-il entre deux réservations ?</p>
-          <p-dropdown
-            [options]="preparationTimeOptions"
-            formControlName="preparationTime"
-            placeholder="Sélectionner"
-            styleClass="w-full"
-            optionLabel="label"
-            optionValue="value">
-          </p-dropdown>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stay Length -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Durée de séjour</h3>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Min Nights -->
-        <div class="border border-gray-200 rounded-xl p-4">
-          <label class="block text-sm font-medium text-gray-900 mb-2">Minimum de nuits</label>
-          <p class="text-sm text-gray-600 mb-3">Séjour minimum requis</p>
-          <input 
-            type="number" 
-            formControlName="minNights"
-            min="1"
-            max="365"
-            placeholder="1"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-        </div>
-
-        <!-- Max Nights -->
-        <div class="border border-gray-200 rounded-xl p-4">
-          <label class="block text-sm font-medium text-gray-900 mb-2">Maximum de nuits</label>
-          <p class="text-sm text-gray-600 mb-3">Séjour maximum autorisé</p>
-          <input 
-            type="number" 
-            formControlName="maxNights"
-            min="1"
-            max="365"
-            placeholder="365"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-        </div>
-      </div>
-    </div>
-
+   
     <!-- Check-in/Check-out -->
     <div>
       <h3 class="text-lg font-semibold text-gray-900 mb-4">Horaires d'arrivée et de départ</h3>
@@ -1054,100 +492,13 @@
         </div>
       </div>
     </div>
-
-    <!-- Trip Purpose -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Type de voyage</h3>
-      
-      <div class="space-y-4">
-        <!-- Business Travel -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex items-center space-x-4">
-            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-              <i class="pi pi-briefcase text-gray-600"></i>
-            </div>
-            <div>
-              <h4 class="font-medium text-gray-900">Adapté aux voyages d'affaires</h4>
-              <p class="text-sm text-gray-500">Wifi, espace de travail, arrivée flexible</p>
-            </div>
-          </div>
-          <div class="flex space-x-2">
-            <button 
-              type="button"
-              [class]="listingForm.get('businessTravel')?.value === false ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-400'"
-              class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-              (click)="updateBookingSetting('businessTravel', false)">
-              <i class="pi pi-times"></i>
-            </button>
-            <button 
-              type="button"
-              [class]="listingForm.get('businessTravel')?.value === true ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'"
-              class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-              (click)="updateBookingSetting('businessTravel', true)">
-              <i class="pi pi-check"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Family Friendly -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-          <div class="flex items-center space-x-4">
-            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-              <i class="pi pi-home text-gray-600"></i>
-            </div>
-            <div>
-              <h4 class="font-medium text-gray-900">Adapté aux familles</h4>
-              <p class="text-sm text-gray-500">Équipements pour enfants, sécurité</p>
-            </div>
-          </div>
-          <div class="flex space-x-2">
-            <button 
-              type="button"
-              [class]="listingForm.get('familyFriendly')?.value === false ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-400'"
-              class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-              (click)="updateBookingSetting('familyFriendly', false)">
-              <i class="pi pi-times"></i>
-            </button>
-            <button 
-              type="button"
-              [class]="listingForm.get('familyFriendly')?.value === true ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'"
-              class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-              (click)="updateBookingSetting('familyFriendly', true)">
-              <i class="pi pi-check"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Settings Summary -->
-    <div class="bg-gray-50 rounded-xl p-4">
-      <h4 class="font-medium text-gray-900 mb-3">Résumé des paramètres</h4>
-      <div class="space-y-2 text-sm">
-        <div class="flex items-center space-x-2">
-          <i class="pi pi-bolt text-orange-500"></i>
-          <span>{{ listingForm.get('instantBook')?.value ? 'Réservation instantanée activée' : 'Demande de réservation requise' }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <i class="pi pi-calendar text-blue-500"></i>
-          <span>{{ listingForm.get('minNights')?.value || 1 }} nuit(s) minimum</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <i class="pi pi-clock text-green-500"></i>
-          <span>Arrivée: {{ getTimeLabel(listingForm.get('checkinStart')?.value) }} - {{ getTimeLabel(listingForm.get('checkinEnd')?.value) }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <i class="pi pi-sign-out text-red-500"></i>
-          <span>Départ avant: {{ getTimeLabel(listingForm.get('checkoutTime')?.value) }}</span>
-        </div>
-      </div>
-    </div>
+    
   </form>
 </div>
 
-<!-- Cancellation policy section -->
+          <!-- Cancellation policy section -->
 
-<div *ngIf="activeSection === 'cancellation'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
+          <div *ngIf="activeSection === 'cancellation'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
   <div class="border-b border-gray-200 pb-6 mb-8">
     <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Politique d'annulation</h2>
     <p class="text-gray-600 mt-2">Choisissez votre politique d'annulation pour équilibrer flexibilité et protection</p>
@@ -1156,146 +507,70 @@
   <form [formGroup]="listingForm" class="space-y-6">
     <div class="space-y-4">
       <!-- Flexible Policy -->
-      <div class="border rounded-xl p-6 transition-all cursor-pointer hover:shadow-md"
+      <div class="border rounded-xl p-4 transition-all cursor-pointer hover:shadow-md"
            [class]="listingForm.get('cancellationPolicy')?.value === 'flexible' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
            (click)="selectCancellationPolicy('flexible')">
         <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                   [class]="listingForm.get('cancellationPolicy')?.value === 'flexible' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
-                <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'flexible'" class="pi pi-check text-white text-xs"></i>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900">Flexible</h3>
-              <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">Recommandé</span>
+          <div class="flex items-start space-x-4">
+            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1"
+                 [class]="listingForm.get('cancellationPolicy')?.value === 'flexible' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
+              <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'flexible'" class="pi pi-check text-white text-xs"></i>
             </div>
-            <p class="text-gray-600 mb-4">Remboursement complet jusqu'à 1 jour avant l'arrivée</p>
-            <div class="space-y-2 text-sm">
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>Remboursement complet si annulation 24h avant l'arrivée</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>50% de remboursement si annulation le même jour</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-times text-red-500"></i>
-                <span>Aucun remboursement après l'heure d'arrivée</span>
-              </div>
+            <div>
+              <h4 class="font-medium text-gray-900 mb-1">Flexible</h4>
+              <p class="text-sm text-gray-600">Remboursement complet jusqu'à 1 jour avant l'arrivée</p>
             </div>
           </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-gray-900">24h</div>
-            <div class="text-sm text-gray-500">avant arrivée</div>
+          <div class="flex items-center space-x-2">
+            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">Recommandé</span>
           </div>
         </div>
       </div>
 
       <!-- Moderate Policy -->
-      <div class="border rounded-xl p-6 transition-all cursor-pointer hover:shadow-md"
+      <div class="border rounded-xl p-4 transition-all cursor-pointer hover:shadow-md"
            [class]="listingForm.get('cancellationPolicy')?.value === 'moderate' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
            (click)="selectCancellationPolicy('moderate')">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                   [class]="listingForm.get('cancellationPolicy')?.value === 'moderate' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
-                <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'moderate'" class="pi pi-check text-white text-xs"></i>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900">Modérée</h3>
-            </div>
-            <p class="text-gray-600 mb-4">Remboursement complet jusqu'à 5 jours avant l'arrivée</p>
-            <div class="space-y-2 text-sm">
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>Remboursement complet si annulation 5 jours avant l'arrivée</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>50% de remboursement si annulation 1-4 jours avant</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-times text-red-500"></i>
-                <span>Aucun remboursement le jour même</span>
-              </div>
-            </div>
+        <div class="flex items-start space-x-4">
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1"
+               [class]="listingForm.get('cancellationPolicy')?.value === 'moderate' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
+            <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'moderate'" class="pi pi-check text-white text-xs"></i>
           </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-gray-900">5j</div>
-            <div class="text-sm text-gray-500">avant arrivée</div>
+          <div>
+            <h4 class="font-medium text-gray-900 mb-1">Modérée</h4>
+            <p class="text-sm text-gray-600">Remboursement complet jusqu'à 5 jours avant l'arrivée</p>
           </div>
         </div>
       </div>
 
       <!-- Strict Policy -->
-      <div class="border rounded-xl p-6 transition-all cursor-pointer hover:shadow-md"
+      <div class="border rounded-xl p-4 transition-all cursor-pointer hover:shadow-md"
            [class]="listingForm.get('cancellationPolicy')?.value === 'strict' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
            (click)="selectCancellationPolicy('strict')">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                   [class]="listingForm.get('cancellationPolicy')?.value === 'strict' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
-                <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'strict'" class="pi pi-check text-white text-xs"></i>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900">Stricte</h3>
-            </div>
-            <p class="text-gray-600 mb-4">Remboursement complet jusqu'à 14 jours avant l'arrivée</p>
-            <div class="space-y-2 text-sm">
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>Remboursement complet si annulation 14 jours avant l'arrivée</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>50% de remboursement si annulation 7-13 jours avant</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-times text-red-500"></i>
-                <span>Aucun remboursement moins de 7 jours avant</span>
-              </div>
-            </div>
+        <div class="flex items-start space-x-4">
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1"
+               [class]="listingForm.get('cancellationPolicy')?.value === 'strict' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
+            <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'strict'" class="pi pi-check text-white text-xs"></i>
           </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-gray-900">14j</div>
-            <div class="text-sm text-gray-500">avant arrivée</div>
+          <div>
+            <h4 class="font-medium text-gray-900 mb-1">Stricte</h4>
+            <p class="text-sm text-gray-600">Remboursement complet jusqu'à 14 jours avant l'arrivée</p>
           </div>
         </div>
       </div>
 
       <!-- Super Strict Policy -->
-      <div class="border rounded-xl p-6 transition-all cursor-pointer hover:shadow-md"
+      <div class="border rounded-xl p-4 transition-all cursor-pointer hover:shadow-md"
            [class]="listingForm.get('cancellationPolicy')?.value === 'super_strict' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
            (click)="selectCancellationPolicy('super_strict')">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                   [class]="listingForm.get('cancellationPolicy')?.value === 'super_strict' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
-                <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'super_strict'" class="pi pi-check text-white text-xs"></i>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900">Super stricte</h3>
-            </div>
-            <p class="text-gray-600 mb-4">Remboursement complet jusqu'à 60 jours avant l'arrivée</p>
-            <div class="space-y-2 text-sm">
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>Remboursement complet si annulation 60 jours avant l'arrivée</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-check text-green-500"></i>
-                <span>50% de remboursement si annulation 30-59 jours avant</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="pi pi-times text-red-500"></i>
-                <span>Aucun remboursement moins de 30 jours avant</span>
-              </div>
-            </div>
+        <div class="flex items-start space-x-4">
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1"
+               [class]="listingForm.get('cancellationPolicy')?.value === 'super_strict' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'">
+            <i *ngIf="listingForm.get('cancellationPolicy')?.value === 'super_strict'" class="pi pi-check text-white text-xs"></i>
           </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-gray-900">60j</div>
-            <div class="text-sm text-gray-500">avant arrivée</div>
+          <div>
+            <h4 class="font-medium text-gray-900 mb-1">Super stricte</h4>
+            <p class="text-sm text-gray-600">Remboursement complet jusqu'à 60 jours avant l'arrivée</p>
           </div>
         </div>
       </div>
@@ -1332,36 +607,28 @@
   </div>
 
   <!-- Navigation Buttons -->
-  <div class="sticky bottom-0 bg-white border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
-    <div class="w-full max-w-4xl mx-auto flex items-center justify-between">
-      <p-button 
-        label="Précédent" 
-        icon="pi pi-chevron-left"
-        [outlined]="true"
-        (click)="previousSection()"
-        [disabled]="isFirstSection()"
-        class="p-button-lg">
-      </p-button>
-      
-      <div class="flex items-center space-x-4">
-        <p-button 
-          label="Enregistrer le brouillon" 
-          [text]="true"
-          (click)="saveDraft()"
-          [loading]="isSavingDraft">
-        </p-button>
-        
-        <p-button 
-          [label]="isLastSection() ? 'Publier' : 'Suivant'" 
-          [icon]="isLastSection() ? 'pi pi-check' : 'pi pi-chevron-right'"
-          [iconPos]="isLastSection() ? 'left' : 'right'"
-          (click)="nextSection()"
-          [loading]="isLoading"
-          class="p-button-lg">
-        </p-button>
-      </div>
-    </div>
+<!-- Navigation Buttons -->
+<div class="sticky bottom-0 bg-white border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
+  <div class="w-full  mx-auto flex items-center justify-between">
+    <p-button 
+      label="Annuler"
+      icon="pi pi-chevron-left"
+      [outlined]="true"
+      (click)="previousSection()"
+      [disabled]="isFirstSection()"
+      class="p-button-lg">
+    </p-button>
+    
+    <p-button
+      [label]="isLastSection() ? 'Publier' : 'Suivant'"
+      [icon]="isLastSection() ? 'pi pi-check' : 'pi pi-chevron-right'"
+      [iconPos]="isLastSection() ? 'left' : 'right'"
+      (click)="nextSection()"
+      [loading]="isLoading"
+      class="p-button-lg">
+    </p-button>
   </div>
+</div>
 
   <!-- Toast Messages -->
   <p-toast position="top-right"></p-toast>
