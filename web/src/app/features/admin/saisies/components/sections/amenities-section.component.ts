@@ -38,16 +38,21 @@ export interface Amenity {
               class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
               [class.bg-gray-900]="amenity.selected"
             >
-              <i
-                [class]="amenity.icon"
-                class="text-xl"
+              <span
+                class="material-icons text-xl"
                 [class.text-white]="amenity.selected"
                 [class.text-gray-600]="!amenity.selected"
-              ></i>
+              >
+                {{ amenity.icon }}
+              </span>
             </div>
             <div class="flex-1">
-              <h3 class="font-semibold text-gray-900">{{ amenity.name }}</h3>
-              <p class="text-sm text-gray-600 mt-1">{{ amenity.name }}</p>
+              <h3 class="font-semibold text-gray-900">
+                {{ amenity.designation }}
+              </h3>
+              <p class="text-sm text-gray-600 mt-1">
+                {{ amenity.designation }}
+              </p>
             </div>
             <div
               class="w-6 h-6 rounded-full border-2 flex items-center justify-center"

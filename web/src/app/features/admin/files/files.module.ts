@@ -13,6 +13,7 @@ import { ReglesComponent } from './pages/regles/regles.component';
 import { SousTypeHebergementComponent } from './pages/sous-type-hebergement/sous-type-hebergement.component';
 import { BathroomTypesComponent } from './pages/bathroom-types/bathroom-types.component';
 import { DiscountComponent } from './pages/discount/discount.component';
+import { CancellationPoliciesComponent } from './pages/cancellation-policy/cancellation-policy.component';
 
 // Import files components
 
@@ -52,6 +53,10 @@ const routes: Routes = [
   {
     path: 'regles',
     component: ReglesComponent,
+  },
+  {
+    path: 'cancellation-policies',
+    component: CancellationPoliciesComponent,
   },
 ];
 

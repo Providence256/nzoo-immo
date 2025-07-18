@@ -163,6 +163,12 @@ export const MENU_CONFIG: { [key: string]: MenuItem[] } = {
           icon: 'pi-key',
           roles: ['admin', 'Root'],
         },
+        {
+          path: '/admin/files/cancellation-policies',
+          label: "Politique d'annulation",
+          icon: 'pi-ban',
+          roles: ['admin', 'Root'],
+        },
       ],
     },
     {

@@ -1,5 +1,6 @@
 using System;
 using API.DTOs.BookingDto;
+using API.DTOs.CancellationPolicyDto;
 using API.DTOs.CommuneDto;
 using API.DTOs.DeviseDto;
 using API.DTOs.DiscountDto;
@@ -28,6 +29,7 @@ public class MappingProfiles : Profile
         CreateMap<Devise, DeviseRequest>().ReverseMap();
         CreateMap<Equipement, EquipementRequest>().ReverseMap();
         CreateMap<TypeHebergement, TypeHebergementRequest>().ReverseMap();
+        CreateMap<CancellationPolicy, CancellationPolicyRequest>().ReverseMap();
 
         CreateMap<TypeHebergement, TypeHebergementResponse>()
             .ForMember(dest => dest.SousTypes, opt => opt.MapFrom(src => src.SousTypes))
@@ -49,7 +51,7 @@ public class MappingProfiles : Profile
         //Listing 
         CreateMap<Listing, ListingResponse>()
            .ForMember(dest => dest.TypeHebergement, opt => opt.MapFrom(src => src.TypeHebergement!.Designation))
-           .ForMember(dest => dest.Equipements, opt => opt.MapFrom(src => src.Equipements.Select(e => e.Equipement)))
+           .ForMember(dest => dest.Equipements, opt => opt.MapFrom(src => src.Equipements!.Select(e => e.Equipement)))
            .ForMember(dest => dest.Rules, opt => opt.MapFrom(src => src.Rules))
            .ForMember(dest => dest.PhotoUrls, opt => opt.MapFrom(src => src.Photos.Select(p => p.PhotoUrl)));
 

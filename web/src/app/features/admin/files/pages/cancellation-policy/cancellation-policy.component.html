@@ -1,0 +1,197 @@
+<div class="cancellation-policy-container">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <div>
+        <button pButton pRipple label="Ajouter" icon="pi pi-plus-circle" 
+                class="p-button-primary mr-2" (click)="openDialog()">
+        </button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table 
+    [value]="cancellationPolicies" 
+    [loading]="loading" 
+    [paginator]="true" 
+    [scrollable]="true"
+    [rows]="10"
+    responsiveLayout="stack"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    [showCurrentPageReport]="true" 
+    [resizableColumns]="true"
+    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} politiques d'annulation"
+    styleClass="font-Jost p-datatable-customers p-datatable-striped p-datatable-gridlines p-datatable-sm">
+    
+    <ng-template pTemplate="caption">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
+        <h2 class="text-lg font-semibold text-gray-800">Gestion des Politiques d'Annulation</h2>
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            placeholder="Rechercher une politique..."
+            class="p-inputtext-sm font-Jost"
+          />
+        </p-iconfield>
+      </div>
+    </ng-template>
+    
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="text-center font-Jost">Désignation</th>
+        <th class="text-center font-Jost">Description</th>
+        <th class="text-center font-Jost">Actions</th>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="body" let-policy>
+      <tr>
+        <td class="text-center font-Jost">{{ policy.designation }}</td>
+        <td class="text-center font-Jost">
+          <span [title]="policy.description">
+            {{ policy.description.length > 50 ? (policy.description | slice:0:50) + '...' : policy.description }}
+          </span>
+        </td>
+        <td class="text-center">
+          <div class="flex gap-2 h-full">
+            <button pButton icon="pi pi-pencil"
+                    class="p-button-sm p-button-rounded p-button-info"
+                    pTooltip="Modifier" tooltipPosition="top"
+                    (click)="editCancellationPolicy(policy)"></button>
+            <button pButton icon="pi pi-trash"
+                    class="p-button-sm p-button-rounded p-button-danger"
+                    pTooltip="Supprimer" tooltipPosition="top"
+                    (click)="deleteCancellationPolicy(policy)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center p-4">
+          <div class="flex flex-col items-center justify-center py-6">
+            <i class="pi pi-info-circle text-4xl text-blue-300 mb-2"></i>
+            <span class="text-lg">Aucune politique d'annulation trouvée</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Add/Edit Dialog -->
+<p-dialog 
+  [header]="cancellationPolicy.id ? 'Modifier la Politique d\'Annulation' : 'Ajouter une Politique d\'Annulation'"
+  [modal]="true" 
+  [(visible)]="dialog"
+  [breakpoints]="{'960px': '75vw', '640px': '90vw'}" 
+  [style]="{width: '600px'}"
+  [draggable]="false" 
+  [resizable]="false"
+  styleClass="cancellation-policy-dialog"
+  [contentStyle]="{'border-radius': '8px', 'overflow-y': 'auto', 'max-height': '85vh'}"
+  [closeOnEscape]="true">
+  
+  <div class="p-3 sm:p-5">
+    <form [formGroup]="formGroup" class="w-full">
+      
+      <!-- Désignation Field -->
+      <div class="mb-5">
+        <label for="designation" class="block text-sm font-medium text-gray-700 mb-1">
+          Désignation <span class="text-red-500">*</span>
+        </label>
+        <span class="p-input-icon-left w-full">
+          <input 
+            pInputText 
+            id="designation" 
+            formControlName="designation"
+            placeholder="Entrez la désignation" 
+            autocomplete="off"
+            class="w-full p-inputtext-sm" 
+            [ngClass]="{'ng-dirty': isInvalid('designation')}" 
+          />
+        </span>
+        <small *ngIf="isInvalid('designation')" class="p-error block mt-1">
+          {{ getErrorMessage('designation') }}
+        </small>
+      </div>
+
+      <!-- Description Field -->
+      <div class="mb-5">
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
+          Description <span class="text-red-500">*</span>
+        </label>
+    <textarea 
+      pInputText 
+      id="description"
+      placeholder="Entrez la description de la politique d'annulation"
+      required
+      formControlName="description"
+      rows="4"
+      class="w-full border rounded-md text-gray-700 p-inputtext-sm"
+      [ngClass]="{'ng-dirty': isInvalid('description')}"
+      autocomplete="off"
+    ></textarea>
+        <small *ngIf="isInvalid('description')" class="p-error block mt-1">
+          {{ getErrorMessage('description') }}
+        </small>
+      </div>
+    </form>
+  </div>
+
+  <!-- Dialog Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-end p-3">
+      <button 
+        pButton 
+        pRipple 
+        type="button" 
+        label="Annuler"
+        icon="pi pi-times" 
+        class="p-button-outlined font-Jost p-button-secondary" 
+        [disabled]="loading"
+        (click)="annuler()">
+      </button>
+      
+      <button 
+        pButton 
+        pRipple 
+        type="button" 
+        [label]="cancellationPolicy.id ? 'Modifier' : 'Enregistrer'"
+        icon="pi pi-check" 
+        class="p-button-primary font-Jost" 
+        [loading]="loading" 
+        (click)="saveCancellationPolicy()">
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Delete Confirmation Dialog -->
+<p-dialog [(visible)]="deleteDialog" 
+          header="Confirmer la Suppression" 
+          [modal]="true" 
+          [style]="{ width: 'min(500px, 90vw)' }">
+  <div class="flex items-center p-4">
+    <i class="pi pi-exclamation-triangle mr-3 text-yellow-500" style="font-size: 2rem"></i>
+    <span *ngIf="cancellationPolicy" class="text-lg font-Jost">
+      Voulez-vous vraiment supprimer la politique <b>{{ cancellationPolicy.designation }}</b>?
+      <p class="text-sm text-gray-500 mt-2 font-Jost">Cette action est irréversible.</p>
+    </span>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button pButton pRipple label="Non" 
+              class="p-button-text font-Jost" icon="pi pi-times"
+              (click)="cancelDelete()"></button>
+      <button pButton pRipple label="Oui" 
+              class="p-button-danger font-Jost" icon="pi pi-check"
+              [loading]="loading"
+              (click)="confirmDelete(cancellationPolicy.id)"></button>
+    </div>
+  </ng-template>
+</p-dialog>

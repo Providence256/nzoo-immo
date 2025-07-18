@@ -37,6 +37,7 @@ import { AmenitiesSectionComponent } from './saisies/components/sections/ameniti
 import { GuestSectionComponent } from './saisies/components/sections/guest-section.component';
 import { LocationSectionComponent } from './saisies/components/sections/location-section.component';
 import { RulesSectionComponent } from './saisies/components/sections/rules-section.component';
+import { CancellationPoliciesComponent } from './files/pages/cancellation-policy/cancellation-policy.component';
 
 // Admin Guard
 // import { AdminGuard } from '../../core/authentication/guards/admin.guard';
@@ -109,6 +110,7 @@ const routes: Routes = [
     AmenitiesSectionComponent,
     LocationSectionComponent,
     RulesSectionComponent,
+    CancellationPoliciesComponent,
   ],
   imports: [
     CommonModule,

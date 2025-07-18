@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { finalize } from 'rxjs/operators';
+import { AnnoncesService } from '../../services/annonces.service';
 
 @Component({
   selector: 'app-edit-annonce',
@@ -8,21 +11,20 @@ import { MessageService } from 'primeng/api';
 })
 export class EditAnnonceComponent implements OnInit {
   activeSection = 'photos';
-  listingForm: FormGroup;
+  listingForm!: FormGroup;
   isLoading = false;
   showMobileMenu = false;
   photos: any[] = [];
   isSavingDraft = false;
   villes: any[] = [];
   communes: any[] = [];
+  annonceId: number | null = null;
+  currentAnnonce: any | null = null;
+  isLoadingData = true;
 
-  types: any[] = [
-    { id: 1, designation: 'Appartement' },
-    { id: 2, designation: 'Maison' },
-    { id: 3, designation: 'Chalet' },
-    { id: 4, designation: 'Villa' },
-    { id: 5, designation: 'Studio' },
-  ];
+  types: any[] = [];
+  type: any = {};
+  sousTypes: any[] = [];
 
   // Menu sections
   sections = [
@@ -234,8 +236,28 @@ export class EditAnnonceComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private annonceService: AnnoncesService
   ) {
+    this.initializeForm();
+  }
+
+  ngOnInit() {
+    // Récupérer l'ID de l'annonce depuis les paramètres de route
+    this.route.params.subscribe((params) => {
+      this.annonceId = params['id'] ? +params['id'] : null;
+      if (this.annonceId) {
+        this.loadAnnonceData();
+      } else {
+        this.isLoadingData = false;
+        this.loadReferenceData();
+      }
+    });
+  }
+
+  private initializeForm() {
     this.listingForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(10)]],
       description: ['', [Validators.required, Validators.minLength(50)]],
@@ -259,27 +281,130 @@ export class EditAnnonceComponent implements OnInit {
       checkinEnd: ['22:00', Validators.required],
       checkoutTime: ['11:00', Validators.required],
       acceptBabies: [false, Validators.required],
+      instantBook: [false],
+      noSmoking: [true],
+      petsAllowed: [false],
+      maxPets: [null],
+      partiesAllowed: [false],
+      photographyAllowed: [false],
     });
   }
 
-  ngOnInit() {
-    this.loadListingData();
+  private loadAnnonceData() {
+    if (!this.annonceId) return;
+
+    this.isLoadingData = true;
+    this.annonceService
+      .find(this.annonceId)
+      .pipe(finalize(() => (this.isLoadingData = false)))
+      .subscribe({
+        next: (annonce) => {
+          this.currentAnnonce = annonce;
+          this.populateForm(annonce);
+          this.loadReferenceData();
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement de l'annonce:", error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: "Impossible de charger l'annonce",
+          });
+          this.router.navigate(['/admin/annonces']);
+        },
+      });
   }
 
-  loadListingData() {
-    // Simulate loading existing listing data
+  private populateForm(annonce: any) {
+    // Populer les champs de base
     this.listingForm.patchValue({
-      title: 'Appartement cosy au cœur de Paris',
-      description:
-        'Magnifique appartement situé dans le centre historique de Paris...',
-      price: 89,
-      guests: 4,
-      bedrooms: 2,
-      bathrooms: 1,
-      cancellationPolicy: 'flexible',
-      checkInTime: '15:00',
-      checkOutTime: '11:00',
+      title: annonce.title,
+      description: annonce.description,
+      type: annonce.type,
+      sousType: annonce.sousType,
+      basePrice: annonce.basePrice,
+      guests: annonce.guests,
+      bedrooms: annonce.bedrooms,
+      bathrooms: annonce.bathrooms,
+      ville: annonce.ville,
+      commune: annonce.commune,
+      quartier: annonce.quartier,
+      avenue: annonce.avenue,
+      numero: annonce.numero,
+      cancellationPolicy: annonce.cancellationPolicy,
+      checkinStart: annonce.checkinStart,
+      checkinEnd: annonce.checkinEnd,
+      checkoutTime: annonce.checkoutTime,
+      acceptBabies: annonce.acceptBabies,
+      instantBook: annonce.instantBook,
+      noSmoking: annonce.noSmoking,
+      petsAllowed: annonce.petsAllowed,
+      maxPets: annonce.maxPets,
+      partiesAllowed: annonce.partiesAllowed,
+      photographyAllowed: annonce.photographyAllowed,
+      advanceNotice: annonce.advanceNotice,
+      tripLength_min: annonce.tripLength_min,
+      tripLength_max: annonce.tripLength_max,
     });
+
+    // Populer les photos
+    this.photos = annonce.photos || [];
+
+    // Populer les équipements
+    if (annonce.amenities) {
+      this.amenities = this.amenities.map((amenity) => ({
+        ...amenity,
+        selected: annonce.amenities.some((a: any) => a.id === amenity.id),
+      }));
+    }
+
+    // Activer le champ commune si une ville est sélectionnée
+    if (annonce.ville) {
+      this.listingForm.get('commune')?.enable();
+      this.loadCommunes(annonce.ville.id || annonce.ville);
+    }
+  }
+
+  private loadReferenceData() {
+    // Charger les données de référence
+    this.annonceService.findAllTypes().subscribe((types) => {
+      this.types = types;
+    });
+
+    this.annonceService
+      .findSousTypeByType(this.type.id)
+      .subscribe((sousTypes) => {
+        this.sousTypes = sousTypes;
+      });
+
+    this.annonceService.findAllVilles().subscribe((villes) => {
+      this.villes = villes;
+    });
+
+    this.annonceService.findAllEquipements().subscribe((amenities) => {
+      // Mettre à jour les équipements disponibles
+      this.amenities = amenities.map((amenity) => ({
+        ...amenity,
+        selected:
+          this.currentAnnonce?.amenities?.some(
+            (a: any) => a.id === amenity.id
+          ) || false,
+      }));
+    });
+  }
+
+  private loadCommunes(villeId: number) {
+    this.annonceService.getAllCommunesByVille(villeId).subscribe((communes) => {
+      this.communes = communes;
+    });
+  }
+
+  updateLocationField(field: any, value: string): void {
+    if (field === 'ville') {
+      this.listingForm.get('commune')?.setValue(null);
+      this.listingForm.get('commune')?.enable();
+      this.loadCommunes(+value);
+    }
   }
 
   setActiveSection(sectionId: string) {
@@ -293,7 +418,9 @@ export class EditAnnonceComponent implements OnInit {
     }
   }
 
-  toggleMobileMenu() {}
+  toggleMobileMenu() {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
 
   selectCancellationPolicy(policyId: string) {
     this.listingForm.patchValue({ cancellationPolicy: policyId });
@@ -329,8 +456,6 @@ export class EditAnnonceComponent implements OnInit {
     return addressParts.join(', ');
   }
 
-  updateLocationField(field: any, value: string): void {}
-
   updateRule(controlName: string, value: boolean): void {
     this.listingForm.get(controlName)?.setValue(value);
 
@@ -363,28 +488,42 @@ export class EditAnnonceComponent implements OnInit {
   }
 
   onSave() {
-    if (this.listingForm.valid) {
+    if (this.listingForm.valid && this.annonceId) {
       this.isLoading = true;
 
       const formData = {
         ...this.listingForm.value,
+        id: this.annonceId,
         houseRules: this.houseRules.filter((r) => r.active),
         amenities: this.amenities.filter((a) => a.selected),
+        photos: this.photos,
         reservationSettings: this.reservationSettings.reduce((acc, setting) => {
           acc[setting.id] = setting.value;
           return acc;
         }, {} as any),
       };
 
-      // Simulate API call
-      setTimeout(() => {
-        this.isLoading = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Succès',
-          detail: 'Annonce mise à jour avec succès',
+      this.annonceService
+        .update(this.annonceId, formData)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe({
+          next: (updatedAnnonce) => {
+            this.currentAnnonce = updatedAnnonce;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'Annonce mise à jour avec succès',
+            });
+          },
+          error: (error) => {
+            console.error('Erreur lors de la mise à jour:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: "Impossible de mettre à jour l'annonce",
+            });
+          },
         });
-      }, 1500);
     } else {
       this.messageService.add({
         severity: 'error',
@@ -395,23 +534,85 @@ export class EditAnnonceComponent implements OnInit {
   }
 
   getCurrentStepNumber() {
-    /* ... */
+    return this.sections.findIndex((s) => s.id === this.activeSection) + 1;
   }
+
   getCurrentSectionLabel() {
-    /* ... */
+    const section = this.sections.find((s) => s.id === this.activeSection);
+    return section ? section.label : '';
   }
+
   getCompletionPercentage() {
-    /* ... */
+    const currentIndex = this.sections.findIndex(
+      (s) => s.id === this.activeSection
+    );
+    return Math.round(((currentIndex + 1) / this.sections.length) * 100);
   }
-  isFirstSection() {}
-  isLastSection(): number {
-    return this.sections.length;
+
+  isFirstSection() {
+    return this.sections.findIndex((s) => s.id === this.activeSection) === 0;
   }
-  nextSection(): void {}
-  previousSection(): void {}
-  saveDraft(): void {}
+
+  isLastSection(): boolean {
+    return (
+      this.sections.findIndex((s) => s.id === this.activeSection) ===
+      this.sections.length - 1
+    );
+  }
+
+  nextSection(): void {
+    const currentIndex = this.sections.findIndex(
+      (s) => s.id === this.activeSection
+    );
+    if (currentIndex < this.sections.length - 1) {
+      this.activeSection = this.sections[currentIndex + 1].id;
+    }
+  }
+
+  previousSection(): void {
+    const currentIndex = this.sections.findIndex(
+      (s) => s.id === this.activeSection
+    );
+    if (currentIndex > 0) {
+      this.activeSection = this.sections[currentIndex - 1].id;
+    }
+  }
+
+  saveDraft(): void {
+    if (this.annonceId) {
+      this.isSavingDraft = true;
+      const formData = {
+        ...this.listingForm.value,
+        id: this.annonceId,
+        isDraft: true,
+      };
+
+      this.annonceService
+        .update(this.annonceId, formData)
+        .pipe(finalize(() => (this.isSavingDraft = false)))
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Brouillon sauvegardé',
+              detail: 'Vos modifications ont été sauvegardées',
+            });
+          },
+          error: (error) => {
+            console.error('Erreur lors de la sauvegarde du brouillon:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Impossible de sauvegarder le brouillon',
+            });
+          },
+        });
+    }
+  }
 
   previewListing() {
-    window.open('/preview-listing', '_blank');
+    if (this.annonceId) {
+      window.open(`/preview-listing/${this.annonceId}`, '_blank');
+    }
   }
 }

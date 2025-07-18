@@ -19,6 +19,8 @@ public class NzooContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     public DbSet<WhoInSite> WhoInSites { get; set; }
     public DbSet<TypeHebergement> TypeHebergements { get; set; }
     public DbSet<Rule> Rules { get; set; }
+    public DbSet<CancellationPolicy> CancellationPolicies { get; set; }
+    public DbSet<BookingRule> BookingRules { get; set; }
     public DbSet<TauxChange> TauxChanges { get; set; }
     public DbSet<Listing> Listings { get; set; }
     public DbSet<ListingEquipement> ListingEquipements { get; set; }
